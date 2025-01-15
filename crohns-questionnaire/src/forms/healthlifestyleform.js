@@ -73,12 +73,12 @@ const HealthLifestyleForm = () => {
 
   return (
       <div className="form-container">
-          <h2 className="mb-4">Health Lifestyle Form</h2>
+          <h2 >Health Lifestyle Form</h2>
           <form onSubmit={handleSubmit}>
               <h2>שאלון בריאות</h2>
 
               {/* Smoking Section */}
-              <div className="col-md-6 mb-3">
+              <div className="form-group">
                   <h3>עישון</h3>
                   <label>
                       עישון- בעבר לא/ כן - אם כן פרט מספר סיגריות ביום:
@@ -88,10 +88,9 @@ const HealthLifestyleForm = () => {
                       עישון- בהווה לא/ כן - אם כן פרט מספר סיגריות ביום:
                       <input type="text" name="smokingPresent" value={formData.smokingPresent} onChange={handleChange}/>
                   </label>
-              </div>
+
 
               {/* Substance Use Section */}
-              <div className="col-md-6 mb-3">
                   <h3>שימוש בחומרים</h3>
                   <label>
                       האם אתה צורך היום או בעבר סמים? אם כן איזה סם ובאיזו תדירות?
@@ -102,10 +101,9 @@ const HealthLifestyleForm = () => {
                       <input type="text" name="alcoholConsumption" value={formData.alcoholConsumption}
                              onChange={handleChange}/>
                   </label>
-              </div>
 
-              {/* Lifestyle Section */}
-              <div className="col-md-6 mb-3">
+
+
                   <h3>אורח חיים</h3>
                   <label>
                       רמת אנרגיה עייפות במשך היום:
@@ -128,20 +126,27 @@ const HealthLifestyleForm = () => {
                       הערכה - כמה צעדים אתה צועד ביום ממוצע:
                       <input type="text" name="stepsPerDay" value={formData.stepsPerDay} onChange={handleChange}/>
                   </label>
-              </div>
+
 
               {/* Mental and Social Health Section */}
-              <div className="col-md-6 mb-3">
+
                   <h3>בריאות נפשית וחברתית</h3>
                   <label>
                       מה הדאגה המרכזית בחייך:
                       <select name="mainConcern" value={formData.mainConcern} onChange={handleChange}>
-                          <option value="">בחר</option>
-                          <option value="לעיתים נדירות">לעיתים נדירות</option>
-                          <option value="לפעמים">לפעמים</option>
-                          <option value="לעיתים תכופות">לעיתים תכופות</option>
+                          <option value="כלכלית">כלכלית</option>
+                          <option value="עבודה">עבודה</option>
+                          <option value="אקלים">אקלים</option>
+                          <option value="פוליטיקה">פוליטיקה</option>
+                          <option value="זוגיות">זוגיות</option>
+                          <option value="ילדים">ילדים</option>
+                          <option value="בריאות שלי">בריאות שלי</option>
+                          <option value="בריאות של הסובבים ">בריאות של הסובבים </option>
+                          <option value="אחר">אחר</option>
+                          ככלכלית/ עבודה/ אקלים /פוליטיקה/ זוגיות/ ילדים/ בריאות שלי / בריאות של הסובבים / אחר 
                       </select>
                   </label>
+
                   <label>
                       האם יש לך קשיי הרדמות? אם כן אנא ציינו מספר פעמים בלילה:
                       <input type="text" name="sleepingProblems" value={formData.sleepingProblems}
@@ -154,7 +159,7 @@ const HealthLifestyleForm = () => {
                           <option value="1">1</option>
                           <option value="2-3">2-3</option>
                           <option value="4-5">4-5</option>
-                          <option value=">5">>5</option>
+                          <option value=">5">5</option>
                       </select>
                   </label>
                   <label>
@@ -164,7 +169,7 @@ const HealthLifestyleForm = () => {
                           <option value="1">1</option>
                           <option value="2-3">2-3</option>
                           <option value="4-5">4-5</option>
-                          <option value=">5">>5</option>
+                          <option value=">5">5</option>
                       </select>
                   </label>
                   <label>
@@ -175,7 +180,7 @@ const HealthLifestyleForm = () => {
                           <option value="2-4">2-4</option>
                           <option value="4-6">4-6</option>
                           <option value="6-8">6-8</option>
-                          <option value=">8">>8</option>
+                          <option value=">8">8</option>
                       </select>
                   </label>
                   <label>
@@ -206,10 +211,10 @@ const HealthLifestyleForm = () => {
                       <input type="text" name="meditationFrequency" value={formData.meditationFrequency}
                              onChange={handleChange}/>
                   </label>
-              </div>
+   
 
               {/* Dietary Section */}
-              <div className="col-md-6 mb-3">
+
                   <h3>תזונה</h3>
                   <label>
                       מספר ממוצע של ארוחות ביום:
@@ -331,10 +336,8 @@ const HealthLifestyleForm = () => {
                           <option value="אף פעם">אף פעם</option>
                       </select>
                   </label>
-              </div>
 
               {/* Digestive Health Section */}
-              <div className="col-md-6 mb-3">
                   <h3>בריאות מעיים</h3>
                   <label>
                       מתן צואה ברמיסיה - מספר פעמים ביום/ בשבוע:
@@ -351,9 +354,9 @@ const HealthLifestyleForm = () => {
                       <input type="text" name="urinationFrequency" value={formData.urinationFrequency}
                              onChange={handleChange}/>
                   </label>
-              </div>
 
               <button type="submit">שלח</button>
+              </div>
           </form>
       </div>
   );

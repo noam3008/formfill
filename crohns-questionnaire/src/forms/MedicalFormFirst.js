@@ -65,11 +65,11 @@ const MedicalForm = () => {
   return (
       <div className="form-container">
         <h2 className="mb-4">Medical Form</h2>
-        <form className="container mt-5" onSubmit={handleSubmit}>
+        <form  onSubmit={handleSubmit}>
           <div className="row">
 
             {/* Diagnosis Information */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="diagnosis" className="form-label">אבחנה (Diagnosis)</label>
               <input
                   type="text"
@@ -81,7 +81,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="crohnAge" className="form-label">גיל פריצת הקרוהן (Crohn's Age Onset)</label>
               <input
                   type="number"
@@ -93,7 +93,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="diagnosisAge" className="form-label">גיל אבחון הקרוהן (Age of Diagnosis)</label>
               <input
                   type="number"
@@ -106,7 +106,7 @@ const MedicalForm = () => {
             </div>
 
             {/* Treatment Information */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="treatmentType" className="form-label">סוג הטיפול הנוכחי (Current Treatment Type)</label>
               <input
                   type="text"
@@ -118,7 +118,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div>
               <label htmlFor="treatmentDuration" className="form-label">משך הטיפול (Treatment Duration)</label>
               <input
                   type="text"
@@ -130,7 +130,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="treatmentChanges" className="form-label">שינויים בטיפול/במינון (Changes in
                 Treatment)</label>
               <input
@@ -143,7 +143,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="treatmentAdherence" className="form-label">התמדת הטיפול (Treatment Adherence)</label>
               <select
                   className="form-select"
@@ -160,7 +160,7 @@ const MedicalForm = () => {
             </div>
 
             {/* Medical Background */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="backgroundDiseases" className="form-label">מחלות רקע (Background Diseases)</label>
               <input
                   type="text"
@@ -172,7 +172,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="allergies" className="form-label">אלרגיות (Allergies)</label>
               <input
                   type="text"
@@ -184,7 +184,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="foodSensitivity" className="form-label">רגישות למזון (Food Sensitivity)</label>
               <input
                   type="text"
@@ -196,7 +196,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="chronicDiseases" className="form-label">מחלות כרוניות (Chronic Diseases)</label>
               <input
                   type="text"
@@ -209,7 +209,7 @@ const MedicalForm = () => {
             </div>
 
             {/* Health History */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="hospitalization" className="form-label">אשפוזים (Hospitalization)</label>
               <input
                   type="text"
@@ -221,7 +221,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="surgeries" className="form-label">ניתוחים (Surgeries)</label>
               <input
                   type="text"
@@ -233,7 +233,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="complementaryMedicine" className="form-label">רפואה משלימה (Complementary
                 Medicine)</label>
               <input
@@ -246,7 +246,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="treatmentHelp" className="form-label">טיפולים שעוזרים (Treatments That Help)</label>
               <input
                   type="text"
@@ -258,7 +258,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="aggravatesCondition" className="form-label">דברים שמחמירים (Aggravates Condition)</label>
               <input
                   type="text"
@@ -270,7 +270,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div>
               <label htmlFor="improvesCondition" className="form-label">דברים שמשפרים (Improves Condition)</label>
               <input
                   type="text"
@@ -283,7 +283,7 @@ const MedicalForm = () => {
             </div>
 
             {/* Disease Onset */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="diseaseOnsetEvent" className="form-label">אירוע בזמן הופעת המחלה (Event at Disease
                 Onset)</label>
               <input
@@ -297,7 +297,7 @@ const MedicalForm = () => {
             </div>
 
             {/* Pain and Symptoms */}
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="headacheFrequency" className="form-label">תדירות כאבי ראש (Headache Frequency)</label>
               <input
                   type="text"
@@ -309,7 +309,7 @@ const MedicalForm = () => {
               />
             </div>
 
-            <div className="col-md-6 mb-3">
+            <div >
               <label htmlFor="abdominalPainFrequency" className="form-label">תדירות כאבי בטן (Abdominal Pain
                 Frequency)</label>
               <input

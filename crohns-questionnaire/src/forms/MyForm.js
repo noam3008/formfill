@@ -223,7 +223,7 @@ function App() {
                         onChange={handleChange}
                         required
                     >
-                        <option value="">Select</option>
+                        <option class = "check" value="">Select</option>
                         <option value="מכבי">מכבי</option>
                         <option value="כללית">כללית</option>
                         <option value="מאוחדת">מאוחדת</option>
@@ -248,10 +248,10 @@ function App() {
                 <div className="form-group">
                     <label className="form-label">מגדר</label><br />
                     <div className="form-check">
-                        <input type="radio" name="gender" value="זכר" onChange={handleChange} required /> זכר
+                        <input type="radio" name="gender" value="זכר" onChange={handleChange} required /> גבר
                     </div>
                     <div className="form-check">
-                        <input type="radio" name="gender" value="אישה" onChange={handleChange} required /> נקבה
+                        <input type="radio" name="gender" value="אישה" onChange={handleChange} required /> אישה
                     </div>
                 </div>
 

@@ -73,19 +73,17 @@ const PersonalForm = () => {
           <div className="form-group">
             <label htmlFor="numberOfChildren"> מספר ילדים</label>
             <input type="number" name="numberOfChildren" id="numberOfChildren" className="form-control" value={formData.numberOfChildren} onChange={handleChange} />
-          </div>
 
-        <div className="form-group">
+
           <label htmlFor="height">גובה (בס"מ)</label>
           <input type="number" name="height" id="height" className="form-control" value={formData.height} onChange={handleChange} />
-        </div>
 
-        <div className="form-group">
+
+
           <label htmlFor="weight">משקל (בק"ג)</label>
           <input type="number" name="weight" id="weight" className="form-control" value={formData.weight} onChange={handleChange} />
-        </div>
 
-        <div className="form-group">
+
           <label htmlFor="weightChange">האם היה לך שינוי משמעותי במשקל במהלך חייך?</label>
           <textarea name="weightChange" id="weightChange" className="form-control" value={formData.weightChange} onChange={handleChange}></textarea>
         </div>

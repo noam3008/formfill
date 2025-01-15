@@ -7,13 +7,22 @@
     background-color: cadetblue;
     padding: 20px;
     border-radius: 8px;
+    text-align: end;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.a32{
+    text-align: center;
 }
 
 body {
     background-image: url('../images/download.jpeg');
   background-size: cover;
   background-blend-mode: difference;
+}
+
+.check{
+    text-align: start;
 }
 
 /* Title Styling */
@@ -25,6 +34,7 @@ body {
 /* Form Labels */
 .form-label {
     font-weight: bold;
+    text-align: end;
 }
 
 /* Margin for checkboxes and radios */
@@ -35,6 +45,7 @@ body {
 /* Form fields margin */
 .form-group {
     margin-bottom: 15px;
+
 }
 
 /* Submit button styling */
@@ -43,4 +54,89 @@ body {
     border-color: #007bff;
     font-weight: bold;
     width: 100%;
+}
+.form-label{
+    text-align: start;
+}
+
+.medicine-usage-container {
+    background-color: #f9faff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0; /* Removes extra space above and below the label */
+    display: block;
+    color: #333;
+}
+
+.slider-container {
+    margin-top: 10px; /* Adjusts spacing between the label and slider */
+    position: relative;
+}
+
+.slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background: linear-gradient(
+        to right,
+        #ff4d4d 0%,
+        #ffa64d 25%,
+        #ffff4d 50%,
+        #a6ff4d 75%,
+        #4dff88 100%
+    );
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+}
+
+.slider-labels span {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.slider-labels span:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 8px;
+    background: #333;
 }
