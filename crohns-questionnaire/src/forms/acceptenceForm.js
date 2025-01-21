@@ -7,19 +7,19 @@ import WomanForm from "./WomanForm";
 
 
 function App() {
-    const [formData, setFormData] = useState({
-        preferredLanguage: '',
-        firstName: '',
-        lastName: '',
-        idNumber: '',
-        email: '',
-        phone: '',
-        address: '',
-        healthFund: '',
-        age: '',
-        gender: '',
-        sex: ''
-    });
+     const [formData, setFormData] = useState({
+    preferredLanguage: '',
+    firstName: '',
+    lastName: '',
+    idNumber: '',
+    email: '',
+    phone: '',
+    address: '',
+    healthFund: '',
+    age: '',
+    gender: '',
+    sex: ''
+  });
 
     const navigate = useNavigate();
 
@@ -32,23 +32,13 @@ function App() {
     };
 
     const handleChange = (e) => {
-
         const { name, value } = e.target;
-
-        // Enforce positive number for age
-
         setFormData({ ...formData, [name]: value });
-
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submitted formData: ", formData);
-
-        if (formData.age <= 0) {
-            alert("הגיל חייב להיות מספר חיובי."); // Hebrew: "The age must be a positive number."
-            return; // Prevents updating the state with an invalid value
-        }
         //
         // fetch('http://localhost:3002/insert_user', {
         //     method: 'POST',
@@ -68,36 +58,36 @@ function App() {
 
         if (formData.preferredLanguage === 'לשון נקבה') {
             navigate("/woman");
-            // Perform any specific action if the form is submitted with לשון נקבה
-            console.log('Form submitted with לשון נקבה');
-            // fetch('http://localhost:3000/woman', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(formData),  // Send form data in JSON format
-            // })
-            //     .then((response) => {
-            //         if (!response.ok) {
-            //             throw new Error('Network response was not ok');
-            //         }
-            //         return response.json();
-            //     })
-            //     .then((data) => {
-            //         alert("Form submitted successfully!");
-            //          navigate("/woman");
-            //
-            //     })
-            //     .catch((error) => {
-            //         alert("Error submitting form!");
-            //         console.error('Error:', error);
-            //     });
-            // Example: You can redirect, display a message, or send specific data to the backend
-            // alert('Form submitted with לשון נקבה');
-            // You could also redirect or add any other logic here
-        } else {
-            navigate("/personalform")
-        }
+        // Perform any specific action if the form is submitted with לשון נקבה
+        console.log('Form submitted with לשון נקבה');
+        // fetch('http://localhost:3000/woman', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(formData),  // Send form data in JSON format
+        // })
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data) => {
+        //         alert("Form submitted successfully!");
+        //          navigate("/woman");
+        //
+        //     })
+        //     .catch((error) => {
+        //         alert("Error submitting form!");
+        //         console.error('Error:', error);
+        //     });
+        // Example: You can redirect, display a message, or send specific data to the backend
+        // alert('Form submitted with לשון נקבה');
+        // You could also redirect or add any other logic here
+    } else {
+        navigate("/personalform")
+    }
 
 
 
@@ -110,23 +100,23 @@ function App() {
         //     er:', gender);
         // }
 
-        //     if (showAdditionalForm) {
-        //         console.log("נכנס לתנאי")
-        //         console.log(gender)
-        //          try {
-        //             console.log("נכנס FETCH")
-        //              fetch('http://localhost:3002/personalform', {
-        //                 method: 'GET',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                 }
-        //             })
-        //              console.log("FINISH FETCH")
-        //             setShowAdditionalForm(true);
-        //         } catch (error) {
-        //             console.error('Error making API call:', error);
-        //         }
-        // }
+    //     if (showAdditionalForm) {
+    //         console.log("נכנס לתנאי")
+    //         console.log(gender)
+    //          try {
+    //             console.log("נכנס FETCH")
+    //              fetch('http://localhost:3002/personalform', {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 }
+    //             })
+    //              console.log("FINISH FETCH")
+    //             setShowAdditionalForm(true);
+    //         } catch (error) {
+    //             console.error('Error making API call:', error);
+    //         }
+    // }
     };
 
     return (
@@ -134,15 +124,15 @@ function App() {
             <h2 className="form-title">Personal Information Form</h2>
             <form onSubmit={handleSubmit} className="form-container">
 
-                <div className="form-group radio-preferred">
-                    <label className="form-label">מה הניסוח הפניה המועדף עליך?</label><br />
-                    <div className="form-check">
-                        <input type="radio" name="preferredLanguage" value="לשון נקבה" onChange={handleChange} required /> לשון נקבה
-                    </div>
-                    <div className="form-check">
-                        <input type="radio" name="preferredLanguage" value="לשון זכר" onChange={handleChange} /> לשון זכר
-                    </div>
+            <div className="form-group radio-preferred">
+                <label className="form-label">מה הניסוח הפניה המועדף עליך?</label><br />
+                <div className="form-check">
+                    <input type="radio" name="preferredLanguage" value="לשון נקבה" onChange={handleChange} required /> לשון נקבה
                 </div>
+                <div className="form-check">
+                    <input type="radio" name="preferredLanguage" value="לשון זכר" onChange={handleChange} /> לשון זכר
+                </div>
+            </div>
 
 
                 {/* First Name */}
@@ -233,7 +223,7 @@ function App() {
                         onChange={handleChange}
                         required
                     >
-                        <option class="check" value="">Select</option>
+                        <option class = "check" value="">Select</option>
                         <option value="מכבי">מכבי</option>
                         <option value="כללית">כללית</option>
                         <option value="מאוחדת">מאוחדת</option>
@@ -251,7 +241,6 @@ function App() {
                         value={formData.age}
                         onChange={handleChange}
                         required
-                        min="1" // Ensures only positive numbers are allowed
                     />
                 </div>
 

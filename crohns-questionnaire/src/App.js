@@ -8,6 +8,7 @@ import GiladGame from "./forms/GiladGame";
 import MedicalFormFirst from "./forms/MedicalFormFirst";
 import Healthlifestyleform from "./forms/healthlifestyleform";
 import ChildhoodQuastionaire from "./forms/ChildhoodQuastionaire";
+import AcceptenceForm from "./forms/acceptenceForm"
 
 // Create this component
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <Router>
       <Routes>
+          {/* <Route path="/" element={<AcceptenceForm />} /> */}
           <Route path="/" element={<MyForm />} />
           <Route path="/woman" element={<WomanForm/>}/>
           <Route path="/success" element={<SuccessPage />}/>

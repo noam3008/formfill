@@ -31,11 +31,26 @@ body {
     margin-bottom: 20px;
 }
 
-/* Form Labels */
+.form-select {
+    border-radius: 8px;
+    border: 2px solid #007bff; /* Adds a blue border */
+    padding: 10px;
+  }
+  
+  .form-select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Highlight on focus */
+  }
+
 .form-label {
-    font-weight: bold;
-    text-align: end;
-}
+    text-align: right;
+    display: block; /* Ensures the alignment applies correctly to the label */
+    direction: rtl; /* For proper alignment with Hebrew text */
+  }
+  
+  .form-select option {
+    text-align: right; /* Aligns text in dropdown options */
+  }
 
 /* Margin for checkboxes and radios */
 .form-check {
@@ -57,6 +72,34 @@ body {
 }
 .form-label{
     text-align: start;
+}
+
+/* Radio Button Styling for preferredLanguage */
+.radio-preferred {
+    background-color: #e6f7ff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+.radio-preferred .form-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.radio-preferred .form-check {
+    margin: 10px 0;
+}
+
+.radio-preferred .form-check input[type="radio"] {
+    margin-right: 10px;
+}
+
+.radio-preferred label {
+    color: #555;
+    font-size: 14px;
 }
 
 .medicine-usage-container {
@@ -96,6 +139,18 @@ body {
     border-radius: 5px;
     outline: none;
     transition: background 0.3s ease-in-out;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+    text-align: right;  /* Align text to the right */
+    direction: rtl;  /* Sets text direction to right-to-left */
+    padding-right: 10px;  /* Padding only on the right side */
 }
 
 .slider::-webkit-slider-thumb {
