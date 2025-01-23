@@ -9,6 +9,9 @@ import MedicalFormFirst from "./forms/MedicalFormFirst";
 import Healthlifestyleform from "./forms/healthlifestyleform";
 import ChildhoodQuastionaire from "./forms/ChildhoodQuastionaire";
 import AcceptenceForm from "./forms/acceptenceForm"
+import PTSDQuestionnaire from './forms/PTSDQuestionnaire';
+import DepressionAssessment from './forms/depressionAssessment';
+import MSPSSQuestionnaire  from './forms/mspssquastionaire';
 
 // Create this component
 
@@ -24,6 +27,10 @@ function App() {
           <Route path="/medicalformfirst" element={<MedicalFormFirst/>}/>
           <Route path="/healthlifestyleform" element={<Healthlifestyleform/>}/>
           <Route path="/childhoodquastionaire" element={<ChildhoodQuastionaire/>}/>
+          <Route path="/ptsdquestionnaire" element={<PTSDQuestionnaire/>}/>
+          <Route path="/depressionassessment" element={<DepressionAssessment/>}/>
+          <Route path="/mspssquastionaire" element={<MSPSSQuestionnaire />}/>
+
       </Routes>
     </Router>
   );

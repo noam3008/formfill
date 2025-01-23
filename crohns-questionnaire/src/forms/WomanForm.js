@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import '../css/WomanForm.css';
+import '../css/MyForm.css';
 import { useNavigate } from 'react-router-dom';
-
 
 function App() {
     const [formData, setFormData] = useState({
         menstrualLength: '',
         painDuringMenstruation: '',
+        selectedSymptoms :'',
         pmsSymptoms: [],
+        isGlulotInPast :'',
+        isBikurKavua:'',
         childrenCount: '',
         usedContraceptives: '',
         contraceptiveType: '',
@@ -15,168 +17,637 @@ function App() {
         hormonalType: '',
         hormonalAge: '',
         hormonalProfile: '',
+        setLastMenstrualPeriod :'',
+        setHasMenstrualCycle : '',
+        hasMenstrualCycle:'',
+        lastMenstrualPeriod:'',
         id_number :'',
     });
 
-    const [showContraceptiveQuestions, setShowContraceptiveQuestions] = useState(false);
+    const pmsSymptoms = [
+        "דכאון",
+        "עצבנות",
+        "חרדה",
+        "אקנה",
+        "נדודי שינה",
+        "עייפות",
+        "עצירות",
+        "כאבי פרקים",
+        "כאבי שרירים",
+        "כאבי בטן",
+        "רגישות בשדיים",
+        "תנודות בחשק המיני",
+        "שינויים במצב הרוח",
+        "אחר- פרטי",
+    ];
 
-    // Handle form field changes
+    const [hasMenstrualCycle, setHasMenstrualCycle] = useState('');
+    const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState('');
+    const [hasBeenPregnant, setHasBeenPregnant] = useState('');
+    const [pregnancyCount, setPregnancyCount] = useState('');
+    const [isGlulotInPast, setIsGlulotInPast] = useState('');
+    const [isBikurKavua, setisBikurKavua] = useState('');
+    const [numberOfChildren, setNumberOfChildren] = useState('');
+    const [postpartumDepression, setPostpartumDepression] = useState({
+        suffered: '',
+        diagnosed: '',
+        treated: '',
+        stillTreated: ''
+    });
+
+    const [contraceptiveMethods, setContraceptiveMethods] = useState({
+        using: '',
+        type: '',
+        ageStarted: '',
+        hormonalDevice: '',
+        nonHormonalDevice: '',
+        ageDeviceStarted: ''
+    });
+
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-
-        // Show contraceptive-related questions only if user selects "Yes"
-        if (name === 'usedContraceptives' && value === 'yes') {
-            setShowContraceptiveQuestions(false);
-        } else if (name === 'usedContraceptives' && value === 'no') {
-            setShowContraceptiveQuestions(true);
-        }
     };
 
-    const navigate = useNavigate();
+    const handleLastMenstrualPeriodChange = (e) => {
+        setLastMenstrualPeriod(e.target.value);
+    };
+    const handlePregnancyChange = (e) => {
+        setHasBeenPregnant(e.target.value);
+    };
+
+    const handlePregnancyCountChange = (e) => {
+        setPregnancyCount(e.target.value);
+    };
+
+    const handleChildrenCountChange = (e) => {
+        setNumberOfChildren(e.target.value);
+    };
+
+    const handleGlulotInPastChange = (e) => {
+        setIsGlulotInPast(e.target.value);
+    };
+
+    const handleBikurKavua = (e) => {
+        setisBikurKavua(e.target.value);
+    };
+
+
+    const handlePostpartumDepressionChange = (field, value) => {
+        setPostpartumDepression((prevState) => ({
+            ...prevState,
+            [field]: value
+        }));
+    };
+
+    const handleContraceptiveChange = (field, value) => {
+        setContraceptiveMethods((prevState) => ({
+            ...prevState,
+            [field]: value
+        }));
+    };
+
 
     const handleSubmit = (e) => {
-        navigate("/medicalformfirst")
-        // e.preventDefault();
-        // console.log("Submitted formData: ", formData);
-        //
-        // // Add form submission logic here
-        // fetch('/submit', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(formData),
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         alert("Form submitted successfully!");
-        //     })
-        //     .catch((error) => {
-        //         alert("Error submitting form!");
-        //         console.error('Error:', error);
-        //     });
+        e.preventDefault();
+        navigate("/medicalformfirst");
+        // You can add an API call here
+    };
+
+    const handleRadioChange = (e) => {
+        setHasMenstrualCycle(e.target.value);
+    };
+
+    const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+
+    const handleCheckboxChange = (e) => {
+        const { value, checked } = e.target;
+            setSelectedSymptoms((prevSymptoms) => {
+                if (checked) {
+                    return [...prevSymptoms, value];
+                } else {
+                    return prevSymptoms.filter(symptom => symptom !== value);
+                }
+            });
     };
 
     return (
-        <div className="wrapper">
         <div className="form-container">
-            <h2 class="a32">Woman Form</h2>
+            <h2 className="mb-4 text-center">Woman information form</h2>
             <form onSubmit={handleSubmit}>
-
-                
-                <label>מספר תעודת זהות</label>
-                <input type="number" name="id_number" value={formData.id_number}
-                       onChange={handleChange}/><br/><br/>
-            
-
-                {/* Menstrual Length */}
-                <label>מה אורך וסת הממוצע?</label>
-                <select name="menstrualLength" value={formData.menstrualLength} onChange={handleChange} required>
-                    <option value="">Select</option>
-                    <option value="1-2 ימים">1-2 ימים</option>
-                    <option value="3-4 ימים">3-4 ימים</option>
-                    <option value="4-5 ימים">4-5 ימים</option>
-                    <option value="6 ימים ומעלה">6 ימים ומעלה</option>
-                </select><br/><br/>
-
-                {/* Pain During Menstruation */}
                 <div className="form-group">
-                <label >האם את סובלת מכאבים בזמן מחזור?</label><br/>
-                <input type="radio" name="painDuringMenstruation" value="כן" onChange={handleChange} required/> כן
-                <input type="radio" name="painDuringMenstruation" value="לא" onChange={handleChange}/> לא<br/><br/>
+                    <label className="form-label">גיל הופעת וסת ראשונה </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="menstrualLength"
+                        value={formData.menstrualLength}
+                        onChange={handleChange}                  
+                        min="0" // Ensures only positive numbers are allowed
+                    />
                 </div>
-                {/* PMS Symptoms */}
-                <label>האם את סובלת מסמפטומים של תסמונת קדם וסתית (PMS)?</label><br/>
-                <select multiple name="pmsSymptoms" onChange={handleChange}>
-                    <option value="דכאון">דכאון</option>
-                    <option value="עצבנות">עצבנות</option>
-                    <option value="חרדה">חרדה</option>
-                    <option value="אקנה">אקנה</option>
-                    <option value="נדודי שינה">נדודי שינה</option>
-                    <option value="עייפות">עייפות</option>
-                    <option value="עצירות">עצירות</option>
-                    <option value="כאבי פרקים">כאבי פרקים"</option>
-                    <option value="כאבי שרירים">כאבי שרירים"</option>
-                    <option value="כאבי בטן">כאבי בטן"</option>
-                    <option value="רגישות בשדיים">רגישות בשדיים"</option>
-                    <option value="תנודות בחשק המיני">תנודות בחשק המיני</option>
-                    <option value="שינויים במצב הרוח">שינויים במצב הרוח</option>
-                </select><br/><br/>
 
-                {/* Children Count */}
-                <label>מספר ילדים</label>
-                <input type="number" name="childrenCount" value={formData.childrenCount}
-                       onChange={handleChange}/><br/><br/>
+                <div className="averageDuration">
+                    <label className="form-label">
+                        מה אורך וסת הממוצע שלך בימים?
+                    </label>
+                    <div className="slider-container">
+                        <input
+                            type="range"
+                            min="1"
+                            max="4"
+                            step="1"
+                            className="slider"
+                            id="durationSlider"
+                            name="durationSlider"
+                            onChange={handleChange}
+                        />
+                        <div className="slider-labels">
+                            <span>1-2</span>
+                            <span>3-4</span>
+                            <span>4-5</span>
+                            <span>שישה ימים ומעלה</span>
+                        </div>
+                    </div>
+                </div>
 
-                {/* Used Contraceptives */}
-                <label>האם סבלת מדכאון אחרי לידה?</label><br/>
-                <input type="radio" name="sufferAfterBirth" value="yes" onChange={handleChange} required/> כן
-                <input type="radio" name="sufferAfterBirth" value="no" onChange={handleChange}/> לא<br/><br/>
+                <div className="form-group radio-preferred">
+                    <label htmlFor="menstrualPain" className="form-label">
+                        האם את סובלת מכאבים בזמן מחזור?
+                    </label>
+                    <div className="form-check">
+                        <input type="radio" name="menstrualPain" value="כן" onChange={handleChange} />
+                        <label htmlFor="menstrualPain">כן</label>
+                    </div>
+                    <div className="form-check">
+                        <input type="radio" name="menstrualPain" value="לא" onChange={handleChange} />
+                        <label htmlFor="menstrualPain">לא</label>
+                    </div>
+                </div>
 
-                {/* Used Contraceptives */}
-                <label>האם את משתמשת באמצעי מניעה?</label><br/>
-                <input type="radio" name="usedContraceptives" value="yes" onChange={handleChange} required/> כן
-                <input type="radio" name="usedContraceptives" value="no" onChange={handleChange}/> לא<br/><br/>
+                <div className="form-group radio-preferred">
+                    <label htmlFor="pmsSymptoms" className="form-label">
+                        האם את סובלת מסמפטומים של תסמונת קדם וסתית PMS, באופן קבוע?
+                    </label>
+                    <div className="form-check">
+                        <input type="radio" name="pmsSymptoms" value="כן" onChange={handleChange} />
+                        <label htmlFor="pmsSymptoms">כן</label>
+                    </div>
+                    <div className="form-check">
+                        <input type="radio" name="pmsSymptoms" value="לא" onChange={handleChange} />
+                        <label htmlFor="pmsSymptoms">לא</label>
+                    </div>
+                </div>
 
-                {/* Conditional Questions for Contraceptive Usage */}
-                {showContraceptiveQuestions && (
-                    <>
-                        {/* Contraceptive Type */}
-                        <label>אם כן, איזה סוג אמצעי מניעה את משתמשת?</label>
-                        <select name="contraceptiveType" value={formData.contraceptiveType} onChange={handleChange}
-                                required>
-                            <option value="">Select</option>
-                            <option value="גלולות">גלולות</option>
-                            <option value="התקן הורמונלי">התקן הורמונלי</option>
-                            <option value="התקן לא הורמונלי">התקן לא הורמונלי</option>
-                        </select><br/><br/>
+                {formData.pmsSymptoms === 'כן' && (
+                <div className="form-group radio-preferred">
+                        <label htmlFor="additionalSymptoms" className="form-label">
+                            אילו תסמינים נוספים חווים בקשר לתסמונת קדם וסתית PMS?
+                        </label>
+                        {[
+                            "דכאון",
+                            "עצבנות",
+                            "חרדה",
+                            "אקנה",
+                            "נדודי שינה",
+                            "עייפות",
+                            "עצירות",
+                            "כאבי פרקים",
+                            "כאבי שרירים",
+                            "כאבי בטן",
+                            "רגישות בשדיים",
+                            "תנודות בחשק המיני",
+                            "שינויים במצב הרוח",
+                            "אחר- פרטי"
+                        ].map((symptom, index) => (
+                            <div key={index} className="form-check">
+                                <input
+                                    type="checkbox"
+                                    name="additionalSymptoms"
+                                    value={symptom}
+                                    onChange={handleCheckboxChange}
+                                    checked={selectedSymptoms.includes(symptom)}
+                                />
+                                <label htmlFor={symptom}>{symptom}</label>
+                            </div>
+                        ))}
+                    </div>
+                 )}
 
-                        {/* Age for Contraceptive Type */}
-                        {formData.contraceptiveType === 'גלולות' && (
-                            <>
-                                <label>אם גלולות, מאיזה גיל?</label>
-                                <input type="number" name="contraceptiveAge" value={formData.contraceptiveAge}
-                                       onChange={handleChange} required/><br/><br/>
-                            </>
-                        )}
+            
+            <div className="form-group radio-preferred">
+            <label htmlFor="additionalSymptoms" className="form-label">           
+                האם קיבלת מחזור בשנה האחרונה?                    
+            </label>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="hasMenstrualCycle"
+                        value="כן"
+                        onChange={handleRadioChange}
+                    /> כן
+                </div>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="hasMenstrualCycle"
+                        value="לא"
+                        onChange={handleRadioChange}
+                    /> לא
+                </div>
+            </div>
 
-                        {/* Age for Hormonal or Non-Hormonal IUD */}
-                        {(formData.contraceptiveType === 'התקן הורמונלי' || formData.contraceptiveType === 'התקן לא הורמונלי') && (
-                            <>
-                                <label>אם התקן הורמונלי/לא הורמונלי, מאיזה גיל?</label>
-                                <input type="number" name="hormonalAge" value={formData.hormonalAge}
-                                       onChange={handleChange} required/><br/><br/>
-                            </>
-                        )}
+            {hasMenstrualCycle === 'לא' && (
+                <div className="form-group">
+                    <label className="form-label">
+                        מתי הייתה גיל הופעת הוסת האחרונה שלך?
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        min = "0"
+                        value={lastMenstrualPeriod}
+                        onChange={handleLastMenstrualPeriodChange}
+                    />
+                </div>
+            )}
+
+
+            <div className="form-group radio-preferred">
+                <label htmlFor="pregnancyStatus" className="form-label">
+                    האם היית בהריון?
+                </label>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="pregnancyStatus"
+                        value="כן"
+                        onChange={handlePregnancyChange}
+                    /> כן
+                </div>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="pregnancyStatus"
+                        value="לא"
+                        onChange={handlePregnancyChange}
+                    /> לא
+                </div>
+            </div>
+
+            {hasBeenPregnant === 'כן' && (
+                <div className="form-group">
+                    <label className="form-label">
+                        צייני את מספר ההריונות שלך:
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        value={pregnancyCount}
+                        onChange={handlePregnancyCountChange}
+                        min="0" // Ensures only non-negative numbers
+                    />
+                </div>
+            )}
+
+
+            <div className="form-group">
+                <label className="form-label">
+                    צייני את מספר הילדים שלך:
+                </label>
+                <input
+                    type="number"
+                    className="form-control"
+                    value={numberOfChildren}
+                    onChange={handleChildrenCountChange}
+                    min="0" // Ensures only non-negative numbers
+                />
+            </div>
+
+            <div className="form-group radio-preferred">
+                <label htmlFor="postpartumDepression" className="form-label">
+                    האם סבלת מדכאון אחרי לידה?
+                </label>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="postpartumDepression"
+                        value="כן"
+                        onChange={(e) => handlePostpartumDepressionChange('suffered', e.target.value)}
+                    /> כן
+                </div>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="postpartumDepression"
+                        value="לא"
+                        onChange={(e) => handlePostpartumDepressionChange('suffered', e.target.value)}
+                    /> לא
+                </div>
+            </div>
+
+            {postpartumDepression.suffered === 'כן' && (
+                <>
+                    <div className="form-group radio-preferred">
+                        <label htmlFor="diagnosed" className="form-label">
+                            האם אובחנת?
+                        </label>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="diagnosed"
+                                value="כן"
+                                onChange={(e) => handlePostpartumDepressionChange('diagnosed', e.target.value)}
+                            /> כן
+                        </div>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="diagnosed"
+                                value="לא"
+                                onChange={(e) => handlePostpartumDepressionChange('diagnosed', e.target.value)}
+                            /> לא
+                        </div>
+                    </div>
+
+                    <div className="form-group radio-preferred">
+                        <label htmlFor="treated" className="form-label">
+                            האם טופלת?
+                        </label>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="treated"
+                                value="כן"
+                                onChange={(e) => handlePostpartumDepressionChange('treated', e.target.value)}
+                            /> כן
+                        </div>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="treated"
+                                value="לא"
+                                onChange={(e) => handlePostpartumDepressionChange('treated', e.target.value)}
+                            /> לא
+                        </div>
+                    </div>
+
+                    {postpartumDepression.treated === 'כן' && (
+                        <div className="form-group">
+                            <label className="form-label">
+                                כיצד טופלת?
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={postpartumDepression.treatmentMethod || ''}
+                                onChange={(e) => handlePostpartumDepressionChange('treatmentMethod', e.target.value)}
+                            />
+                        </div>
+                    )}
+
+                    {postpartumDepression.treated === 'כן' && (
+                    <div className="form-group radio-preferred">
+                        <label htmlFor="stillTreated" className="form-label">
+                            האם את עדיין מטופלת?
+                        </label>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="stillTreated"
+                                value="כן"
+                                onChange={(e) => handlePostpartumDepressionChange('stillTreated', e.target.value)}
+                            /> כן
+                        </div>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="stillTreated"
+                                value="לא"
+                                onChange={(e) => handlePostpartumDepressionChange('stillTreated', e.target.value)}
+                            /> לא
+                        </div>
+                    </div>
+                    )}
                     </>
-                )}
+            )}
 
-                <label>האם את מבקרת באופן קבוע אצל רופא נשים? כמה פעמים בשנה ? (לא כולל בזמן מעקב הריון/ פוריות)</label><br/>
-                <select multiple name="checkwomandoctor" onChange={handleChange}>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3-4">3-4</option>
-                    <option value="5">5</option>
-                    <option value="יותר מ6 פעמים">יותר מ6 פעמים</option>
-                </select><br/><br/>
+            <div className="form-group radio-preferred">
+            <label htmlFor="treated" className="form-label">
+                האם את משתמשת באמצעי מניעה?
+            </label>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="contraceptiveUsing"
+                        value="כן"
+                        onChange={(e) => handleContraceptiveChange('using', e.target.value)}
+                    /> כן
+                </div>
+                <div className="form-check">
+                    <input
+                        type="radio"
+                        name="contraceptiveUsing"
+                        value="לא"
+                        onChange={(e) => handleContraceptiveChange('using', e.target.value)}
+                    /> לא
+                </div>
+            </div>
+
+            {contraceptiveMethods.using === 'כן' && (
+                <div className="form-group">
+                    <label className="form-label">
+                        איזה סוג אמצעי מניעה את משתמשת?
+                    </label>
+                    <select
+                        className="form-control"
+                        value={contraceptiveMethods.type}
+                        onChange={(e) => handleContraceptiveChange('type', e.target.value)}
+                    >
+                        <option value="">בחר סוג</option>
+                        <option value="גלולות">גלולות</option>
+                        <option value="התקן הורמונלי">התקן הורמונלי</option>
+                        <option value="התקן לא הורמונלי">התקן לא הורמונלי</option>
+                        {/* Add more options as needed */}
+                    </select>
+                </div>
+            )}
+
+            {contraceptiveMethods.type === 'גלולות' && (
+                <div className="form-group">
+                    <label className="form-label">
+                        מאיזה גיל התחלת להשתמש בגלולות?
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        value={contraceptiveMethods.ageStarted}
+                        onChange={(e) => handleContraceptiveChange('ageStarted', e.target.value)}
+                        min="0" // Ensures only non-negative numbers
+                    />
+                </div>
+            )}
+
+            {(contraceptiveMethods.type === 'התקן הורמונלי' || contraceptiveMethods.type === 'התקן לא הורמונלי') && (
+                <div className="form-group">
+                    <label className="form-label">
+                        מאיזה גיל התחלת להשתמש בהתקן?
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        value={contraceptiveMethods.ageDeviceStarted}
+                        onChange={(e) => handleContraceptiveChange('ageDeviceStarted', e.target.value)}
+                        min="0" // Ensures only non-negative numbers
+                    />
+                </div>
+            )}
+
+        <div className="form-group radio-preferred">
+            <label htmlFor="isGlulotInPast" className="form-label">
+            האם השתמשת בעבר בגלולות למניעת הריון
+            </label>
+                <div className="form-check">
+                <input
+                            type="radio"
+                            name="isGlulotInPast"
+                            value="כן"
+                            onChange={handleGlulotInPastChange}
+                        /> כן
+                </div>
+                <div className="form-check">
+                <input
+                            type="radio"
+                            name="isGlulotInPast"
+                            value="לא"
+                            onChange={handleGlulotInPastChange}
+                        /> לא
+                </div>
+            </div>
+
+            {isGlulotInPast === 'כן' && (
+                <div className="form-group">
+                    <label className="form-label">
+                        מאיזה גיל התחלת להשתמש בגלולות?
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        value={contraceptiveMethods.ageStarted}
+                        onChange={(e) => handleContraceptiveChange('ageStarted', e.target.value)}
+                        min="0" // Ensures only non-negative numbers
+                    />
+                </div>
+            )}
+
+<div className="form-group radio-preferred">
+            <label htmlFor="isBikurKavua" className="form-label">
+            האם את מבקרת באופן קבוע אצל רופא נשים
+            </label>
+                <div className="form-check">
+                <input
+                            type="radio"
+                            name="isBikurKavua"
+                            value="כן"
+                            onChange={handleBikurKavua}
+                        /> כן
+                </div>
+                <div className="form-check">
+                <input
+                            type="radio"
+                            name="isBikurKavua"
+                            value="לא"
+                            onChange={handleBikurKavua}
+                        /> לא
+                </div>
+            </div>
+
+            {isBikurKavua === 'כן' && (
+                <div className="form-group radio-preferred">
+                    <label className="form-label">
+                    כמה פעמים בשנה לא כולל מעקב הריון/פוריות
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="annualVisits"
+                        value={formData.annualVisits}
+                        onChange={handleChange}
+                        min="0"
+                    />
+                </div>
+            )}
+
+<div className="form-group radio-preferred">
+    <label className="form-label">האם את מבקרת באופן קבוע אצל כירוגית שד?</label>
+    <div className="form-check">
+        <input type="radio" name="breastSurgeonVisits" value="כן" onChange={handleChange} />
+        <label>כן</label>
+    </div>
+    <div className="form-check">
+        <input type="radio" name="breastSurgeonVisits" value="לא" onChange={handleChange} />
+        <label>לא</label>
+    </div>
+    </div>
+
+    {formData.breastSurgeonVisits === 'כן' && (
+        <div className="form-group radio-preferred">
+            <label className="form-label">באיזו תדירות את מבקרת?</label>
+            <input
+                type="number"
+                className="form-control"
+                name="breastSurgeonVisitFrequency"
+                value={formData.breastSurgeonVisitFrequency}
+                onChange={handleChange}
+                min="0"
+            />
+        </div>
+    )}
+
+<div className="form-group radio-preferred">
+    <label className="form-label">האם יש היסטוריה של סרטן שד/שחלות במשפחה?</label>
+    <div className="form-check">
+        <input type="radio" name="familyBreastOvarianCancer" value="כן" onChange={handleChange} />
+        <label>כן</label>
+    </div>
+    <div className="form-check">
+        <input type="radio" name="familyBreastOvarianCancer" value="לא" onChange={handleChange} />
+        <label>לא</label>
+    </div>
+</div>
+
+<div className="form-group radio-preferred">
+    <label className="form-label">פרופיל הורמונלי תקין?</label>
+    <div className="form-check">
+        <input type="radio" name="hormonalProfile" value="נבדק ונמצא תקין" onChange={handleChange} />
+        <label>נבדק ונמצא תקין</label>
+    </div>
+    <div className="form-check">
+        <input type="radio" name="hormonalProfile" value="נבדק ונמצא כי________" onChange={handleChange} />
+        <label>:נבדק ונמצא כי</label>
+        <input 
+            type="text" 
+            name="hormonalProfileDetails" 
+            placeholder="הכנס פרטים נוספים" 
+            className="form-control" 
+            onChange={handleChange} 
+            disabled={!formData.hormonalProfile || formData.hormonalProfile !== 'נבדק ונמצא כי________'} 
+        />
+    </div>
+    <div className="form-check">
+        <input type="radio" name="hormonalProfile" value="לא נבדק" onChange={handleChange} />
+        <label>לא נבדק</label>
+    </div>
+</div>
 
 
-                {/* Hormonal Profile */}
-                <label>פרופיל הורמונלי תקין?</label><br/>
-                <input type="radio" name="hormonalProfile" value="כן" onChange={handleChange} required/> כן
-                <input type="radio" name="hormonalProfile" value="לא" onChange={handleChange}/> לא
-                <input type="radio" name="hormonalProfile" value="לא בדקתי" onChange={handleChange}/> לא בדקתי <br/><br/>
 
 
-                {/* Submit Button */}
-                <input type="submit" value="Submit"/><br/><br/>
+
             </form>
         </div>
-        </div>
     );
-
 }
 
 export default App;

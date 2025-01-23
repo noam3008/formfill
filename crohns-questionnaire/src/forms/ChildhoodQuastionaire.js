@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
+import { useEffect } from 'react';
 
 const ChildhoodQuestionnaire = () => {
     const [formData, setFormData] = useState({
@@ -34,6 +35,41 @@ const ChildhoodQuestionnaire = () => {
         additionalComments: '',
     });
 
+     useEffect(() => {
+        // Initialize formData with default or empty values when component mounts
+        setFormData({
+            pregnancyRisk: '',
+            birthType: '',
+            preterm: '',
+            feedingMethod: '',
+            isNative: '',
+            childhoodResidence: '',
+            hospitalization: '',
+            pets: '',
+            medicineUsageFrequency: '',
+            childhoodIllnesses: '',
+            hygieneAwareness: '',
+            foodSafetyAwareness: '',
+            sunExposureAwareness: '',
+            strictness: '',
+            parentingStyle: '',
+            involvement: '',
+            shouting: '',
+            silence: '',
+            punishment: '',
+            warmth: '',
+            physicalNeeds: '',
+            emotionalNeeds: '',
+            permissiveness: '',
+            touch: '',
+            activeParenting: '',
+            physicalPunishment: '',
+            childhoodDescription: '',
+            additionalComments: '',
+        });
+        window.scrollTo(0,0)
+      }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -46,7 +82,6 @@ const ChildhoodQuestionnaire = () => {
         e.preventDefault();
         console.log(formData); // Here you can handle form submission, like sending data to an API
     };
-    window.scrollTo(0,0);
 
 
   return (
@@ -77,7 +112,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div >
-                    <label className="form-label">האם נולדת פג, או סמוך לשבוע 40?</label>
+                    <label className="form-label">האם נולדת פג? (לפני שבוע 36)</label>
                     <select name="preterm" className="form-select" onChange={handleChange}>
                         <option value="">בחר</option>
                         <option value="כן">כן</option>
@@ -94,11 +129,55 @@ const ChildhoodQuestionnaire = () => {
                         <option value="לא יודע">לא יודע</option>
                     </select>
                 </div>
+                <br></br>
 
-                <div >
-                    <label className="form-label">האם אתה יליד הארץ? אם לא, באיזה גיל עלית ומהיכן?</label>
-                    <input type="text" name="isNative" className="form-control" value={formData.isNative} onChange={handleChange} />
+                <div className="form-group radio radio-preferred">
+                    <label className="form-label">האם אתה יליד הארץ</label>
+                    <div className="form-check-group">
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="nativeBorn"
+                                value="Yes"
+                                onChange={handleChange}
+                            />
+                            כן
+                        </div>
+                        <div className="form-check">
+                            <input
+                                type="radio"
+                                name="nativeBorn"
+                                value="No"
+                                onChange={handleChange}
+                            />
+                            לא
+                        </div>
+                    </div>
+
+                    {formData.nativeBorn === "No" && (
+                        <div className="conditional-inputs">
+                            <div className="form-group">
+                                <label className="form-label">באיזה גיל עלית</label>
+                                <input
+                                    type="number"
+                                    name="immigrationAge"
+                                    className="form-control"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">מהיכן</label>
+                                <input
+                                    type="text"
+                                    name="immigrationOrigin"
+                                    className="form-control"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
+
 
                 <div >
                     <label className="form-label">היכן גרת בילדותך (עד גיל 12)?</label>

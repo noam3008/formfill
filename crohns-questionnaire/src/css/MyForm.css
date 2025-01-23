@@ -63,6 +63,21 @@ body {
 
 }
 
+.pms-symptoms-container {
+    margin-top: 20px;
+}
+
+.pms-symptom-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.pms-symptom-item input {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 /* Submit button styling */
 .btn-primary {
     background-color: #007bff;

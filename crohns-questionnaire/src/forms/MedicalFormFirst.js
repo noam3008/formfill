@@ -9,6 +9,7 @@ const MedicalForm = () => {
   // State management for the form
   const [formData, setFormData] = useState({
     diagnosis: '',
+    workIssuesMentalFrequency : '',
     crohnAge: '',
     diagnosisAge: '',
     treatmentType: '',
@@ -57,6 +58,7 @@ const MedicalForm = () => {
       treatmentType: '',
       treatmentDuration: '',
       treatmentChanges: '',
+      workIssuesMentalFrequency : '',
       treatmentAdherence: '',
       backgroundDiseases: '',
       allergies: '',
@@ -98,11 +100,29 @@ const MedicalForm = () => {
     });
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Handle the file upload logic here (e.g., save to state or upload to the server)
+      console.log("Selected file:", file.name);
+    }
+  };
+
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
+    const workIssuesMentalFrequency = formData.workIssuesMentalFrequency;
     console.log(formData);
-    navigate("/healthlifestyleform")
+    if (formData.diseaseTrigger === 'טראומה') {
+      navigate('/ptsdquestionnaire'); // Redirect to trauma page if "טראומה" is selected
+    }
+    else if (workIssuesMentalFrequency >= 10 && workIssuesMentalFrequency <= 30) {
+      navigate('/depressionassessment');
+    }
+    else{
+
+        navigate("/healthlifestyleform")
+    }
     // Here you'd handle sending the formData to the backend (e.g., with axios)
   };
 
@@ -519,24 +539,23 @@ const MedicalForm = () => {
           />
         </div>
 
-        <div className="form-group">
-        <label htmlFor="diseaseTrigger" className="form-label">
-          האם התפרצות המחלה התרחשה בסמיכות להתפרצות מחלה אחרת/ בסמיכות לארוע משנה חיים/תאונה/ טראומה? אם כן פרט.י
-        </label>
-        <select
-          id="diseaseTrigger"
-          name="diseaseTrigger"
-          value={formData.diseaseTrigger}
-          onChange={handleChange}
-          className="form-select"
-        >
-          <option value="" disabled>בחר אפשרות</option>
-          <option value="מחלה אחרת">מחלה אחרת</option>
-          <option value="ארוע משנה חיים">ארוע משנה חיים</option>
-          <option value="תאונה">תאונה</option>
-          <option value="טראומה">טראומה</option>
-        </select>
-      </div> 
+        
+
+        <div className="form-group radio-preferred">
+          <label htmlFor="diseaseTrigger" className="form-label" >האם התפרצות המחלה התרחשה בסמיכות להתפרצות מחלה אחרת/ בסמיכות לארוע משנה חיים/תאונה/ טראומה ?</label>
+          <div className="form-check">
+              <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange}  /> התפרצות מחלה אחרת
+          </div>
+          <div className="form-check">
+              <input type="radio" name="diseaseTrigger" value="סמיכות לארוע משנה חיים" onChange={handleChange}  /> סמיכות לארוע משנה חיים
+          </div>
+          <div className="form-check">
+              <input type="radio" name="diseaseTrigger" value="תאונה" onChange={handleChange}  /> תאונה
+          </div>
+          <div className="form-check">
+              <input type="radio" name="diseaseTrigger" value="טראומה" onChange={handleChange}  /> טראומה
+          </div>
+        </div>
 
       {formData.diseaseTrigger && (
         <div className="form-group mt-3">
@@ -663,14 +682,14 @@ const MedicalForm = () => {
         <label htmlFor="visitYes">כן</label>
       </div>
 
-      <div className="form-check">
+     <div className="form-check">
         <input
           type="radio"
           id="visitNo"
-          name="dentistDoctorVisit"
+          name="pointsDoctorVisit"
           value="לא"
           onChange={handleChange}
-          checked={formData.dentistDoctorVisit === "לא"}
+          checked={formData.pointsDoctorVisit === "לא"}
         />
         <label htmlFor="visitNo">לא</label>
       </div>
@@ -703,7 +722,7 @@ const MedicalForm = () => {
       </div>
 
       <div className="form-group radio-preferred">
-          <label htmlFor="pointsDoctorVisit" className="form-label" >האם אתה מבקר באופן קבוע אבחון נקודות חן ?</label>
+          <label htmlFor="dentistDoctorVisit" className="form-label" >האם אתה מבצע באופן קבוע אבחון נקודות חן ?</label>
           <div className="form-check">
         <input
           type="radio"
@@ -740,52 +759,789 @@ const MedicalForm = () => {
         />
          
          <label htmlFor="visitOnce">  (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה </label>
-        {formData.pointsDoctorVisit === "once" && (
+        {formData.dentistDoctorVisit === "once" && (
           <input
           min = "0"
             type="number"
             className="form-control mt-2"
-            name="visitFrequencyPoints"
+            name="visitFrequency"
             placeholder="מספר חודשים"
-            value={formData.visitFrequencyPoints}
+            value={formData.visitFrequencyDentist}
             onChange={handleChange}
             style={{ width: "120px", display: "inline-block", marginLeft: "10px" }}
           />
         )}
       </div>
+      </div>
+      
+      <div className="form-group radio-preferred">
+      <label htmlFor="vaccinationStatus" className="form-label">
+         מלא מצב פנקס חיסונים
+        </label>
+        <select
+          id="vaccinationStatus"
+          name="vaccinationStatus"
+          value={formData.diseaseTrigger}
+          onChange={handleChange}
+          className="form-select"
+        >
+        <option value="" disabled>בחר מצב פנקס חיסונים</option> 
+        <option value="full">מלא</option>
+        <option value="comprehensive">מלא פרט לקורונה ו/או שפעת</option>
+        <option value="partial">חלקי</option>
+        <option value="not-vaccinated">לא מחוסן</option>
+        </select>
+        </div>
+
+        <div className="form-group radio-preferred">
+          <label htmlFor="takeMedicen" className="form-label" >האם את.ה לוקח תרופות באופן קבוע </label>
+          <div className="form-check">
+              <input type="radio" name="takeMedicen" value="כן" onChange={handleChange}  /> כן
+          </div>
+          <div className="form-check">
+              <input type="radio" name="takeMedicen" value="לא" onChange={handleChange}  /> לא
+          </div>
+        </div>
+
+        {formData.takeMedicen === "כן" && (
+        <div className="form-group mt-3">
+          <label htmlFor="takeMedicenWhich" className="form-label">
+          אנא פרט בבקשה
+          </label>
+          <textarea
+            id="takeMedicenWhich"
+            name="takeMedicenWhich"
+            value={formData.takeMedicenWhich}
+            onChange={handleChange}
+            className="form-control"
+            placeholder=""
+          />
+        </div>
+      )}
+
+      <div className="form-group radio-preferred">
+          <label htmlFor="takeFood" className="form-label" >האם את.ה לוקח תוסף תזונה באופן קבוע </label>
+          <div className="form-check">
+              <input type="radio" name="takeFood" value="כן" onChange={handleChange}  /> כן
+          </div>
+          <div className="form-check">
+              <input type="radio" name="takeFood" value="לא" onChange={handleChange}  /> לא
+          </div>
+        </div>
+
+        {formData.takeFood === "כן" && (
+        <div className="form-group mt-3">
+          <label htmlFor="takeFoodWhich" className="form-label">
+          אנא פרט בבקשה
+          </label>
+          <textarea
+            id="takeFoodWhich"
+            name="takeFoodWhich"
+            value={formData.takeMedicenWhich}
+            onChange={handleChange}
+            className="form-control"
+            placeholder=""
+          />
+        </div>
+      )}
+      </div>
+
       
 
+      
+      <div className="form-group radio-preferred">
+          <label htmlFor="otherDeases" className="form-label" >האם אתה נמצא במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?</label>
+          <div className="form-check">
+              <input type="radio" name="otherDeases" value="כן" onChange={handleChange}  /> כן
+          </div>
+          <div className="form-check">
+              <input type="radio" name="otherDeases" value="לא" onChange={handleChange}  /> לא
+          </div>
+        </div>
 
-      </div>
-            {/* Pain and Symptoms */}
-            <div >
-              <label htmlFor="headacheFrequency" className="form-label">תדירות כאבי ראש (Headache Frequency)</label>
+        {formData.otherDeases === "כן" && (
+        <div className="form-group mt-3">
+          <label htmlFor="otherDeasesWhich" className="form-label">
+          אנא פרט בבקשה
+          </label>
+          <textarea
+            id="otherDeasesWhich"
+            name="otherDeasesWhich"
+            value={formData.takeMedicenWhich}
+            onChange={handleChange}
+            className="form-control"
+            placeholder=""
+          />
+        </div>
+      )}
+
+      <div className="medicationWithoutDoctorAmount">
+          <label className="form-label">
+          באיזו תדירות נוטל תרופות ללא מרשם
+          </label>
+          <div className="slider-container">
               <input
-                  type="text"
-                  className="form-control"
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="medicationWithoutDoctorAmount"
+                  name="medicationWithoutDoctorAmount"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>1 - בכלל לא</span>
+                  <span>פעם בחודש</span>
+                  <span>פעם בשבוע</span>
+                  <span>פעם ביומיים</span>
+                  <span>פעם ביום</span>
+              </div>
+          </div>
+      </div>
+
+      <div className="form-group  radio-preferred">
+          <label htmlFor="bloodType"  className="form-label">סוג דם</label>
+          <div className="form-check">
+              <input type="radio" name="bloodType" value="A" onChange={handleChange}  /> A
+          </div>
+          <div className="form-check">
+              <input type="radio" name="bloodType" value="B" onChange={handleChange}  /> B
+          </div>
+          <div className="form-check">
+              <input type="radio" name="bloodType" value="AB" onChange={handleChange}  /> AB
+          </div>
+          <div className="form-check">
+              <input type="radio" name="bloodType" value="O" onChange={handleChange}  /> O
+          </div>
+          <div className="form-check">
+              <input type="radio" name="bloodType" value="לא יודע" onChange={handleChange}  /> לא יודע
+          </div>
+        </div>
+      <div >
+
+
+      <div className="headacheFrequency">
+          <label className="form-label">
+          תדירות כאבי ראש
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  className="slider"
                   id="headacheFrequency"
                   name="headacheFrequency"
-                  value={formData.headacheFrequency}
                   onChange={handleChange}
               />
+              <div className="slider-labels">
+                  <span>לעתים נדירות</span>
+                  <span>לפעמים</span>
+                  <span>לעתים תכופות</span>
+                  <span>כל יום</span>
+              </div>
+          </div>
+      </div>
+
+      <div className="abdominalPainFrequency">
+          <label className="form-label">
+          תדירות כאבי בטן
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  className="slider"
+                  id="abdominalPainFrequency"
+                  name="abdominalPainFrequency"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>לעתים נדירות</span>
+                  <span>לפעמים</span>
+                  <span>לעתים תכופות</span>
+                  <span>כל יום</span>
+              </div>
+          </div>
+      </div>
+      <div className="backPainFrequency">
+          <label className="form-label">
+          תדירות כאבי גב
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  className="slider"
+                  id="backPainFrequency"
+                  name="backPainFrequency"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>לעתים נדירות</span>
+                  <span>לפעמים</span>
+                  <span>לעתים תכופות</span>
+                  <span>כל יום</span>
+              </div>
+          </div>
+      </div>
+
+      <div className="jointsPainFrequency">
+          <label className="form-label">
+          תדירות כאבי מפרקים
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  className="slider"
+                  id="jointsPainFrequency"
+                  name="jointsPainFrequency"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>לעתים נדירות</span>
+                  <span>לפעמים</span>
+                  <span>לעתים תכופות</span>
+                  <span>כל יום</span>
+              </div>
+          </div>
+      </div>
+
+      <div className="form-group radio-preferred">
+          <label htmlFor="cronicDeseas" className="form-label" >האם אתה סובל מכאב כרוני כלשהו?</label>
+          <div className="form-check">
+              <input type="radio" name="cronicDeseas" value="כן" onChange={handleChange}  /> כן
+          </div>
+          <div className="form-check">
+              <input type="radio" name="cronicDeseas" value="לא" onChange={handleChange}  /> לא
+          </div>
+        </div>
+
+        {formData.cronicDeseas === "כן" && (
+        <div className="form-group mt-3">
+          <label htmlFor="cronicDeasesDetails" className="form-label">
+          אנא פרט בבקשה
+          </label>
+          <textarea
+            id="cronicDeasesDetails"
+            name="cronicDeasesDetails"
+            value={formData.takeMedicenWhich}
+            onChange={handleChange}
+            className="form-control"
+            placeholder=""
+          />
+        </div>
+      )}
+
+<div className="isMouthAftha">
+          <label className="form-label">
+          האם אתה סובל מכיבים בפה (אפטות)
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  className="slider"
+                  id="isMouthAftha"
+                  name="isMouthAftha"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>אף פעם</span>
+                  <span>לעתים נדירות</span>
+                  <span>לפעמים</span>
+                  <span>לעתים תכופות</span>
+              </div>
+          </div>
+      </div>
+
+
+      <div className="form-group radio-preferred">
+          <label htmlFor="wormsSuffer" className="form-label" >האם סבלת אי פעם מתולעי מעיים ?</label>
+          <div className="form-check">
+        <input
+          type="radio"
+          id="visitYes"
+          name="wormsSuffer"
+          value="כן"
+          onChange={handleChange}
+          checked={formData.wormsSuffer === "כן"}
+        />
+        <label htmlFor="visitYes">כן</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNo"
+          name="wormsSuffer"
+          value="לא"
+          onChange={handleChange}
+          checked={formData.wormsSuffer === "לא"}
+        />
+        <label htmlFor="visitNo">לא</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNotKnoen"
+          name="wormsSuffer"
+          value=" לא יודע"
+          onChange={handleChange}
+          checked={formData.wormsSuffer === " לא יודע"}
+        />
+        <label htmlFor="visitNo">לא יודע</label>
+      </div>
+      </div>
+
+      <div className="form-group radio-preferred">
+          <label htmlFor="otherInsectsSuffer" className="form-label" >האם סבלת אי פעם מטפילים אחרים ?</label>
+          <div className="form-check">
+        <input
+          type="radio"
+          id="visitYes"
+          name="otherInsectsSuffer"
+          value="כן"
+          onChange={handleChange}
+          checked={formData.otherInsectsSuffer === "כן"}
+        />
+        <label htmlFor="visitYes">כן</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNo"
+          name="otherInsectsSuffer"
+          value="לא"
+          onChange={handleChange}
+          checked={formData.otherInsectsSuffer === "לא"}
+        />
+        <label htmlFor="visitNo">לא</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNotKnoen"
+          name="otherInsectsSuffer"
+          value=" לא יודע"
+          onChange={handleChange}
+          checked={formData.otherInsectsSuffer === " לא יודע"}
+        />
+        <label htmlFor="visitNo">לא יודע</label>
+      </div>
+      </div>
+
+      <div className="selfConfidence">
+          <label className="form-label">
+          האם המחלה השפיעה על הבטחון העצמי שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="selfConfidence"
+                  name="selfConfidence"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="socialLife">
+          <label className="form-label">
+          האם המחלה השפיעה על חיי החברה שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="socialLife"
+                  name="socialLife"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="mood">
+          <label className="form-label">
+          האם המחלה השפיעה על מצב הרוח שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="mood"
+                  name="mood"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="workAfterIll">
+          <label className="form-label">
+          האם המחלה השפיעה על התעסוקה שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="workAfterIll"
+                  name="workAfterIll"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="relationship">
+          <label className="form-label">
+          האם המחלה השפיעה על הזוגיות שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="relationship"
+                  name="relationship"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="parentsAttidude">
+          <label className="form-label">
+          האם המחלה השפיעה על היחס שלך להורים?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="parentsAttidude"
+                  name="parentsAttidude"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="outsideActivity">
+          <label className="form-label">
+          האם המחלה השפיעה על הפעילות הגופנית שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="outsideActivity"
+                  name="outsideActivity"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      
+      <div className="selfEsteem">
+          <label className="form-label">
+          האם המחלה השפיעה על הערכה העצמית שלך?
+          </label>
+          <div className="slider-container">
+              <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  className="slider"
+                  id="selfEsteem"
+                  name="selfEsteem"
+                  onChange={handleChange}
+              />
+              <div className="slider-labels">
+                  <span>השתנה לרעה</span>
+                  <span>השתנה מעט לרעה</span>
+                  <span>לא השתנה</span>
+                  <span>השתנה מעט לטובה</span>
+                  <span>השתנה לטובה</span>
+              </div>
+          </div>
+      </div>
+
+      <div className="form-group">
+      <label htmlFor="workIssuesFrequency" className="form-label">
+        בחודש האחרון באיזו תדירות היו לך בעיות לבצע עבודתך (/לימודים) בעקבות בריאותך הפיזית (0-30 יום)
+      </label>
+      <input
+        type="number"
+        className="form-control"
+        id="workIssuesFrequency"
+        name="workIssuesFrequency"
+        min="0"
+        max="30"
+        value={formData.workIssuesFrequency}
+        onChange={handleChange}
+      />
+    </div>
+
+      <div className="form-group">
+        <label htmlFor="workIssuesMentalFrequency" className="form-label">
+          בחודש האחרון באיזו תדירות היו לך בעיות לבצע עבודתך (/לימודים) בעקבות בריאותך הנפשית (0-30 יום)
+        </label>
+        <input
+          type="number"
+          className="form-control"
+          id="workIssuesMentalFrequency"
+          name="workIssuesMentalFrequency"
+          min="0"
+          max="30"
+          value={formData.workIssuesMentalFrequency}
+          onChange={(e) => {
+            const value = Math.max(0, Math.min(30, Number(e.target.value))); // Ensure value is between 0-30
+            handleChange({ target: { name: e.target.name, value } });
+          }}
+        />
+      </div>
+
+
+
+            {/* Treatment Information */}
+            <div className="form-group radio-preferred">
+              <label htmlFor="isPshycologicalTreatment" className="form-label" >האם עברת בעבר או בהווה טיפול פסיכולוגי? </label>
+              <div className="form-check">
+                  <input type="radio" name="isPshycologicalTreatment" value="כן" onChange={handleChange}  /> כן
+              </div>
+              <div className="form-check">
+                  <input type="radio" name="isPshycologicalTreatment" value="לא" onChange={handleChange}  /> לא
+              </div>
             </div>
 
-            <div >
-              <label htmlFor="abdominalPainFrequency" className="form-label">תדירות כאבי בטן (Abdominal Pain
-                Frequency)</label>
+
+        {formData.isPshycologicalTreatment === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentAge" className="form-label">באיזה גיל</label>
+                      <input
+                          type="number"
+                          min="0"
+                          className="form-control"
+                          id="treatmentAge"
+                          name="treatmentAge"
+                          value={formData.treatmentAge}
+                          onChange={handleChange}
+                      />
+                    </div>
+        )}
+ {formData.isPshycologicalTreatment === 'כן' && (
+            <div>
+              <label htmlFor="treatmentReason" className="form-label">מה הייתה הסיבה לפניה לטיפול</label>
               <input
                   type="text"
                   className="form-control"
-                  id="abdominalPainFrequency"
-                  name="abdominalPainFrequency"
-                  value={formData.abdominalPainFrequency}
+                  id="treatmentReason"
+                  name="treatmentReason"
+                  value={formData.treatmentReason}
+                  onChange={handleChange}
+              />
+            </div>
+             )}
+
+{formData.isPshycologicalTreatment === 'כן' && (
+            <div>
+              <label htmlFor="treatmentConnection" className="form-label">אם ראיתי קשר בין מצב המחלה לבין הטיפול הרגשי?</label>
+              <input
+                  type="text"
+                  className="form-control"
+                  id="treatmentConnection"
+                  name="treatmentConnection"
+                  value={formData.treatmentConnection}
+                  onChange={handleChange}
+              />
+            </div>
+             )}
+
+{formData.isPshycologicalTreatment === 'כן' && (
+            <div>
+              <label htmlFor="treatmentHelpMental" className="form-label">האם הטיפול סייע למצב הנפשי?</label>
+              <input
+                  type="text"
+                  className="form-control"
+                  id="treatmentHelpMental"
+                  name="treatmentHelpMental"
+                  value={formData.treatmentHelpMental}
+                  onChange={handleChange}
+              />
+            </div>
+             )}
+
+{formData.isPshycologicalTreatment === 'כן' && (
+            <div>
+              <label htmlFor="treatmentHelpIll" className="form-label">האם היה שינוי במצב המחלה בעקבות הטיפול?</label>
+              <input
+                  type="text"
+                  className="form-control"
+                  id="treatmentHelpIll"
+                  name="treatmentHelpIll"
+                  value={formData.treatmentHelpIll}
+                  onChange={handleChange}
+              />
+            </div>
+             )}
+
+                <div className="form-group">
+                    <label className="form-label">מתן צואה ברמיסיה - מספר פעמים ביום </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="rimisia"
+                        value={formData.rimisia}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">מתן צואה בזמן התקף - מספר פעמים ביום </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="poopDuringSuffer"
+                        value={formData.poopDuringSuffer}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">מתן שתן - מספר פעמים ביום בממוצע </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="averagePiss"
+                        value={formData.averagePiss}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
+
+                <div>
+              <label htmlFor="extraDetails" className="form-label">משהו נוסף שתרצה שנדע?</label>
+              <input
+                  type="text"
+                  className="form-control"
+                  id="extraDetails"
+                  name="extraDetails"
+                  value={formData.extraDetails}
                   onChange={handleChange}
               />
             </div>
 
-            {/* You can continue adding more questions following the same structure */}
+            <div className="form-group">
+              <label htmlFor="bloodTestAttachment" className="form-label">
+                אנא צרף בדיקת דם כללית מהשנה האחרונה - הבדיקות הנדרשות: ספירת דם, כימיה בדם
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="bloodTestAttachment"
+                name="bloodTestAttachment"
+                onChange={handleFileChange}
+                accept=".pdf,.jpg,.png,.doc,.docx"
+              />
+              <small className="form-text text-muted">
+              PDF, JPG, PNG, DOC, או DOCX ניתן להעלות קבצים בפורמטים  .
+              </small>
+            </div>
+                  
 
-          </div>
+    </div>
 
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>
