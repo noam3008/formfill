@@ -210,3 +210,84 @@ body {
     height: 8px;
     background: #333;
 }
+
+.acceptance-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9; /* Soft background */
+    padding: 20px;
+  }
+  
+  .acceptance-form-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    direction: rtl; /* Ensure all text is right-to-left */
+  }
+  
+  h2 {
+    text-align: right; /* Align the header to the right */
+    font-size: 1.8em;
+    color: #333;
+  }
+  
+  p {
+    font-size: 1.1em;
+    color: #444;
+    text-align: right; /* Align paragraph text to the right */
+    margin: 10px 0;
+  }
+  
+  form {
+    margin-top: 20px;
+  }
+  
+  .acceptance-form-group {
+    display: flex;
+    justify-content: flex-end; /* Align the entire group to the right */
+    align-items: center;
+    margin-bottom: 20px;
+    direction: rtl; /* Proper text flow for Hebrew */
+    text-align:right
+}
+
+.acceptance-form-group input[type="checkbox"] {
+    margin: 0;
+    margin-right: 10px; /* Add space between the checkbox and the label */
+    width: auto; /* Keep the checkbox size natural */
+    text-align: right;  /* Align text to the right */
+    direction: rtl;  /* Sets text direction to right-to-left */
+}
+
+.aggrementLabel{
+    text-align: right;
+    background-color: #007bff;
+    text-align: right;  /* Align text to the right */
+    direction: rtl;  /* Sets text direction to right-to-left */
+}
+  
+  button.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.2em;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  
+  button.submit-button:disabled {
+    background-color: #ccc;
+  }
+  
+  button.submit-button:hover:not(:disabled) {
+    opacity: 1;
+  }

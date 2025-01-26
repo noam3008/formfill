@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
+import { useEffect } from 'react';
+
 
 const foodItems = [
-    { label: 'מספר ממוצע של ארוחות ביום', name: 'averageMeals', type: 'select', options: ['1', '2', '3', '4', '5', '6', '>6'] },
-    { label: 'כמות אכילת האוכל החריף', name: 'spicyFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת הבשר', name: 'meatFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת העוף', name: 'chickenFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת הירקות', name: 'vegetableFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת הדגים', name: 'fishFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת הפירות', name: 'fruitFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת מנת האגוזים', name: 'nutsFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת הקטניות', name: 'legumesFood', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת החטיפים המלוחים', name: 'saltySnacks', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    { label: 'כמות אכילת החטיפים המתוקים', name: 'sweetSnacks', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    {label: 'מינון שתיית קפה / תה', name: 'drinknigCoffeeOrTea', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-    {label: 'מינון שתיית כוסות מים', name: 'drinknigGlassOfWater', fields: ['פעמים ביום', 'פעמים בשבוע'] },
-];
-
+    { label: 'כמות אכילת האוכל החריף', name: 'spicyFood' },
+    { label: 'כמות אכילת הבשר', name: 'meatFood' },
+    { label: 'כמות אכילת העוף', name: 'chickenFood' },
+    { label: 'כמות אכילת הירקות', name: 'vegetableFood' },
+    { label: 'כמות אכילת הדגים', name: 'fishFood' },
+    { label: 'כמות אכילת הפירות', name: 'fruitFood' },
+    { label: 'כמות אכילת מנת האגוזים', name: 'nutsFood' },
+    { label: 'כמות אכילת הקטניות', name: 'legumesFood' },
+    { label: 'כמות אכילת החטיפים המלוחים', name: 'saltySnacks' },
+    { label: 'כמות אכילת החטיפים המתוקים', name: 'sweetSnacks' },
+    { label: 'מינון שתיית קפה / תה', name: 'drinkingCoffeeOrTea' },
+    { label: 'מינון שתיית כוסות מים', name: 'drinkingGlassOfWater' },
+  ];
 const HealthLifestyleForm = () => {
+  const location = useLocation();
+  const { preferredLanguage } = location.state || {};
+
       const [formData, setFormData] = useState({
         isSmokingNow: '',
         smokingNowNumber : '',
@@ -67,6 +70,31 @@ const HealthLifestyleForm = () => {
         urinationFrequency: ''
     });
 
+    
+      useEffect(() => {
+        window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+      }, []); // Empty dependency array to ensure it runs only once when the component mounts
+    
+
+    const [timePeriod, setTimePeriod] = useState("week"); // Default is 'week'
+    const [answers, setAnswers] = useState({}); // Store the answers dynamically
+
+    const handleTimePeriodChange = (e) => {
+        setTimePeriod(e.target.value); // Update the selected time period
+        setAnswers({}); // Reset answers when the time period changes
+      };
+    
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setAnswers((prev) => ({
+          ...prev,
+          [name]: Math.max(0, Math.min(10, parseInt(value, 10))), // Clamp value between 0 and 10
+        }));
+      };
+    
+    
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -111,13 +139,13 @@ const HealthLifestyleForm = () => {
   };
 
 
-      const navigate = useNavigate();
+    const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic
     console.log(formData);
-    navigate("/childhoodquastionaire")
+    navigate("/mspssquastionaire", { state: { preferredLanguage: formData.preferredLanguage } });
   };
 
 
@@ -127,7 +155,11 @@ const HealthLifestyleForm = () => {
         <form onSubmit={handleSubmit}>
 
           <div className="form-group radio-preferred">
-          <label htmlFor="isSmokingNow" className="form-label" > האם אתה מעשן כעת ?</label>
+          <label htmlFor="isSmokingNow" className="form-label" > 
+          {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה מעשן כעת ?' 
+                : '  האם את מעשנת כעת ?'}
+           </label>
           <div className="form-check">
               <input type="radio" name="isSmokingNow" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -139,14 +171,23 @@ const HealthLifestyleForm = () => {
 
         {formData.isSmokingNow === 'כן' && (
           <div className="form-group">
-            <label htmlFor="smokingNowNumber"> פרט את מספר הסיגריות ביום</label>
+            <label htmlFor="smokingNowNumber"> 
+            {preferredLanguage === 'לשון זכר' 
+                ? '   פרט את מספר הסיגריות ביום' 
+                : '   פרטי את מספר הסיגריות ביום'}
+               </label>
             <input type="number" min ="0" name="smokingNowNumber" id="smokingNowNumber" className="form-control" value={formData.smokingNowNumber} onChange={handleChange} />
           </div>
         )}
 
         {formData.isSmokingNow === 'כן' && (
             <div className="form-group radio-preferred">
-                <label htmlFor="smokingPeriod" className="form-label" >כמה שנים אתה מגדיר את עצמך מעשן (אל תספור תקופות בהן לא עישנת)?</label>
+                <label htmlFor="smokingPeriod" className="form-label" >
+                {preferredLanguage === 'לשון זכר' 
+                ? '  כמה שנים אתה מגדיר את עצמך מעשן (אל תספור תקופות בהן לא עישנת)?' 
+                : '   כמה שנים את מגדירה את עצמך מעשנת (אל תספרי תקופות בהן לא עישנת)?'}
+                   
+                    </label>
                 <div className="form-check">
                     <input type="radio" name="smokingPeriod" value="0-1" onChange={handleChange}  /> 0-1
                 </div>
@@ -177,14 +218,24 @@ const HealthLifestyleForm = () => {
 
         {formData.isSmokingPast === 'כן' && (
           <div className="form-group">
-            <label htmlFor="smokingPastNumber"> פרט את מספר הסיגריות ביום בתקופה בה עישנת</label>
+            <label htmlFor="smokingPastNumber"> 
+            {preferredLanguage === 'לשון זכר' 
+                ? '    פרט את מספר הסיגריות ביום בתקופה בה עישנת'
+                : '   פרטי את מספר הסיגריות ביום בתקופה בה עישנת'}
+                
+              </label>
             <input type="number" min ="0" name="smokingPastNumber" id="smokingPastNumber" className="form-control" value={formData.smokingPastNumber} onChange={handleChange} />
           </div>
         )}
 
         {formData.isSmokingPast === 'כן' && (
             <div className="form-group radio-preferred">
-                <label htmlFor="pastsmokingPeriod" className="form-label" >כמה שנים עישנת במהלך חייך (אל תספור תקופות בהן לא עישנת)?</label>
+                <label htmlFor="pastsmokingPeriod" className="form-label" >
+                {preferredLanguage === 'לשון זכר' 
+                ? '   כמה שנים עישנת במהלך חייך (אל תספור תקופות בהן לא עישנת)?'
+                : '  כמה שנים עישנת במהלך חייך (אל תספרי תקופות בהן לא עישנת)?'}
+                    
+                   </label>
                 <div className="form-check">
                     <input type="radio" name="pastsmokingPeriod" value="0-1" onChange={handleChange}  /> 0-1
                 </div>
@@ -202,7 +253,12 @@ const HealthLifestyleForm = () => {
 
 
         <div className="form-group radio-preferred">
-            <label htmlFor="drugUse" className="form-label" >האם אתה צורך היום או בעבר סמים  ?</label>
+            <label htmlFor="drugUse" className="form-label" >
+            {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה צורך היום או בעבר סמים  ?'
+                : '   האם את צורכת היום או בעבר סמים  ?'}
+                
+               </label>
             <div className="form-check">
                 <input type="radio" name="drugUse" value="כן" onChange={handleChange}  /> כן
             </div>
@@ -220,7 +276,12 @@ const HealthLifestyleForm = () => {
         )}
         
         <div className="form-group radio-preferred">
-            <label htmlFor="AlcoholUse" className="form-label" >האם אתה שותה אלכוהול  ?</label>
+            <label htmlFor="AlcoholUse" className="form-label" >
+            {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה שותה אלכוהול  ?'
+                : '    האם את שותה אלכוהול  ?'}
+                
+               </label>
             <div className="form-check">
                 <input type="radio" name="AlcoholUse" value="כן" onChange={handleChange}  /> כן
             </div>
@@ -232,7 +293,12 @@ const HealthLifestyleForm = () => {
 
         {formData.AlcoholUse === 'כן' && (
           <div className="form-group">
-            <label htmlFor="AlcoholAmount">פרט כמה מנות אלכוהול בשבוע ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה</label>
+            <label htmlFor="AlcoholAmount">
+            {preferredLanguage === 'לשון זכר' 
+                ? ' פרט כמה מנות אלכוהול בשבוע ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'
+                : '  פרטי כמה מנות אלכוהול בשבוע ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'}
+                
+               </label>
             <input type="number" min ="0" name="AlcoholAmount" id="AlcoholAmount" className="form-control" value={formData.AlcoholAmount} onChange={handleChange} />
           </div>
         )}
@@ -240,7 +306,10 @@ const HealthLifestyleForm = () => {
 
         <div className="energyLevel">
                 <label className="form-label">
-                 הגדר את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייף מאוד - 5 מאוד אנרגטי</label>
+                {preferredLanguage === 'לשון זכר' 
+                ? ' הגדר את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייף מאוד - 5 מאוד אנרגטי'
+                : ' הגדירי את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייפה מאוד - 5 מאוד אנרגטית?'}
+                 </label>
                 <div className="slider-container">
                     <input
                         type="range"
@@ -270,7 +339,11 @@ const HealthLifestyleForm = () => {
 
         <div className="appetite">
                 <label className="form-label">
-                 הגדר את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייף מאוד - 5 מאוד אנרגטי</label>
+
+                {preferredLanguage === 'לשון זכר' 
+                ? '? איך תתאר את רמת התאבון שלך'
+                : 'איך תתארי את מצב התאבון שלך ? '}
+                </label>
                 <div className="slider-container">
                     <input
                         type="range"
@@ -291,7 +364,12 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group radio-preferred">
-            <label htmlFor="exerciseFrequency" className="form-label" >האם אתה נהנה מפעילות ספורטיבית  ?</label>
+            <label htmlFor="exerciseFrequency" className="form-label" >
+            {preferredLanguage === 'לשון זכר' 
+                ? ' האם אתה נהנה מפעילות ספורטיבית ?' 
+                : ' האם את נהנית מפעילות ספורטיבית  ?'}
+                
+               </label>
             <div className="form-check">
                 <input type="radio" name="exerciseFrequency" value="כן" onChange={handleChange}  /> כן
             </div>
@@ -301,13 +379,20 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group">
-            <label htmlFor="stepsPerDay">? הערכה - כמה צעדים אתה צועד ביום ממוצע </label>
+            <label htmlFor="stepsPerDay">
+            {preferredLanguage === 'לשון זכר' 
+                ? '? הערכה - כמה צעדים אתה צועד ביום ממוצע ' 
+                : ' ? הערכה - כמה צעדים את צועדת ביום ממוצע '}
+                </label>
             <input type="number" min ="0" name="stepsPerDay" id="stepsPerDay" className="form-control" value={formData.stepsPerDay} onChange={handleChange} />
         </div>
 
         <div className="form-group  radio-preferred">
             <label htmlFor="mainConcern" className="form-label">
-                מה לדעתך הדאגה המרכזית בחייך בחודש האחרון?
+            {preferredLanguage === 'לשון זכר' 
+                ? '      מה הבעיה המרכזית בחייך ? בחר' 
+                : '       מה הבעיה המרכזית בחייך ? בחרי'}
+          
             </label>
             <div className="form-check">
                 <input
@@ -431,7 +516,10 @@ const HealthLifestyleForm = () => {
 
                 <div className="form-group radio-preferred">
                     <label htmlFor="wakingUpAtNight" className="form-label">
-                        האם את.ה מתעורר תדיר בלילה?
+                    {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה מתעורר תדיר בלילה?' 
+                : ' האם את מתעוררת תדיר בלילה?'}
+                      
                     </label>
                     <div className="form-check">
                         <input
@@ -453,7 +541,10 @@ const HealthLifestyleForm = () => {
                     {formData.wakingUpAtNight === "כן" && (
                         <div className="form-group">
                         <label htmlFor="wakingUpFrequency" className="form-label">
-                            אם כן אנא ציינו מספר פעמים בלילה:
+                        {preferredLanguage === 'לשון זכר' 
+                ? ' אנא ציין מספר פעמים בלילה:' 
+                : 'אנא צייני מספר פעמים בלילה:'}
+                             
                         </label>
                         <input
                             type="number"
@@ -470,7 +561,10 @@ const HealthLifestyleForm = () => {
 
                     <div className="form-group radio-preferred">
                         <label htmlFor="vacationFlights" className="form-label">
-                            כמה פעמים בשנה את.ה טס.ה לחו"ל לחופש
+                        {preferredLanguage === 'לשון זכר' 
+                ? '   כמה פעמים בשנה אתה טס לחו"ל לחופש' 
+                : '  כמה פעמים בשנה את טסה לחו"ל לחופש'}
+                          
                         </label>
                         <div className="form-check">
                             <input type="radio" name="vacationFlights" value="0" onChange={handleChange} /> 0
@@ -491,7 +585,10 @@ const HealthLifestyleForm = () => {
 
                         <div className="form-group radio-preferred">
                         <label htmlFor="workFlights" className="form-label">
-                            כמה פעמים בשנה את.ה טס.ה לחו"ל לעבודה
+                        {preferredLanguage === 'לשון זכר' 
+                ? '   כמה פעמים בשנה אתה טס לחו"ל למטרת עבודה' 
+                : '  כמה פעמים בשנה את טסה לחו"ל למטרת עבודה'}
+                            
                         </label>
                         <div className="form-check">
                             <input type="radio" name="workFlights" value="0" onChange={handleChange} /> 0
@@ -512,7 +609,10 @@ const HealthLifestyleForm = () => {
 
                         <div className="form-group radio-preferred">
                         <label htmlFor="booksRead" className="form-label">
-                            כמה ספרים את.ה קורא בשנה
+                        {preferredLanguage === 'לשון זכר' 
+                ? '  כמה ספרים אתה קורא בשנה'
+                : '  כמה ספרים את קוראת בשנה'}
+                           
                         </label>
                         <div className="form-check">
                             <input type="radio" name="booksRead" value="0" onChange={handleChange} /> 0
@@ -536,7 +636,11 @@ const HealthLifestyleForm = () => {
 
             <div className="appetite">
                 <label className="form-label">
-                כמה פעמים אתה נפגש עם חברים ?</label>
+                {preferredLanguage === 'לשון זכר' 
+                ? '  כמה פעמים אתה נפגש עם חברים ?'
+                : '  כמה פעמים את נפגשת עם חברים '}
+                           
+               </label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -561,7 +665,10 @@ const HealthLifestyleForm = () => {
 
             <div className="form-group radio-preferred">
             <label className="form-label">
-                האם מתרגל מדיטציה/יוגה/ מיידפולנס באופן קבוע?
+            {preferredLanguage === 'לשון זכר' 
+                ? ' האם אתה מתרגל מדיטציה/יוגה/ מיידפולנס באופן קבוע?'
+                : '  האם את מתרגלת מדיטציה/יוגה/ מיידפולנס באופן קבוע?'}
+               
             </label>
             <div className="form-check-group">
                 <div className="form-check">
@@ -576,30 +683,91 @@ const HealthLifestyleForm = () => {
             </div>
         </div>
 
-        {foodItems.map(item => (
-            <div key={item.name} className="form-group  radio-preferred">
-                <label className="form-label">{item.label}</label>
-                {item.type === 'select' ? (
-                    <select name={item.name} onChange={handleChange} className="form-select">
-                        {item.options.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                        ))}
-                    </select>
-                ) : (
-                    <div className="form-input-group">
-                        {item.fields.map((field, index) => (
-                            <div key = {index}>
-                                <label>{field}</label>
-                            <input key={index} type="number" min="0" name={`${item.name}_${field}`} className="form-control" onChange={handleChange} />
-                        </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        ))}
+        <div className="form-group radio-preferred">
+        {preferredLanguage === 'לשון זכר' 
+                ? ' :בחר עבור איזה פרק זמן תרצה למלאות את שאלון הארוחות '
+                : '  :בחרי עבור איזה פרק זמן תרצה למלאות את שאלון הארוחות '}
+        <label></label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="timePeriod"
+              value="month"
+              checked={timePeriod === "month"}
+              onChange={handleTimePeriodChange}
+            />
+            חודש
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="timePeriod"
+              value="week"
+              checked={timePeriod === "week"}
+              onChange={handleTimePeriodChange}
+            />
+            שבוע
+          </label>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label>מספר ממוצע של ארוחות ביום</label>
+        <select
+          name="averageMeals"
+          onChange={handleInputChange}
+          value={answers.averageMeals || ""}
+          className="form-select"
+        >
+          <option value="">בחר</option>
+          {['1', '2', '3', '4', '5', '6', '>6'].map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {foodItems.map((item) => (
+            <div key={item.name} className="form-group">
+              <label>
+                {item.label} ({timePeriod === "week" ? "בשבוע" : "בחודש"})
+              </label>
+              {item.type === "select" ? (
+                <select
+                  name={item.name}
+                  onChange={handleInputChange}
+                  className="form-select"
+                >
+                  {item.options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="number"
+                  min="0"
+                  max="10"
+                  name={item.name}
+                  value={answers[item.name] || ""}
+                  onChange={handleInputChange}
+                  className="form-control"
+                />
+              )}
+              </div>
+      ))}
+
 
         <div className="form-group radio-preferred">
-            <label className="form-label">האם אתה אוכל גלוטן</label>
+            <label className="form-label">
+            {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה אוכל גלוטן?'
+                : '   האם את אוכלת גלוטן?'}
+                
+               </label>
             <div className="form-check">
                 <input type="radio" name="glutenIntake" value="כן" onChange={handleChange} /> כן
             </div>
@@ -622,7 +790,12 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group radio-preferred">
-            <label className="form-label">כמה פעמים בשבוע אתה אוכל דגנים (עם גלוטן)</label>
+            <label className="form-label">
+            {preferredLanguage === 'לשון זכר' 
+                ? '  כמה פעמים בשבוע אתה אוכל דגנים (עם גלוטן)'
+                : '   כמה פעמים בשבוע את אוכלת דגנים (עם גלוטן)'}
+                
+              </label>
             <div className="form-check">
                 <label className="form-label">מספר פעמים בשבוע:</label>
                 <input 
@@ -635,7 +808,12 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group radio-preferred">
-                <label className="form-label">איזה שמן אתה צורך בדר"כ? (ניתן לסמן יותר מאחד)</label>
+                <label className="form-label">
+                {preferredLanguage === 'לשון זכר' 
+                ? '  איזה שמן אתה צורך בדר"כ? (ניתן לסמן יותר מאחד)'
+                : '   איזה שמן את צורכת בדר"כ? (ניתן לסמן יותר מאחד)'}
+                    
+                   </label>
                 <div className="form-check-group">
                     <div className="form-check">
                         <input 
@@ -697,7 +875,11 @@ const HealthLifestyleForm = () => {
             </div>
 
             <div className="form-group  radio-preferred">
-            <label className="form-label">בחודש האחרון כמה פעמים בשבוע אתה שותה שתיה ממותקת?</label>
+            <label className="form-label">
+            {preferredLanguage === 'לשון זכר' 
+                ? ' בחודש האחרון כמה פעמים בשבוע אתה שותה שתיה ממותקת?'
+                : '  בחודש האחרון כמה פעמים בשבוע את שותה שתיה ממותקת?'}
+               </label>
             <div className="form-check">
                 <input type="number" name="drinkingSweetAmountPerWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />
             </div>
@@ -728,7 +910,10 @@ const HealthLifestyleForm = () => {
                     {formData.dietChange === "כן" && (
                         <div className="form-group">
                         <label htmlFor="dietChange" className="form-label">
-                           פרט בבקשה מה היו השינויים
+                        {preferredLanguage === 'לשון זכר' 
+                ? '       פרט בבקשה מה היו השינויים'
+                : '        פרטי בבקשה מה היו השינויים'}
+                    
                         </label>
                         <input
                             type="number"
@@ -745,7 +930,10 @@ const HealthLifestyleForm = () => {
 
                     <div className="form-group radio-preferred">
                         <label htmlFor="eatingOutFrequency" className="form-label">
-                            כמה פעמים בחודש את.ה אוכל בחוץ/ מזמין אוכל
+                        {preferredLanguage === 'לשון זכר' 
+                ? '         כמה פעמים בחודש אתה אוכל בחוץ/ מזמין אוכל'
+                : '         כמה פעמים בחודש את אוכלת בחוץ/ מזמין אוכל'}
+                         
                         </label>
                         <div className="form-check-group">
                             <div className="form-check">

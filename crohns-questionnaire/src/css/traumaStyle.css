@@ -5,35 +5,73 @@
     margin: auto; /* Centers the div horizontally */
     text-align: right; /* Ensures RTL alignment for Hebrew text */
   }
-  
+
   .slider-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* Align everything to the right */
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
   }
   
   .slider {
     width: 100%;
-    margin: 10px 0;
-    cursor: pointer; /* Indicate interactivity */
-    accent-color: #007bff; /* Optional: Set a custom slider color */
+    margin: 0;
+    appearance: none;
+    height: 10px;
+    border-radius: 5px;
+    background: #ccc;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
   }
   
   .slider-labels {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    font-size: 1rem; /* Slightly larger font for better readability */
-    font-weight: bold; /* Make the options stand out */
-    color: #333; /* Dark text for sharp contrast */
     margin-top: 5px;
   }
   
   .slider-labels span {
     text-align: center;
-    width: 20%; /* Equal spacing for labels */
-    margin: 0 2px; /* Add slight spacing between labels */
+    font-size: 0.9rem;
+    width: 25%; /* Ensures labels align proportionally */
   }
+
+  
+ .slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background: linear-gradient(
+        to right,
+        #ff4d4d 0%,
+        #ffa64d 25%,
+        #ffff4d 50%,
+        #a6ff4d 75%,
+        #4dff88 100%
+    );
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+}
   
   .slider-labels span:hover {
     color: #007bff; /* Highlight text on hover */

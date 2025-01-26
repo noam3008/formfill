@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
-import {useNavigate} from "react-router-dom";
+import {useNavigate,useLocation} from "react-router-dom";
 import { useEffect } from 'react';
 
 const PersonalForm = () => {
+  const location = useLocation();
+  const { preferredLanguage } = location.state || {};
+  
   const [formData, setFormData] = useState({
     maritalStatus: '',
     numberOfChildren: '',
@@ -34,6 +37,74 @@ const PersonalForm = () => {
     welfareTreatment: ''
   });
 
+   // Define options for "לשון זכר"
+   const maleDailyActivityOptions = [
+    { value: "יושב", label: "יושב" },
+    { value: "עומד", label: "עומד" },
+    { value: "נוהג", label: "נוהג" },
+    { value: "עבודה פיזית קלה", label: "עבודה פיזית קלה" },
+    { value: "עבודה פיזית מאומצת", label: "עבודה פיזית מאומצת" },
+  ];
+
+  // Define options for "לשון נקבה"
+  const femaleDailyActivityOptions = [
+    { value: "יושבת", label: "יושבת" },
+    { value: "עומדת", label: "עומדת" },
+    { value: "נוהגת", label: "נוהגת" },
+    { value: "עבודה פיזית קלה", label: "עבודה פיזית קלה" },
+    { value: "עבודה פיזית מאומצת", label: "עבודה פיזית מאומצת" },
+  ];
+
+  // Select the appropriate options based on the preferred language
+  const dailyActivityOptions = preferredLanguage === 'לשון זכר' ? maleDailyActivityOptions : femaleDailyActivityOptions;
+
+
+  const maleValues = [
+    { value: 'רווק', label: 'רווק' },
+    { value: 'נשוי', label: 'נשוי' },
+    { value: 'נשוי בשנית', label: 'נשוי בשנית' },
+    { value: 'גרוש', label: 'גרוש' },
+    { value: 'אלמן', label: 'אלמן' },
+    { value: 'פרוד', label: 'פרוד' }
+  ];
+
+  const femaleValues = [
+    { value: 'רווקה', label: 'רווקה' },
+    { value: 'נשואה', label: 'נשואה' },
+    { value: 'נשואה בשנית', label: 'נשואה בשנית' },
+    { value: 'גרושה', label: 'גרושה' },
+    { value: 'אלמנה', label: 'אלמנה' },
+    { value: 'פרודה', label: 'פרודה' }
+  ];
+
+  const maleEmploymentOptions = [
+    { value: "עובד מהבית", label: "עובד מהבית" },
+    { value: "עובד היברידי", label: "עובד היברידי" },
+    { value: "משרה מלאה במקום העבודה", label: "משרה מלאה במקום העבודה" },
+    { value: "משמרות", label: "משמרות" },
+    { value: "לא עובד", label: "לא עובד" },
+    { value: "בעל קצבת נכות", label: "בעל קצבת נכות" },
+  ];
+
+  // Define options for "לשון נקבה"
+  const femaleEmploymentOptions = [
+    { value: "עובדת מהבית", label: "עובדת מהבית" },
+    { value: "עובדת היברידית", label: "עובדת היברידית" },
+    { value: "משרה מלאה במקום העבודה", label: "משרה מלאה במקום העבודה" },
+    { value: "משמרות", label: "משמרות" },
+    { value: "לא עובדת", label: "לא עובדת" },
+    { value: "בעלת קצבת נכות", label: "בעלת קצבת נכות" },
+  ];
+
+  const valuesToUse = preferredLanguage === 'לשון זכר' ? maleValues : femaleValues;
+  const employmentOptions = preferredLanguage === 'לשון זכר' ? maleEmploymentOptions : femaleEmploymentOptions;
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+  }, []); // Empty dependency array to ensure it runs only once when the component mounts
+
+
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,14 +117,15 @@ const PersonalForm = () => {
     setFormData({ ...formData, siblingAges: updatedAges });
   };
 
-  const handleSubmit = (e) => {
+  const handlesubmit = (e) => {
     e.preventDefault();
     console.log('Form Data Submitted:', formData);
     if (formData.numberOfChildren < 0) {
       alert("מספר ילדים חייב להיות מספר חיובי או 0"); // Hebrew: "The age must be a positive number."
       return; // Prevents updating the state with an invalid value
   }
-    navigate("/medicalformfirst");
+   navigate("/medicalformfirst", { state: { preferredLanguage: formData.preferredLanguage } });
+  
     
     // You can add an API call here
     
@@ -73,52 +145,42 @@ const PersonalForm = () => {
   ));
 
   return (
+    
     <div className="form-container">
       <h2 className="mb-4 text-center">Personal Information Form</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group  radio-preferred">
-          <label htmlFor="maritalStatus"  className="form-label">מצב אישי</label>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="רווק" onChange={handleChange}  /> רווק
-          </div>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="נשוי" onChange={handleChange}  /> נשוי
-          </div>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="נשוי בשנית" onChange={handleChange}  /> נשוי בשנית
-          </div>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="גרוש" onChange={handleChange}  /> גרוש
-          </div>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="אלמן" onChange={handleChange}  /> אלמן
-          </div>
-          <div className="form-check">
-              <input type="radio" name="maritalStatus" value="פרוד" onChange={handleChange}  /> פרוד
-          </div>
+      <form onSubmit={handlesubmit}>
+      <div className="form-group radio-preferred">
+      <label htmlFor="maritalStatus" className="form-label">מצב אישי</label>
+
+            {valuesToUse.map((item, index) => (
+              <div className="form-check" key={index}>
+                <input
+                  type="radio"
+                  id={item.value}
+                  name="maritalStatus"
+                  value={item.value}
+                  onChange={handleChange}
+                  checked={formData.maritalStatus === item.value}
+                />
+                <label htmlFor={item.value}>{item.label}</label>
+              </div>
+            ))}
+          </div>       
+               
+        {formData.preferredLanguage === 'לשון זכר' && (
+        <div className="form-group">
+            <label className="form-label">מספר ילדים</label>
+            <input
+                type="number"
+                className="form-control"
+                name="numberOfChildren"
+                value={formData.numberOfChildren}
+                onChange={handleChange}
+                
+                min="0" // Ensures only positive numbers are allowed
+            />
         </div>
-
-        {/*{formData.maritalStatus === 'נשוי' && (*/}
-        {/*  <div className="form-group">*/}
-        {/*    <label htmlFor="numberOfChildren">רק לגברים: מספר ילדים</label>*/}
-        {/*    <input type="number" name="numberOfChildren" id="numberOfChildren" className="form-control" value={formData.numberOfChildren} onChange={handleChange} />*/}
-        {/*  </div>*/}
-        {/*)}*/}
-
-          
-                {/* Age */}
-                <div className="form-group">
-                    <label className="form-label">מספר ילדים</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="numberOfChildren"
-                        value={formData.numberOfChildren}
-                        onChange={handleChange}
-                        
-                        min="0" // Ensures only positive numbers are allowed
-                    />
-                </div>
+        )}
 
         <div className="form-group">
           <label htmlFor="height">גובה (בס"מ)</label>
@@ -140,12 +202,48 @@ const PersonalForm = () => {
           </div>
         </div>
 
+        {/* Conditional rendering for additional fields if "Yes" is selected */}
+        {formData.weightChange === 'כן' && (
+                <div>
+                  <div className="form-group">
+                    <label htmlFor="changeTime" className="form-label"> מתי?</label>
+                    <input
+                      type="text"
+                      id="changeTime"
+                      name="changeTime"
+                      className="form-control"
+                      value={formData.changeTime}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="diseaseImpact" className="form-label">
+                      האם השינוי השפיע על מהלך המחלה?
+                    </label>
+                    <select
+                      id="diseaseImpact"
+                      name="diseaseImpact"
+                      className="form-control"
+                      value={formData.diseaseImpact}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>בחר</option>
+                      <option value="לטובה">לטובה</option>
+                      <option value="לרעה">לרעה</option>
+                      <option value="לא השפיע">לא השפיע</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+
         <div className="form-group">
           <label htmlFor="currentOccupation">עיסוק נוכחי</label>
           <select name="currentOccupation" id="currentOccupation" className="form-control" value={formData.currentOccupation} onChange={handleChange} >
             <option value="" disabled>בחר עיסוק</option>
-            <option value="תלמיד.ה">תלמיד.ה</option>
-            <option value="סטודנט.ית">סטודנט.ית</option>
+            <option value="תלמיד.ה">תלמיד</option>
+            <option value="סטודנט.ית">סטודנט</option>
             <option value="מחשוב">מחשוב</option>
             <option value="כח אדם">כח אדם</option>
             <option value="בנקאות">בנקאות</option>
@@ -174,27 +272,38 @@ const PersonalForm = () => {
 
         <div className="form-group">
           <label htmlFor="employmentType">?כיצד אתה מגדיר את אופי העסקתך</label>
-          <select name="employmentType" id="employmentType" className="form-control" value={formData.employmentType} onChange={handleChange} >
-            <option value="" disaled>בחר אופי העסקה</option>
-            <option value="עובד מהבית">עובד מהבית</option>
-            <option value="עובד היברידי">עובד היברידי</option>
-            <option value="משרה מלאה במקום העבודה">משרה מלאה במקום העבודה</option>
-            <option value="משמרות">משמרות</option>
-            <option value="לא עובד">לא עובד</option>
-            <option value="בעל קצבת נכות">בעל קצבת נכות</option>
-          </select>
+          <select
+        name="employmentType"
+        id="employmentType"
+        className="form-control"
+        value={formData.employmentType}
+        onChange={handleChange}
+      >
+        <option value="" disabled>בחר אופי העסקה</option>
+        {employmentOptions.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
         </div>
 
         <div className="form-group">
-          <label htmlFor="dailyActivity">ביום עבודה ממוצע את.ה בעיקר:</label>
-          <select name="dailyActivity" id="dailyActivity" className="form-control" value={formData.dailyActivity} onChange={handleChange} >
-            <option value="" disabled>בחר פעילות</option>
-            <option value="יושב.ת">יושב.ת</option>
-            <option value="עומד.ת">עומד.ת</option>
-            <option value="נוהג.ת">נוהג.ת</option>
-            <option value="עבודה פיזית קלה">עבודה פיזית קלה</option>
-            <option value="עבודה פיזית מאומצת">עבודה פיזית מאומצת</option>
-          </select>
+          <label htmlFor="dailyActivity">:ביום עבודה ממוצע המצב שגופך נמצא בו </label>
+          <select
+        name="dailyActivity"
+        id="dailyActivity"
+        className="form-control"
+        value={formData.dailyActivity}
+        onChange={handleChange}
+      >
+        <option value="" disabled>בחר פעילות</option>
+        {dailyActivityOptions.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
         </div>
 
         <div className="form-group">
@@ -296,7 +405,7 @@ const PersonalForm = () => {
 
         {formData.petOwner === 'כן' && (
           <div className="form-group">
-            <label htmlFor="petAge">אם כן, מאיזה גיל יש לך חיית מחמד?</label>
+            <label htmlFor="petAge">אם מאיזה גיל יש לך חיית מחמד?</label>
             <input type="number" name="petAge" id="petAge" className="form-control" value={formData.petAge} onChange={handleChange} />
           </div>
         )}
@@ -313,7 +422,7 @@ const PersonalForm = () => {
 
         {formData.experiencedLoss === 'כן' && (
           <div className="form-group">
-            <label htmlFor="ageAtLoss">אם כן, באיזה גיל היית בזמן המאורע?</label>
+            <label htmlFor="ageAtLoss"> באיזה גיל היית בזמן המאורע?</label>
             <input type="number" name="ageAtLoss" id="ageAtLoss" className="form-control" value={formData.ageAtLoss} onChange={handleChange} />
           </div>
         )}

@@ -1,41 +1,71 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import "../css/traumaStyle.css";
 
 const MSPSSQuestionnaire = () => {
-  const questions = [
-    "יש אדם קרוב לי הנמצא בקרבתי כאשר אני נזקק/ת",
-    "יש אדם קרוב שאני יכול/ה לשתף בצער ובשמחה.",
+  const location = useLocation();
+  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+
+  // Questions in masculine form
+  const questionsMale = [
+    "יש אדם קרוב לי הנמצא בקרבתי כאשר אני נזקק",
+    "יש אדם קרוב שאני יכול לשתף בצער ובשמחה.",
     "משפחתי מנסה באמת לעזור לי.",
-    "אני מקבל/ת ממשפחתי את העזרה והתמיכה הרגשית שאני זקוק/ה לה.",
+    "אני מקבל ממשפחתי את העזרה והתמיכה הרגשית שאני זקוק לה.",
     "יש אדם קרוב אלי המהווה לגבי מקור עידוד ממש.",
     "חברי מנסים באמת לעזור לי.",
-    "אני יכול/ה לסמוך על חברי/ חברותי כאשר מתעוררות בעיות.",
-    "אני יכול/ה לשוחח על בעיותיי עם משפחתי.",
-    "יש לי חברים/ות שאותם אני יכול/ה לשתף בשמחתי ובצערי.",
+    "אני יכול לסמוך על חברי כאשר מתעוררות בעיות.",
+    "אני יכול לשוחח על בעיותיי עם משפחתי.",
+    "יש לי חברים שאותם אני יכול לשתף בשמחתי ובצערי.",
     "יש אדם קרוב לי שרגשותיי חשובים לו.",
     "משפחתי מוכנה לעזור לי לקבל החלטות.",
-    "אני יכול/ה לדבר על בעיותי עם חברי.",
+    "אני יכול לדבר על בעיותי עם חברי.",
   ];
+
+  // Questions in feminine form
+  const questionsFemale = [
+    "יש אדם קרוב לי הנמצא בקרבתי כאשר אני נזקקת",
+    "יש אדם קרוב שאני יכולה לשתף בצער ובשמחה.",
+    "משפחתי מנסה באמת לעזור לי.",
+    "אני מקבלת ממשפחתי את העזרה והתמיכה הרגשית שאני זקוקה לה.",
+    "יש אדם קרוב אלי המהווה לגבי מקור עידוד ממש.",
+    "חברותי מנסות באמת לעזור לי.",
+    "אני יכולה לסמוך על חברותי כאשר מתעוררות בעיות.",
+    "אני יכולה לשוחח על בעיותיי עם משפחתי.",
+    "יש לי חברות שאותן אני יכולה לשתף בשמחתי ובצערי.",
+    "יש אדם קרוב לי שרגשותיי חשובים לו.",
+    "משפחתי מוכנה לעזור לי לקבל החלטות.",
+    "אני יכולה לדבר על בעיותי עם חברותי.",
+  ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top of the page on mount
+  }, []);
 
   const navigate = useNavigate();
 
-  // Default value for all sliders is 4 (neutral)
-  const [answers, setAnswers] = useState(questions.map(() => 4));
+  // Default answers are neutral (4)
+  const [answers, setAnswers] = useState(
+    new Array(questionsMale.length).fill(4)
+  );
 
+  // Handle slider changes
   const handleChange = (index, value) => {
     const updatedAnswers = [...answers];
     updatedAnswers[index] = parseInt(value, 10);
     setAnswers(updatedAnswers);
   };
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handlesubmit = (e) => {
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/ChildhoodQuastionaire");
+    navigate("/childhoodquastionaire", { state: { preferredLanguage } });
   };
 
+  // Slider labels
   const labels = [
     "לא מתאים כלל",
     "מתאים במידה מועטה מאוד",
@@ -46,8 +76,12 @@ const MSPSSQuestionnaire = () => {
     "מתאים לחלוטין",
   ];
 
+  // Choose questions based on preferredLanguage
+  const questions =
+    preferredLanguage === "לשון זכר" ? questionsMale : questionsFemale;
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handlesubmit}>
       <h3 className="text-center">שאלון תמיכה חברתית ומשפחתית</h3>
       {questions.map((question, index) => (
         <div className="form-group-trauma mt-3" key={index}>

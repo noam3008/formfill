@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import '../css/MyForm.css';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 
 function App() {
+      const location = useLocation();
+      const { preferredLanguage } = location.state || {};
     const [formData, setFormData] = useState({
         menstrualLength: '',
         painDuringMenstruation: '',
@@ -24,6 +28,12 @@ function App() {
         id_number :'',
     });
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+  }, []); // Empty dependency array to ensure it runs only once when the component mounts
+
+
+
     const pmsSymptoms = [
         "דכאון",
         "עצבנות",
@@ -43,7 +53,7 @@ function App() {
 
     const [hasMenstrualCycle, setHasMenstrualCycle] = useState('');
     const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState('');
-    const [hasBeenPregnant, setHasBeenPregnant] = useState('');
+    const [pregnancyStatus, setPregnancyStatus] = useState('');
     const [pregnancyCount, setPregnancyCount] = useState('');
     const [isGlulotInPast, setIsGlulotInPast] = useState('');
     const [isBikurKavua, setisBikurKavua] = useState('');
@@ -74,7 +84,7 @@ function App() {
         setLastMenstrualPeriod(e.target.value);
     };
     const handlePregnancyChange = (e) => {
-        setHasBeenPregnant(e.target.value);
+        setPregnancyStatus(e.target.value);
     };
 
     const handlePregnancyCountChange = (e) => {
@@ -109,9 +119,9 @@ function App() {
     };
 
 
-    const handleSubmit = (e) => {
+    const handlesubmit = (e) => {
         e.preventDefault();
-        navigate("/medicalformfirst");
+        navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
         // You can add an API call here
     };
 
@@ -135,7 +145,7 @@ function App() {
     return (
         <div className="form-container">
             <h2 className="mb-4 text-center">Woman information form</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handlesubmit}>
                 <div className="form-group">
                     <label className="form-label">גיל הופעת וסת ראשונה </label>
                     <input
@@ -296,7 +306,7 @@ function App() {
                 </div>
             </div>
 
-            {hasBeenPregnant === 'כן' && (
+            {pregnancyStatus === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
                         צייני את מספר ההריונות שלך:
@@ -311,7 +321,7 @@ function App() {
                 </div>
             )}
 
-
+            {pregnancyStatus === 'כן' && (
             <div className="form-group">
                 <label className="form-label">
                     צייני את מספר הילדים שלך:
@@ -324,7 +334,10 @@ function App() {
                     min="0" // Ensures only non-negative numbers
                 />
             </div>
+             )}
 
+
+            {pregnancyStatus === 'כן' && (
             <div className="form-group radio-preferred">
                 <label htmlFor="postpartumDepression" className="form-label">
                     האם סבלת מדכאון אחרי לידה?
@@ -346,6 +359,7 @@ function App() {
                     /> לא
                 </div>
             </div>
+             )}
 
             {postpartumDepression.suffered === 'כן' && (
                 <>
@@ -465,10 +479,12 @@ function App() {
                         value={contraceptiveMethods.type}
                         onChange={(e) => handleContraceptiveChange('type', e.target.value)}
                     >
-                        <option value="">בחר סוג</option>
+                        <option value="">בחרי סוג</option>
                         <option value="גלולות">גלולות</option>
                         <option value="התקן הורמונלי">התקן הורמונלי</option>
                         <option value="התקן לא הורמונלי">התקן לא הורמונלי</option>
+                        <option value="התקן הורמונלי">ימים בטוחים</option>
+                        <option value="התקן לא הורמונלי">השיטה הטבעית למודות לפוריות</option>
                         {/* Add more options as needed */}
                     </select>
                 </div>
@@ -592,18 +608,23 @@ function App() {
     </div>
 
     {formData.breastSurgeonVisits === 'כן' && (
-        <div className="form-group radio-preferred">
-            <label className="form-label">באיזו תדירות את מבקרת?</label>
-            <input
-                type="number"
-                className="form-control"
-                name="breastSurgeonVisitFrequency"
-                value={formData.breastSurgeonVisitFrequency}
-                onChange={handleChange}
-                min="0"
-            />
-        </div>
-    )}
+    <div className="form-group radio-preferred">
+        <label className="form-label">באיזו תדירות את מבקרת?</label>
+        <select
+            className="form-control"
+            name="breastSurgeonVisitFrequency"
+            value={formData.breastSurgeonVisitFrequency}
+            onChange={handleChange}
+        >
+            <option value="">בחר תדירות</option>
+            <option value="אחת לשנתיים">אחת לשנתיים</option>
+            <option value="אחת לשנה">אחת לשנה</option>
+            <option value="אחת לחצי שנה">אחת לחצי שנה</option>
+            <option value="אחת לשלושה חודשים">אחת לשלושה חודשים</option>
+        </select>
+    </div>
+)}
+
 
 <div className="form-group radio-preferred">
     <label className="form-label">האם יש היסטוריה של סרטן שד/שחלות במשפחה?</label>
@@ -642,7 +663,7 @@ function App() {
 </div>
 
 
-
+<button type="submit" className="btn btn-primary">שלחי</button>
 
 
             </form>

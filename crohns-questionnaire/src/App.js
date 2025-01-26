@@ -19,8 +19,8 @@ function App() {
   return (
     <Router>
       <Routes>
-          {/* <Route path="/" element={<AcceptenceForm />} /> */}
-          <Route path="/" element={<MyForm />} />
+          <Route path="/" element={<AcceptenceForm />} />
+          <Route path="/start" element={<MyForm />} />
           <Route path="/woman" element={<WomanForm/>}/>
           <Route path="/success" element={<SuccessPage />}/>
           <Route path="/personalform" element={<PersonalForm />} />

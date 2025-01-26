@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import "../css/traumaStyle.css"
-import { useNavigate } from 'react-router-dom';
+import {useNavigate,useLocation} from "react-router-dom";
+import { useEffect } from 'react';
 
 const PTSDQuestionnaire = () => {
+    const location = useLocation();
+    const { preferredLanguage } = location.state || {};
+
   const questions = [
     "זיכרונות טורדניים ולא רצויים של החוויה הטראומטית?",
     "חלומות טורדניים של החוויה הטראומטית?",
@@ -28,6 +32,10 @@ const PTSDQuestionnaire = () => {
   ];
 
 const navigate = useNavigate();
+ useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+  }, []); // Empty dependency array to ensure it runs only once when the component mounts
+
 
   const [answers, setAnswers] = useState(
     questions.map(() => 3) // Default value is 3 (neutral) for all questions
@@ -37,18 +45,20 @@ const navigate = useNavigate();
     const updatedAnswers = [...answers];
     updatedAnswers[index] = parseInt(value, 10);
     setAnswers(updatedAnswers);
+  
   };
+  
 
-  const handleSubmit = (e) => {
+  const handlesubmit = (e) => {
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/healthlifestyleform")
+    navigate("/healthlifestyleform", { state: { preferredLanguage } });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3 className="text-center">רשימת בדיקה להפרעת דחק פוסט טראומטית</h3>
+    <form onSubmit={handlesubmit}>
+
       {questions.map((question, index) => (
         <div className="form-group-trauma mt-3" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
@@ -75,7 +85,9 @@ const navigate = useNavigate();
         </div>
       ))}
       <button type="submit" className="btn btn-primary mt-4">
-        שלח שאלון
+      {preferredLanguage === "לשון זכר"
+          ? " שלח שאלון"
+          : " שלחי שאלון"}
       </button>
     </form>
   );

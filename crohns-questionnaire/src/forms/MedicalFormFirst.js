@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
 import { useEffect } from 'react';
 
 const MedicalForm = () => {
- 
+   const location = useLocation();
+   const { preferredLanguage } = location.state || {};
   // State management for the form
   const [formData, setFormData] = useState({
     diagnosis: '',
@@ -109,19 +110,22 @@ const MedicalForm = () => {
   };
 
   // Submit handler
-  const handleSubmit = (e) => {
+  const handlesubmit = (e) => {
     e.preventDefault();
     const workIssuesMentalFrequency = formData.workIssuesMentalFrequency;
     console.log(formData);
     if (formData.diseaseTrigger === 'טראומה') {
-      navigate('/ptsdquestionnaire'); // Redirect to trauma page if "טראומה" is selected
+      navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
+      
     }
     else if (workIssuesMentalFrequency >= 10 && workIssuesMentalFrequency <= 30) {
-      navigate('/depressionassessment');
+      navigate("/depressionassessment", { state: { preferredLanguage: formData.preferredLanguage } });
+
     }
     else{
 
-        navigate("/healthlifestyleform")
+      navigate("/healthlifestyleform", { state: { preferredLanguage: formData.preferredLanguage } });
+
     }
     // Here you'd handle sending the formData to the backend (e.g., with axios)
   };
@@ -130,7 +134,7 @@ const MedicalForm = () => {
   return (
       <div className="form-container">
         <h2 className="mb-4">Medical Form</h2>
-        <form  onSubmit={handleSubmit}>
+        <form  onSubmit={handlesubmit}>
           <div className="row">
 
             {/* Diagnosis Information */}
@@ -174,7 +178,11 @@ const MedicalForm = () => {
 
             {/* Treatment Information */}
             <div className="form-group radio-preferred">
-              <label htmlFor="isTreat" className="form-label" >האם כרגע אתה מקבל טיפול כנגד המחלה?</label>
+            <label htmlFor="isTreat" className="form-label">
+              {preferredLanguage === 'לשון זכר' 
+                ? 'האם כרגע אתה מקבל טיפול כנגד המחלה?' 
+                : 'האם כרגע את מקבלת טיפול כנגד המחלה?'}
+            </label>
               <div className="form-check">
                   <input type="radio" name="isTreat" value="כן" onChange={handleChange}  /> כן
               </div>
@@ -273,12 +281,15 @@ const MedicalForm = () => {
 
             <div className="winterlleness">
                     <label className="form-label">
-                    כמה פעמים בממוצע בשנה את.ה חולה במחלות "חורף" כגון שפעת, דלקת בגרון וכדומה ?</label>
+                    {preferredLanguage === 'לשון זכר' 
+                ? ' כמה פעמים בממוצע בשנה אתה חולה במחלות "חורף" כגון שפעת, דלקת בגרון וכדומה ?' 
+                : ' כמה פעמים בממוצע בשנה את חולה במחלות "חורף" כגון שפעת, דלקת בגרון וכדומה ?'}
+                   </label>
                     <div className="slider-container">
                         <input
                             type="range"
                             min="1"
-                            max="5"
+                            max="3"
                             step="1"
                             className="slider"
                             id="winterlleness"
@@ -286,24 +297,26 @@ const MedicalForm = () => {
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
-                            <span>1 - בכלל לא</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5 - בתדירות גבוהה</span>
+                            <span>0 - בכלל לא</span>
+                            <span >פעם עד פעמיים </span>
+                            <span> שלוש ומעלה </span>
+
                         </div>
                     </div>
                 </div>
 
                 <div className="doctorduechron">
                     <label className="form-label">
-                    כמה פעמים בשנה אתה מבקר רופא בעקבות הקרוהן
+                    {preferredLanguage === 'לשון זכר' 
+                ? ' כמה פעמים בשנה אתה מבקר רופא בעקבות הקרוהן?' 
+                : ' כמה פעמים בשנה את מבקרת רופא בעקבות הקרוהן?'}
+                    
                     </label>
                     <div className="slider-container">
                         <input
                             type="range"
                             min="1"
-                            max="5"
+                            max="4"
                             step="1"
                             className="slider"
                             id="doctorduechron"
@@ -311,17 +324,20 @@ const MedicalForm = () => {
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
-                            <span>1 - בכלל לא</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5 - בתדירות גבוהה</span>
+                            <span>0 - בכלל לא</span>
+                            <span>1-2</span>
+                            <span>3-4</span>
+                            <span>יותר מחמש פעמים</span>
                         </div>
                     </div>
                 </div>
 
         <div className="form-group radio-preferred">
-          <label htmlFor="allergies" className="form-label" >האם אתה סובל מאלרגיה מאובחנת?</label>
+          <label htmlFor="allergies" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה סובל מאלרגיה מאובחנת?' 
+                : '  האם את סובלת מאלרגיה מאובחנת?'}
+          </label>
           <div className="form-check">
               <input type="radio" name="allergies" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -333,13 +349,28 @@ const MedicalForm = () => {
 
         {formData.allergies === 'כן' && (
           <div className="form-group">
-            <label htmlFor="allergiesAge">אם כן, מאיזה גיל האלרגיה מאובחנת?</label>
+            <label htmlFor="allergiesAge"> מאיזה גיל האלרגיה מאובחנת?</label>
             <input type="number" name="allergiesAge" id="allergiesAge" className="form-control" value={formData.allergiesAge} onChange={handleChange} />
           </div>
         )}
 
+        {formData.allergies === 'כן' && (
+          <div className="form-group">
+            <label htmlFor="allergiesForWhat">
+            {preferredLanguage === 'לשון זכר' 
+                ? ' למה אתה אלרגי?' 
+                : '  למה את אלרגית?'}
+              </label>
+            <input type="number" name="allergiesForWhat" id="allergiesForWhat" className="form-control" value={formData.allergiesForWhat} onChange={handleChange} />
+          </div>
+        )}
+
 <div className="form-group radio-preferred">
-          <label htmlFor="foodSensitivity" className="form-label" >האם את/ה סובל מרגישות לסוגי מזון?</label>
+          <label htmlFor="foodSensitivity" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? 'האם אתה סובל מרגישות לסוגי מזון?' 
+                : 'האם את סובלת מרגישות לסוגי מזון?'}
+            </label>
           <div className="form-check">
               <input type="radio" name="foodSensitivity" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -351,7 +382,7 @@ const MedicalForm = () => {
 
         {formData.foodSensitivity === 'כן' && (
           <div className="form-group">
-            <label htmlFor="foodSensetivityAge">אם כן, מאיזה גיל הרגישות?</label>
+            <label htmlFor="foodSensetivityAge"> מאיזה גיל הרגישות?</label>
             <input type="number" name="foodSensetivityAge" id="foodSensetivityAge" className="form-control" value={formData.foodSensetivityAge} onChange={handleChange} />
           </div>
         )}
@@ -369,14 +400,14 @@ const MedicalForm = () => {
 
         {formData.chronicDiseases === 'כן' && (
           <div className="form-group">
-            <label htmlFor="chronicDiseasesAge">אם כן, מאיזה גיל החלו התסמינים?</label>
+            <label htmlFor="chronicDiseasesAge"> מאיזה גיל החלו התסמינים?</label>
             <input type="number" name="chronicDiseasesAge" id="chronicDiseasesAge" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
           </div>
         )}
 
         {formData.chronicDiseases === 'כן' && (
           <div className="form-group">
-            <label htmlFor="chronicDiseasesDiagnose">אם כן, מאיזה גיל אובחנו התסמינים?</label>
+            <label htmlFor="chronicDiseasesDiagnose">מאיזה גיל אובחנו התסמינים?</label>
             <input type="number" name="chronicDiseasesDiagnose" id="chronicDiseasesDiagnose" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
           </div>
         )}
@@ -421,7 +452,9 @@ const MedicalForm = () => {
         {formData.surgeries === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="surgeriesDetails" className="form-label">
-            אנא פרט/י את הניתוחים:
+          {preferredLanguage === 'לשון זכר' 
+                ? '  אנא פרט את הניתוחים:' 
+                : '  אנא פרטי את הניתוחים:'}
           </label>
           <textarea
             id="surgeriesDetails"
@@ -435,7 +468,12 @@ const MedicalForm = () => {
       )}
 
         <div className="form-group radio-preferred">
-          <label htmlFor="complementaryMedicine" className="form-label" >האם אתה מטופל כרגע או טופלת בעבר ברפואה משלימה??</label>
+          <label htmlFor="complementaryMedicine" className="form-label" >
+
+          {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה מטופל כרגע או טופלת בעבר ברפואה משלימה?' 
+                : ' האם את מטופלת כרגע או טופלת בעבר ברפואה משלימה?'}
+            </label>
           <div className="form-check">
             <input type="radio" name="complementaryMedicine" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -497,7 +535,7 @@ const MedicalForm = () => {
         {formData.complementaryMedicine === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineWayOfBetter" className="form-label">
-          האם הייתה הטבה ?
+           האם הייתה הטבה במצבך ?
           </label>
           <textarea
             id="complementaryMedicineWayOfBetter"
@@ -560,7 +598,9 @@ const MedicalForm = () => {
       {formData.diseaseTrigger && (
         <div className="form-group mt-3">
           <label htmlFor="triggerDetails" className="form-label">
-              פרט/י פרטים נוספים על המקרה:
+          {preferredLanguage === 'לשון זכר' 
+                ? 'פרט פרטים נוספים על המקרה:' 
+                : 'פרטי פרטים נוספים על המקרה:'}
           </label>
           <textarea
             id="triggerDetails"
@@ -575,7 +615,10 @@ const MedicalForm = () => {
 
             <div className="form-group mt-3">
                 <label htmlFor="bestTakeCareByClient" className="form-label">
-                מה הטיפול שעזר/ עוזר לך ביותר - פרט.י
+                {preferredLanguage === 'לשון זכר' 
+                ? 'מה הטיפול שעזר / עוזר לך ביותר - פרט:' 
+                : '  מה הטיפול שעזר / עוזר לך ביותר - פרטי'}
+              
                 </label>
                 <textarea
                   id="bestTakeCareByClient"
@@ -589,7 +632,7 @@ const MedicalForm = () => {
 
 
             <div className="form-group radio-preferred">
-          <label htmlFor="cronNegative" className="form-label" >האם יש משהו שהמחלת קרוהן מונעת ממך לעשות? ?</label>
+          <label htmlFor="cronNegative" className="form-label" >האם יש משהו שהמחלת קרוהן מונעת ממך לעשות? </label>
           <div className="form-check">
               <input type="radio" name="cronNegative" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -601,7 +644,10 @@ const MedicalForm = () => {
         {formData.cronNegative === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineReason" className="form-label">
-          אנא פרט בבקשה
+          {preferredLanguage === 'לשון זכר' 
+                ? ' אנא פרט בבקשה' 
+                : ' אנא פרטי בבקשה'}
+         
           </label>
           <textarea
             id="complementaryMedicineReason"
@@ -615,7 +661,13 @@ const MedicalForm = () => {
       )}
 
         <div className="form-group radio-preferred">
-          <label htmlFor="familyDoctorVisit" className="form-label" >האם אתה מבקר באופן קבוע אצל רופא משפחה ?</label>
+          <label htmlFor="familyDoctorVisit" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? ' האם אתה מבקר באופן קבוע אצל רופא משפחה ?' 
+                : '  האם את מבקרת באופן קבוע אצל רופא משפחה ?'}
+         
+           
+            </label>
           <div className="form-check">
         <input
           type="radio"
@@ -651,7 +703,11 @@ const MedicalForm = () => {
           checked={formData.familyDoctorVisit === "once"}
         />
          
-         <label htmlFor="visitOnce">  (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה </label>
+         <label htmlFor="visitOnce">         
+         {preferredLanguage === 'לשון זכר' 
+                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
+                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}
+           </label>
         {formData.familyDoctorVisit === "once" && (
           <input
           min = "0"
@@ -664,12 +720,27 @@ const MedicalForm = () => {
             style={{ width: "120px", display: "inline-block", marginLeft: "10px" }}
           />
         )}
+              <div className="form-check">
+        <input
+          type="radio"
+          id="visitOnceAYear"
+          name="familyDoctorVisit"
+          value="לא"
+          onChange={handleChange}
+          checked={formData.familyDoctorVisit === "פעם בשנה"}
+        />
+        <label htmlFor="visitNo">פעם בשנה</label>
+      </div>
       </div>
       </div>
 
 
       <div className="form-group radio-preferred">
-          <label htmlFor="dentistDoctorVisit" className="form-label" >האם אתה מבקר באופן קבוע אצל רופא שיניים ?</label>
+          <label htmlFor="dentistDoctorVisit" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? ' האם אתה מבקר באופן קבוע אצל רופא שיניים ?' 
+                : '  האם את מבקרת באופן קבוע אצל רופא שיניים ?'}
+           </label>
           <div className="form-check">
         <input
           type="radio"
@@ -705,7 +776,11 @@ const MedicalForm = () => {
           checked={formData.dentistDoctorVisit === "once"}
         />
          
-         <label htmlFor="visitOnce">  (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה </label>
+         <label htmlFor="visitOnce">          
+          {preferredLanguage === 'לשון זכר' 
+                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
+                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}
+                </label>
         {formData.dentistDoctorVisit === "once" && (
           <input
           min = "0"
@@ -722,7 +797,12 @@ const MedicalForm = () => {
       </div>
 
       <div className="form-group radio-preferred">
-          <label htmlFor="dentistDoctorVisit" className="form-label" >האם אתה מבצע באופן קבוע אבחון נקודות חן ?</label>
+          <label htmlFor="dentistDoctorVisit" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? '   האם אתה מבצע באופן קבוע אבחון נקודות חן ?' 
+                : '    האם את מבצעת באופן קבוע אבחון נקודות חן ?'}
+            
+            האם אתה מבצע באופן קבוע אבחון נקודות חן ?</label>
           <div className="form-check">
         <input
           type="radio"
@@ -758,7 +838,10 @@ const MedicalForm = () => {
           checked={formData.pointsDoctorVisit === "once"}
         />
          
-         <label htmlFor="visitOnce">  (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה </label>
+         <label htmlFor="visitOnce">           
+          {preferredLanguage === 'לשון זכר' 
+                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
+                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}</label>
         {formData.dentistDoctorVisit === "once" && (
           <input
           min = "0"
@@ -775,26 +858,47 @@ const MedicalForm = () => {
       </div>
       
       <div className="form-group radio-preferred">
-      <label htmlFor="vaccinationStatus" className="form-label">
-         מלא מצב פנקס חיסונים
+        <label htmlFor="vaccinationStatus" className="form-label">
+          {preferredLanguage === 'לשון זכר' 
+            ? 'מלא מצב פנקס חיסונים'
+            : 'מלאי מצב פנקס חיסונים'}
         </label>
         <select
           id="vaccinationStatus"
           name="vaccinationStatus"
-          value={formData.diseaseTrigger}
+          value={formData.vaccinationStatus}
           onChange={handleChange}
           className="form-select"
         >
-        <option value="" disabled>בחר מצב פנקס חיסונים</option> 
-        <option value="full">מלא</option>
-        <option value="comprehensive">מלא פרט לקורונה ו/או שפעת</option>
-        <option value="partial">חלקי</option>
-        <option value="not-vaccinated">לא מחוסן</option>
+          <option value="" disabled>
+            {preferredLanguage === 'לשון זכר' 
+              ? 'בחר מצב פנקס חיסונים'
+              : 'בחרי מצב פנקס חיסונים'}
+          </option>
+          <option value="full">
+            {preferredLanguage === 'לשון זכר' ? 'מלא' : 'מלא'}
+          </option>
+          <option value="comprehensive">
+            {preferredLanguage === 'לשון זכר' 
+              ? 'מלא פרט לקורונה ו/או שפעת' 
+              : 'מלא פרט לקורונה ו/או שפעת'}
+          </option>
+          <option value="partial">
+            {preferredLanguage === 'לשון זכר' ? 'חלקי' : 'חלקית'}
+          </option>
+          <option value="not-vaccinated">
+            {preferredLanguage === 'לשון זכר' ? 'לא מחוסן' : 'לא מחוסנת'}
+          </option>
         </select>
-        </div>
+      </div>
 
         <div className="form-group radio-preferred">
-          <label htmlFor="takeMedicen" className="form-label" >האם את.ה לוקח תרופות באופן קבוע </label>
+          <label htmlFor="takeMedicen" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? '  האם אתה לוקח תרופות באופן קבוע ' 
+                : '   האם את לוקחת תרופות באופן קבוע '}
+            
+           </label>
           <div className="form-check">
               <input type="radio" name="takeMedicen" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -820,7 +924,11 @@ const MedicalForm = () => {
       )}
 
       <div className="form-group radio-preferred">
-          <label htmlFor="takeFood" className="form-label" >האם את.ה לוקח תוסף תזונה באופן קבוע </label>
+          <label htmlFor="takeFood" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? '   האם אתה לוקח תוסף תזונה באופן קבוע ' 
+                : '   האם את לוקחת תוסף תזונה באופן קבוע '}
+           </label>
           <div className="form-check">
               <input type="radio" name="takeFood" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -850,7 +958,12 @@ const MedicalForm = () => {
 
       
       <div className="form-group radio-preferred">
-          <label htmlFor="otherDeases" className="form-label" >האם אתה נמצא במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?</label>
+          <label htmlFor="otherDeases" className="form-label" >
+          {preferredLanguage === 'לשון זכר' 
+                ? '   האם אתה נמצא במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?אם אתה לוקח תוסף תזונה באופן קבוע ' 
+                : '   האם את נמצאת במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?'}
+            
+            </label>
           <div className="form-check">
               <input type="radio" name="otherDeases" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -862,7 +975,10 @@ const MedicalForm = () => {
         {formData.otherDeases === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="otherDeasesWhich" className="form-label">
-          אנא פרט בבקשה
+          {preferredLanguage === 'לשון זכר' 
+                ? ' אנא פרט בבקשה' 
+                : '  אנא פרטי בבקשה'}
+         
           </label>
           <textarea
             id="otherDeasesWhich"
@@ -877,7 +993,12 @@ const MedicalForm = () => {
 
       <div className="medicationWithoutDoctorAmount">
           <label className="form-label">
-          באיזו תדירות נוטל תרופות ללא מרשם
+
+          {preferredLanguage === 'לשון זכר' 
+                ? ' באיזו תדירות אתה נוטל תרופות ללא מרשם' 
+                : '   באיזו תדירות את נוטלת תרופות ללא מרשם'}
+
+         
           </label>
           <div className="slider-container">
               <input
@@ -1017,7 +1138,13 @@ const MedicalForm = () => {
       </div>
 
       <div className="form-group radio-preferred">
-          <label htmlFor="cronicDeseas" className="form-label" >האם אתה סובל מכאב כרוני כלשהו?</label>
+          <label htmlFor="cronicDeseas" className="form-label" >
+            
+          {preferredLanguage === 'לשון זכר' 
+                ? ' האם אתה סובל מכאב כרוני כלשהו?' 
+                : ' האם את סובלת מכאב כרוני כלשהו?'}
+            
+            </label>
           <div className="form-check">
               <input type="radio" name="cronicDeseas" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -1044,7 +1171,11 @@ const MedicalForm = () => {
 
 <div className="isMouthAftha">
           <label className="form-label">
-          האם אתה סובל מכיבים בפה (אפטות)
+          {preferredLanguage === 'לשון זכר' 
+                ? 'האם אתה סובל מכיבים בפה?' 
+                : ' האם את סובלת מכיבים בפה?'}
+
+          האם אתה סובל ה (אפטות)
           </label>
           <div className="slider-container">
               <input
@@ -1431,7 +1562,7 @@ const MedicalForm = () => {
 
 {formData.isPshycologicalTreatment === 'כן' && (
             <div>
-              <label htmlFor="treatmentConnection" className="form-label">אם ראיתי קשר בין מצב המחלה לבין הטיפול הרגשי?</label>
+              <label htmlFor="treatmentConnection" className="form-label">אם ראית קשר בין מצב המחלה לבין הטיפול הרגשי?</label>
               <input
                   type="text"
                   className="form-control"
@@ -1512,7 +1643,7 @@ const MedicalForm = () => {
 
 
                 <div>
-              <label htmlFor="extraDetails" className="form-label">משהו נוסף שתרצה שנדע?</label>
+              <label htmlFor="extraDetails" className="form-label">משהו נוסף שמומלץ שנדע?</label>
               <input
                   type="text"
                   className="form-control"
@@ -1525,7 +1656,11 @@ const MedicalForm = () => {
 
             <div className="form-group">
               <label htmlFor="bloodTestAttachment" className="form-label">
-                אנא צרף בדיקת דם כללית מהשנה האחרונה - הבדיקות הנדרשות: ספירת דם, כימיה בדם
+              {preferredLanguage === 'לשון זכר' 
+                ? '  אנא צרף בדיקת דם כללית מהשנה האחרונה - הבדיקות הנדרשות: ספירת דם, כימיה בדם' 
+                : '   אנא צרפי בדיקת דם כללית מהשנה האחרונה - הבדיקות הנדרשות: ספירת דם, כימיה בדם'}
+                
+               
               </label>
               <input
                 type="file"
