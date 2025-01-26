@@ -35,6 +35,7 @@ const HealthLifestyleForm = () => {
         sleepDuration: '',
         appetite: '',
         exerciseFrequency: '',
+        preferredLanguage:preferredLanguage,
         stepsPerDay: '',
         mainConcern: '',
         sleepingProblems: '',

@@ -28,6 +28,7 @@ const PersonalForm = () => {
     siblingAges: '',
     familyOrder: '',
     motherAgeAtBirth: '',
+    preferredLanguage:preferredLanguage,
     fatherAgeAtBirth: '',
     householdMembers: '',
     petOwner: '',
@@ -405,7 +406,7 @@ const PersonalForm = () => {
 
         {formData.petOwner === 'כן' && (
           <div className="form-group">
-            <label htmlFor="petAge">אם מאיזה גיל יש לך חיית מחמד?</label>
+            <label htmlFor="petAge"> ?מאיזה גיל יש לך חיית מחמד</label>
             <input type="number" name="petAge" id="petAge" className="form-control" value={formData.petAge} onChange={handleChange} />
           </div>
         )}
@@ -422,7 +423,7 @@ const PersonalForm = () => {
 
         {formData.experiencedLoss === 'כן' && (
           <div className="form-group">
-            <label htmlFor="ageAtLoss"> באיזה גיל היית בזמן המאורע?</label>
+            <label htmlFor="ageAtLoss"> ?באיזה גיל היית בזמן המאורע</label>
             <input type="number" name="ageAtLoss" id="ageAtLoss" className="form-control" value={formData.ageAtLoss} onChange={handleChange} />
           </div>
         )}
