@@ -42,7 +42,7 @@ const DepressionAssessment = () => {
   }, []); // Empty dependency array to ensure it runs only once when the component mounts
 
   const [answers, setAnswers] = useState(
-    questions.map(() => 3) // Default value is 3 (neutral) for all questions
+    questions.map(() => 0) // Default value is 3 (neutral) for all questions
   );
 
   const handleChange = (index, value) => {
@@ -79,6 +79,11 @@ const DepressionAssessment = () => {
               name={`question-${index}`}
               value={answers[index]}
               onChange={(e) => handleChange(index, e.target.value)}
+              onClick={(e) => {
+                if (answers[index] === 0) {
+                  handleChange(index, 1); // Set to 1 when clicked if currently at 0
+                }
+              }}
             />
             <div className="slider-labels">
               <span>כלל לא</span>

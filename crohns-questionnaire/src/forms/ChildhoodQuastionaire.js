@@ -13,11 +13,18 @@ const ChildhoodQuestionnaire = () => {
         birthType: '',
         preterm: '',
         feedingMethod: '',
+        carfulOutsideFood : 0,
+        sunExperience :0,
+        teammateparents : 0,
+        veryInvolveParents : 0,
+        yellingParents : 0,
+        tuffParents : 0,
+        physicalPunishment : 0,
+        cleaningExtra : 0 ,
         isNative: '',
         childhoodResidence: '',
         hospitalization: '',
         pets: '',
-        medicineUsageFrequency: '',
         childhoodIllnesses: '',
         hygieneAwareness: '',
         foodSafetyAwareness: '',
@@ -33,58 +40,66 @@ const ChildhoodQuestionnaire = () => {
         emotionalNeeds: '',
         permissiveness: '',
         touch: '',
+        envolveParents :0 ,
+        silenceParent : 0,
+        punishEducation : 0,
+        tookCareMissingPhysical : 0,
+        tookCareEverythin : 0,
+        funParents : 0,
+        parentsTouching : 0,
         activeParenting: '',
-        physicalPunishment: '',
+        physicalPunishment: 0,
         childhoodDescription: '',
         additionalComments: '',
+        warmEducation : 0 ,
+        medicineUsageFrequency :0
     });
 
      useEffect(() => {
         // Initialize formData with default or empty values when component mounts
-        setFormData({
-            pregnancyRisk: '',
-            birthType: '',
-            preterm: '',
-            feedingMethod: '',
-            isNative: '',
-            childhoodResidence: '',
-            hospitalization: '',
-            pets: '',
-            medicineUsageFrequency: '',
-            childhoodIllnesses: '',
-            hygieneAwareness: '',
-            foodSafetyAwareness: '',
-            sunExposureAwareness: '',
-            strictness: '',
-            parentingStyle: '',
-            involvement: '',
-            shouting: '',
-            silence: '',
-            punishment: '',
-            warmth: '',
-            physicalNeeds: '',
-            emotionalNeeds: '',
-            permissiveness: '',
-            touch: '',
-            activeParenting: '',
-            physicalPunishment: '',
-            childhoodDescription: '',
-            additionalComments: '',
-        });
+
         window.scrollTo(0,0)
       }, []);
-
+      
+      const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
+          // Handle other fields
+          setFormData((prevState) => ({
+            
+            ...prevState,
+            [name]: value
+            
+        }));
+        console.log(`Updated ${name} to ${value}`);
+        
+    };
+    
+    const handleCheckboxChange = (e) => {
+        const { name, value, checked } = e.target;
+    
+        setFormData((prevData) => {
+            if (name === "childhoodDescription") {
+                const updatedSelection = checked
+                    ? [...(prevData.childhoodDescription || []), value] // Add the value
+                    : prevData.childhoodDescription.filter((item) => item !== value); // Remove the value if unchecked
+    
+                return {
+                    ...prevData,
+                    [name]: updatedSelection, // Store selected options as an array
+                };
+            }
+            return {
+                ...prevData,
+                [name]: value,
+            };
         });
     };
-
+    
     const handlesubmit = (e) => {
         e.preventDefault();
         console.log(formData); // Here you can handle form submission, like sending data to an API
+        navigate("/acequastionaire", { state: { preferredLanguage: formData.preferredLanguage } });
     };
 
 
@@ -326,7 +341,7 @@ const ChildhoodQuestionnaire = () => {
 
                 <br></br>
 
-                <div className="medicine-usage-container">
+                <div className="form-group radio-preferred">
                     <label className="form-label">
                         באיזו תדירות נעשה שימוש בביתך ב: דיו לחתכים, תרופות להורדת חום קל, תרופות להקלה על כאבים
                     </label>
@@ -339,6 +354,13 @@ const ChildhoodQuestionnaire = () => {
                             className="slider"
                             id="medicineUsageFrequency"
                             name="medicineUsageFrequency"
+                            value={formData.medicineUsageFrequency } 
+                            onClick={(e) => {
+                                if (formData.medicineUsageFrequency === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
+                            
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
@@ -394,7 +416,8 @@ const ChildhoodQuestionnaire = () => {
                 )}
                 <br></br>
                 <h6> ?דרג באיזה מידה היתה הקפדה בביתך בילדותך על הדברים הבאים </h6>
-                <div className="medicine-usage-container">
+               
+                <div className="form-group radio-preferred">
                     <label className="form-label">ניקיון והגיינה בבית</label>
                     <div className="slider-container">
                         <input
@@ -403,8 +426,14 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.cleaningExtra}
+                            onClick={(e) => {
+                                if (formData.cleaningExtra === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
+                            id="cleaningExtra"
+                            name="cleaningExtra"
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
@@ -416,8 +445,7 @@ const ChildhoodQuestionnaire = () => {
                         </div>
                 </div>
                 </div>
-
-                <div className="medicine-usage-container">
+                <div className="form-group radio-preferred">
                     <label className="form-label">זהירות מפני מזון מלוכלך או מזוהם בחוץ</label>
                     <div className="slider-container">
                         <input
@@ -426,9 +454,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            id="carfulOutsideFood"
+                            value={formData.carfulOutsideFood}
+                            name="carfulOutsideFood"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.carfulOutsideFood === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -449,9 +483,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            id="sunExperience"
+                            name="sunExperience"
+                            value={formData.sunExperience}
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.sunExperience === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -463,7 +503,9 @@ const ChildhoodQuestionnaire = () => {
                 </div>
                 </div>
 
-                <h6>זה היגד יתאר את סוג החינוך בבית ילדותך</h6>
+                <h6>
+                 ציינו את ההיגדים שיתארו את סוג החינוך שלכם
+                </h6>
 
                 <div className="medicine-usage-container">
                     <label className="form-label">הורי היו נוקשים</label>
@@ -474,9 +516,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            id="tuffParents"
+                            value={formData.tuffParents}
+                            name="tuffParents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.tuffParents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -497,9 +545,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.teammateparents}
+                            id="teammateparents"
+                            name="teammateparents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.teammateparents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -520,9 +574,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.veryInvolveParents}
+                            id="veryInvolveParents"
+                            name="veryInvolveParents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.veryInvolveParents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -543,9 +603,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.yellingParents}
+                            id="yellingParents"
+                            name="yellingParents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.yellingParents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -567,9 +633,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.silenceParent}
+                            id="silenceParent"
+                            name="silenceParent"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.silenceParent === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -590,9 +662,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.punishEducation}
+                            id="punishEducation"
+                            name="punishEducation"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.punishEducation === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -613,9 +691,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.warmEducation}
+                            id="warmEducation"
+                            name="warmEducation"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.warmEducation === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -636,9 +720,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.tookCareMissingPhysical}
+                            id="tookCareMissingPhysical"
+                            name="tookCareMissingPhysical"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.tookCareMissingPhysical === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -659,9 +749,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.tookCareEverythin}
+                            id="tookCareEverythin"
+                            name="tookCareEverythin"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.tookCareEverythin === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -682,9 +778,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.funParents}
+                            id="funParents"
+                            name="funParents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.funParents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -705,9 +807,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.parentsTouching}
+                            id="parentsTouching"
+                            name="parentsTouching"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.parentsTouching === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -728,9 +836,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.envolveParents}
+                            id="envolveParents"
+                            name="envolveParents"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.envolveParents === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -751,9 +865,15 @@ const ChildhoodQuestionnaire = () => {
                             max="5"
                             step="1"
                             className="slider"
-                            id="medicineUsageFrequency"
-                            name="medicineUsageFrequency"
+                            value={formData.physicalPunishment}
+                            id="physicalPunishment"
+                            name="physicalPunishment"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.physicalPunishment === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1 - בכלל לא</span>
@@ -765,28 +885,62 @@ const ChildhoodQuestionnaire = () => {
                 </div>
                 </div>
 
-                {/* Childhood Description Section */}
-                <h5>איזה משפט מתאר באופן מדוייק יותר את ילדותך:</h5>
+                {/* Childhood Description Section (Checkboxes) */}
+                <h5>בחר במשפטים שיתארו באופן מדוייק יותר את ילדותך</h5>
 
-                <div>
-                    <label className="form-label">בילדותי ביליתי הרבה במשחקים בבית</label>
-                    <input type="radio" name="childhoodDescription" value="בילדותי ביליתי הרבה במשחקים בבית" onChange={handleChange} /> 
+                <div className="checkbox-group">
+                    <label className="form-label">
+                        בילדותי ביליתי הרבה במשחקים בבית
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="childhoodDescription"
+                        value="בילדותי ביליתי הרבה במשחקים בבית"
+                        onChange={handleCheckboxChange}
+                        checked={formData.childhoodDescription?.includes("בילדותי ביליתי הרבה במשחקים בבית")}
+                    />
                 </div>
 
-                <div >
-                    <label className="form-label">בילדותי ביליתי הרבה בקריאת בבית</label>
-                    <input type="radio" name="childhoodDescription" value="בילדותי ביליתי הרבה בקריאת בבית" onChange={handleChange} /> 
+                <div className="checkbox-group">
+                    <label className="form-label">
+                        בילדותי ביליתי הרבה בקריאת בבית
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="childhoodDescription"
+                        value="בילדותי ביליתי הרבה בקריאת בבית"
+                        onChange={handleCheckboxChange}
+                        checked={formData.childhoodDescription?.includes("בילדותי ביליתי הרבה בקריאת בבית")}
+                    />
                 </div>
 
-                <div >
-                    <label className="form-label">בילדותי צפית שעות רבות בטלויזיה</label>
-                    <input type="radio" name="childhoodDescription" value="בילדותי צפית שעות רבות בטלויזיה" onChange={handleChange} /> 
+                <div className="checkbox-group">
+                    <label className="form-label">
+                        בילדותי צפית שעות רבות בטלויזיה
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="childhoodDescription"
+                        value="בילדותי צפית שעות רבות בטלויזיה"
+                        onChange={handleCheckboxChange}
+                        checked={formData.childhoodDescription?.includes("בילדותי צפית שעות רבות בטלויזיה")}
+                    />
                 </div>
 
-                <div >
-                    <label className="form-label">בילדותי את רב הזמן הפנוי ביליתי במשחק בחוץ</label>
-                    <input type="radio" name="childhoodDescription" value="בילדותי את רב הזמן הפנוי ביליתי במשחק בחוץ" onChange={handleChange} /> 
+                <div className="checkbox-group">
+                    <label className="form-label">
+                        בילדותי את רב הזמן הפנוי ביליתי במשחק בחוץ
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="childhoodDescription"
+                        value="בילדותי את רב הזמן הפנוי ביליתי במשחק בחוץ"
+                        onChange={handleCheckboxChange}
+                        checked={formData.childhoodDescription?.includes("בילדותי את רב הזמן הפנוי ביליתי במשחק בחוץ")}
+                    />
                 </div>
+
+
 
                 {/* Additional Comments Section */}
                 <div >

@@ -11,17 +11,18 @@
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.a32{
+
+.a32 {
     text-align: center;
 }
 
 body {
     background-image: url('../images/download.jpeg');
-  background-size: cover;
-  background-blend-mode: difference;
+    background-size: cover;
+    background-blend-mode: difference;
 }
 
-.check{
+.check {
     text-align: start;
 }
 
@@ -35,22 +36,22 @@ body {
     border-radius: 8px;
     border: 2px solid #007bff; /* Adds a blue border */
     padding: 10px;
-  }
-  
-  .form-select:focus {
+}
+
+.form-select:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Highlight on focus */
-  }
+}
 
 .form-label {
     text-align: right;
     display: block; /* Ensures the alignment applies correctly to the label */
     direction: rtl; /* For proper alignment with Hebrew text */
-  }
-  
-  .form-select option {
+}
+
+.form-select option {
     text-align: right; /* Aligns text in dropdown options */
-  }
+}
 
 /* Margin for checkboxes and radios */
 .form-check {
@@ -60,7 +61,6 @@ body {
 /* Form fields margin */
 .form-group {
     margin-bottom: 15px;
-
 }
 
 .pms-symptoms-container {
@@ -85,7 +85,8 @@ body {
     font-weight: bold;
     width: 100%;
 }
-.form-label{
+
+.form-label {
     text-align: start;
 }
 
@@ -125,37 +126,6 @@ body {
     margin-bottom: 20px;
 }
 
-.form-label {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0; /* Removes extra space above and below the label */
-    display: block;
-    color: #333;
-}
-
-.slider-container {
-    margin-top: 10px; /* Adjusts spacing between the label and slider */
-    position: relative;
-}
-
-.slider {
-    width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 10px;
-    background: linear-gradient(
-        to right,
-        #ff4d4d 0%,
-        #ffa64d 25%,
-        #ffff4d 50%,
-        #a6ff4d 75%,
-        #4dff88 100%
-    );
-    border-radius: 5px;
-    outline: none;
-    transition: background 0.3s ease-in-out;
-}
-
 .form-control {
     width: 100%;
     padding: 10px;
@@ -168,47 +138,12 @@ body {
     padding-right: 10px;  /* Padding only on the right side */
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #007bff;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
-}
-
-.slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    font-size: 0.9rem;
-    color: #555;
-    text-align: center;
-}
-
-.slider-labels span {
-    flex: 1;
-    text-align: center;
-    position: relative;
-}
-
-.slider-labels span:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 8px;
-    background: #333;
+.form-label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0; /* Removes extra space above and below the label */
+    display: block;
+    color: #333;
 }
 
 .acceptance-form-container {
@@ -218,9 +153,9 @@ body {
     height: 100vh;
     background-color: #f9f9f9; /* Soft background */
     padding: 20px;
-  }
-  
-  .acceptance-form-content {
+}
+
+.acceptance-form-content {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -228,26 +163,26 @@ body {
     max-width: 600px;
     width: 100%;
     direction: rtl; /* Ensure all text is right-to-left */
-  }
-  
-  h2 {
+}
+
+h2 {
     text-align: right; /* Align the header to the right */
     font-size: 1.8em;
     color: #333;
-  }
-  
-  p {
+}
+
+p {
     font-size: 1.1em;
     color: #444;
     text-align: right; /* Align paragraph text to the right */
     margin: 10px 0;
-  }
-  
-  form {
+}
+
+form {
     margin-top: 20px;
-  }
-  
-  .acceptance-form-group {
+}
+
+.acceptance-form-group {
     display: flex;
     justify-content: flex-end; /* Align the entire group to the right */
     align-items: center;
@@ -264,14 +199,14 @@ body {
     direction: rtl;  /* Sets text direction to right-to-left */
 }
 
-.aggrementLabel{
+.aggrementLabel {
     text-align: right;
     background-color: #007bff;
     text-align: right;  /* Align text to the right */
     direction: rtl;  /* Sets text direction to right-to-left */
 }
-  
-  button.submit-button {
+
+button.submit-button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -282,12 +217,129 @@ body {
     font-size: 1.2em;
     opacity: 0.7;
     transition: opacity 0.3s;
-  }
-  
-  button.submit-button:disabled {
+}
+
+button.submit-button:disabled {
     background-color: #ccc;
+}
+
+button.submit-button:hover:not(:disabled) {
+    opacity: 1;
+}
+
+/* Default slider styling (initially transparent) */
+.slider {
+    width: 100%;
+    height: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    background: rgba(200, 200, 200, 0.2); /* Very faint background */
+    transition: background 0.3s ease-in-out;
+}
+
+/* Ensure the track is always clickable */
+.slider::-webkit-slider-runnable-track {
+    cursor: pointer;
+    height: 10px;
+}
+
+/* Hide thumb when value is 0, but allow track clicks */
+.slider[value="0"]::-webkit-slider-thumb {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Ensure the slider is still clickable at 0 */
+.slider[value="0"] {
+    pointer-events: auto !important;
+    background: #3b82f6; /* Light blue */
+
+}
+
+/* Show thumb and track when value > 0 */
+.slider:not([value="0"])::-webkit-slider-thumb {
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #3b82f6; /* Light blue */
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* When a value is selected, make the track fully visible */
+.slider:not([value="0"])::-webkit-slider-runnable-track {
+    background: linear-gradient(
+        to right,
+        #dbeafe 0%,  
+        #bfdbfe 25%, 
+        #93c5fd 50%, 
+        #60a5fa 75%, 
+        #3b82f6 100%
+    ) !important;
+}
+
+/* Slider labels styling */
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
   }
   
-  button.submit-button:hover:not(:disabled) {
-    opacity: 1;
+  .slider-labels span {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Style the entire checkbox group */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px; /* Adds space between each checkbox */
+    padding: 5px;
+    background-color: #f1f1f1; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    transition: background-color 0.3s;
+}
+
+/* Style each label inside the checkbox group */
+.checkbox-group label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px; /* Space between label and checkbox */
+    flex-grow: 1; /* Ensures the label takes the full width */
+}
+
+/* Style the checkbox itself */
+.checkbox-group input[type="checkbox"] {
+    margin-left: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+/* Add hover effect for better UX */
+.checkbox-group:hover {
+    background-color: #e6f7ff; /* Light blue on hover */
+}
+
+/* Add focus effect for accessibility */
+.checkbox-group input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Highlight on focus */
+}
+
+/* Optional: Add some margin to the top of the entire form */
+form {
+    margin-top: 20px;
+}
+
+.full-width-image {
+    width: 50%;
+    height:max-content; /* Ensures aspect ratio is maintained */
+    display: block; /* Removes extra spacing below the image */
   }

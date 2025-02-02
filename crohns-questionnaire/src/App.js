@@ -12,6 +12,9 @@ import AcceptenceForm from "./forms/acceptenceForm"
 import PTSDQuestionnaire from './forms/PTSDQuestionnaire';
 import DepressionAssessment from './forms/depressionAssessment';
 import MSPSSQuestionnaire  from './forms/mspssquastionaire';
+import ACEQuestionnaire from './forms/aceQuestionaire';
+import HealthStatusQuestionnaire from './forms/healthStatusQuestionnaire';
+
 
 // Create this component
 
@@ -30,6 +33,8 @@ function App() {
           <Route path="/ptsdquestionnaire" element={<PTSDQuestionnaire/>}/>
           <Route path="/depressionassessment" element={<DepressionAssessment/>}/>
           <Route path="/mspssquastionaire" element={<MSPSSQuestionnaire />}/>
+          <Route path="/acequastionaire" element={<ACEQuestionnaire/>}/>
+          <Route path='/healthstatusquestionnaire' element = {<HealthStatusQuestionnaire/>}/>
 
       </Routes>
     </Router>

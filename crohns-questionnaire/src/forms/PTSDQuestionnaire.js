@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 const PTSDQuestionnaire = () => {
     const location = useLocation();
-    const { preferredLanguage } = location.state || {};
+    const { preferredLanguage, workIssuesMentalFrequency } = location.state || {};
 
   const questions = [
     "זיכרונות טורדניים ולא רצויים של החוויה הטראומטית?",
@@ -38,7 +38,7 @@ const navigate = useNavigate();
 
 
   const [answers, setAnswers] = useState(
-    questions.map(() => 3) // Default value is 3 (neutral) for all questions
+    questions.map(() => 0) // Default value is 3 (neutral) for all questions
   );
 
   const handleChange = (index, value) => {
@@ -53,27 +53,41 @@ const navigate = useNavigate();
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/healthlifestyleform", { state: { preferredLanguage } });
+
+    if(workIssuesMentalFrequency!=null){
+      navigate("/depressionassessment", { state: { preferredLanguage } });
+    }
+    else{
+      navigate("/healthlifestyleform", { state: { preferredLanguage } });
+    }
   };
+
 
   return (
     <form onSubmit={handlesubmit}>
 
+      <h3 className="h3-trauma">אנא ענה על השאלות הבאות כחלק משאלון טראומה</h3>
+
       {questions.map((question, index) => (
-        <div className="form-group-trauma mt-3" key={index}>
+        <div className="form-group-trauma" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
           <div className="slider-container">
-            <input
-              type="range"
-              min="1"
-              max="5"
-              step="1"
-              className="slider"
-              id={`question-${index}`}
-              name={`question-${index}`}
-              value={answers[index]}
-              onChange={(e) => handleChange(index, e.target.value)}
-            />
+          <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            id={`question-${index}`}
+            name={`question-${index}`}
+            value={answers[index]} // Correctly binding the value
+            onChange={(e) => handleChange(index, e.target.value)}
+            onClick={(e) => {
+              if (answers[index] === 0) {
+                handleChange(index, 1); // Set to 1 when clicked if currently at 0
+              }
+            }}
+        />
             <div className="slider-labels">
               <span>כלל לא</span>
               <span>במידה מועטה</span>

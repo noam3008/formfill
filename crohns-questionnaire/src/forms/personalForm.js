@@ -268,7 +268,7 @@ const PersonalForm = () => {
 
         <div className="form-group">
           <label htmlFor="yearsInOccupation">מספר השנים בעיסוק זה</label>
-          <input type="number" name="yearsInOccupation" id="yearsInOccupation" className="form-control" value={formData.yearsInOccupation} onChange={handleChange} />
+          <input type="number" min ="0" name="yearsInOccupation" id="yearsInOccupation" className="form-control" value={formData.yearsInOccupation} onChange={handleChange} />
         </div>
 
         <div className="form-group">

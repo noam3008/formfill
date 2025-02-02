@@ -5,45 +5,39 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-def get_db_connection():
-    return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='Newlife1!',
-        database='health_project'
-    )
+db_config = {
+    'host': 'database-1.cz2i42m6u7g1.us-east-1.rds.amazonaws.com',
+    'user': 'admin',
+    'password': 'Fd[t4#iBIeiX13EuQX!kWDr2X-L*',
+    'database': 'dataformanagement'
+}
+    
 
-@app.route('/insert_user', methods=['POST'])
-def insert_user():
+@app.route('/submit', methods=['POST'])
+def submit_form():
     data = request.json
-    print("data " + data)
-
-    preferred_language = data.get('preferredLanguage', '')
-    first_name = data.get('firstName', '')
-    last_name = data.get('lastName', '')
-    id_number = data.get('idNumber', '')
-    email = data.get('email', '')
-    phone = data.get('phone', '')
-    address = data.get('address', '')
-    health_fund = data.get('healthFund', '')
-    age = data.get('age', '')
-    gender = data.get('gender', '')
-    sex = data.get('sex', '')
-
     try:
-        conn = get_db_connection()
+        conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO users (
-                preferredLanguage, firstName, lastName, idNumber, email, phone, address, healthFund, age, gender, sex
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ''', (preferred_language, first_name, last_name, id_number, email, phone, address, health_fund, age, gender, sex))
+        sql = """
+        INSERT INTO Users (id_number, first_name, last_name, email, phone, age, health_fund, gender, sex, preferred_language)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (
+            data['idNumber'], data['firstName'], data['lastName'], data['email'], 
+            data['phone'], data['age'], data['healthFund'], data['gender'], 
+            data['sex'], data['preferredLanguage']
+        )
+        cursor.execute(sql, values)
         conn.commit()
+        return jsonify({"message": "Data inserted successfully!"}), 200
+    except mysql.connector.errors.IntegrityError as e:
+        return jsonify({"error": "Duplicate id_number. This ID already exists."}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
         cursor.close()
         conn.close()
-        return jsonify({'status': 'success'}), 201
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
         app.run(host='0.0.0.0', port=3002)

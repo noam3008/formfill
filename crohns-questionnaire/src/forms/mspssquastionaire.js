@@ -47,7 +47,7 @@ const MSPSSQuestionnaire = () => {
 
   // Default answers are neutral (4)
   const [answers, setAnswers] = useState(
-    new Array(questionsMale.length).fill(4)
+    new Array(questionsMale.length).fill(0)
   );
 
   // Handle slider changes
@@ -62,7 +62,7 @@ const MSPSSQuestionnaire = () => {
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/childhoodquastionaire", { state: { preferredLanguage } });
+    navigate("/healthstatusquestionnaire", { state: { preferredLanguage } });
   };
 
   // Slider labels
@@ -97,6 +97,12 @@ const MSPSSQuestionnaire = () => {
               name={`question-${index}`}
               value={answers[index]}
               onChange={(e) => handleChange(index, e.target.value)}
+              onClick={(e) => {
+                if (answers[index] === 0) {
+                  handleChange(index, 1); // Set to 1 when clicked if currently at 0
+                }
+              }}
+              
             />
             <div className="slider-labels">
               {labels.map((label, i) => (

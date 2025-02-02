@@ -11,13 +11,21 @@ const MedicalForm = () => {
   const [formData, setFormData] = useState({
     diagnosis: '',
     workIssuesMentalFrequency : '',
+    medicationWithoutDoctorAmount :0,
+    selfEsteem : 0,
+    parentsAttidude :0,
+    relationship : 0,
+    workAfterIll :0,
+    mood :0,
+    socialLife :0,
+    isMouthAftha : 0,
     crohnAge: '',
     diagnosisAge: '',
     treatmentType: '',
     treatmentDuration: '',
     preferredLanguage:preferredLanguage,
     treatmentChanges: '',
-    treatmentAdherence: '',
+    treatmentAdherence: 0,
     backgroundDiseases: '',
     allergies: '',
     foodSensitivity: '',
@@ -29,80 +37,43 @@ const MedicalForm = () => {
     aggravatesCondition: '',
     improvesCondition: '',
     diseaseOnsetEvent: '',
-    headacheFrequency: '',
-    abdominalPainFrequency: '',
-    backPainFrequency: '',
-    jointPainFrequency: '',
+    headacheFrequency: 0,
+    abdominalPainFrequency: 0,
+    backPainFrequency: 0,
+    jointsPainFrequency: 0,
     chronicPain: '',
     mouthUlcers: '',
-    socialImpact: '',
-    selfConfidence: '',
-    jobImpact: '',
-    mentalHealthImpact: '',
-    psychologicalTreatment: '',
-    emotionalTreatmentImpact: '',
+    socialImpact: 0,
+    selfConfidence: 0,
+    jobImpact: 0,
+    mentalHealthImpact: 0,
+    psychologicalTreatment: 0,
+    doctorduechron :0,
+    emotionalTreatmentImpact: 0,
     bloodType: '',
     regularMedications: '',
+    winterlleness :0,
     overCounterMedications: '',
+    outsideActivity : 0,
     physicalHealthImpact: '',
-    mentalHealthImpactWork: '',
-  });
+    mentalHealthImpactWork: '',  // Initial value 0
+});
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Initialize formData with default or empty values when component mounts
-    setFormData({
-      diagnosis: '',
-      crohnAge: '',
-      diagnosisAge: '',
-      isTreat:'',
-      treatmentType: '',
-      treatmentDuration: '',
-      treatmentChanges: '',
-      workIssuesMentalFrequency : '',
-      preferredLanguage:preferredLanguage,
-      treatmentAdherence: '',
-      backgroundDiseases: '',
-      allergies: '',
-      foodSensitivity: '',
-      chronicDiseases: '',
-      hospitalization: '',
-      surgeries: '',
-      complementaryMedicine: '',
-      treatmentHelp: '',
-      aggravatesCondition: '',
-      improvesCondition: '',
-      diseaseOnsetEvent: '',
-      headacheFrequency: '',
-      abdominalPainFrequency: '',
-      backPainFrequency: '',
-      jointPainFrequency: '',
-      chronicPain: '',
-      mouthUlcers: '',
-      socialImpact: '',
-      selfConfidence: '',
-      jobImpact: '',
-      mentalHealthImpact: '',
-      psychologicalTreatment: '',
-      emotionalTreatmentImpact: '',
-      bloodType: '',
-      regularMedications: '',
-      overCounterMedications: '',
-      physicalHealthImpact: '',
-      mentalHealthImpactWork: '',
-    });
-    window.scrollTo(0,0)
-  }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+      }, []); // Empty dependency array to ensure it runs only once when the component mounts
 
   // Handler to update state on form change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+    const { name, value } = e.target;
+    console.log(`Changed ${name} to ${value}`);
+    setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+    }));
+};
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -116,7 +87,11 @@ const MedicalForm = () => {
     e.preventDefault();
     const workIssuesMentalFrequency = formData.workIssuesMentalFrequency;
     console.log(formData);
-    if (formData.diseaseTrigger === 'טראומה') {
+    if (formData.diseaseTrigger === 'טראומה'&&workIssuesMentalFrequency >= 10 && workIssuesMentalFrequency <= 30) {
+      navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage ,workIssuesMentalFrequency:formData.workIssuesMentalFrequency} });
+    }
+
+    else if (formData.diseaseTrigger === 'טראומה') {
       navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
       
     }
@@ -159,6 +134,7 @@ const MedicalForm = () => {
                   className="form-control"
                   id="crohnAge"
                   name="crohnAge"
+                  min="0"
                   value={formData.crohnAge}
                   onChange={handleChange}
               />
@@ -171,12 +147,13 @@ const MedicalForm = () => {
                   className="form-control"
                   id="diagnosisAge"
                   name="diagnosisAge"
+                  min="0"
                   value={formData.diagnosisAge}
                   onChange={handleChange}
               />
             </div>
             
-<div className="mt-4"></div>
+          <div className="mt-4"></div>
 
             {/* Treatment Information */}
             <div className="form-group radio-preferred">
@@ -239,7 +216,7 @@ const MedicalForm = () => {
 
             {formData.treatmentChanges === 'כן' && (
             <div>
-              <label htmlFor="treatmentDateAndReason" className="form-label">מתי היה השינוי בטיפול או המינון ומדוע? </label>
+              <label htmlFor="treatmentDateAndReason" className="form-label">מתי היה השינוי בטיפול או המינון ? </label>
               <input
                   type="text"
                   className="form-control"
@@ -251,6 +228,19 @@ const MedicalForm = () => {
             </div>
              )} 
 
+          {formData.treatmentChanges === 'כן' && (
+            <div>
+              <label htmlFor="treatmentChangeReason" className="form-label">מדוע בוצע השינוי בטיפול או המינון? </label>
+              <input
+                  type="text"
+                  className="form-control"
+                  id="treatmentChangeReason"
+                  name="treatmentChangeReason"
+                  value={formData.treatmentChangeReason}
+                  onChange={handleChange}
+              />
+            </div>
+             )} 
 
 
          {formData.isTreat === 'כן' && (
@@ -265,8 +255,15 @@ const MedicalForm = () => {
                             step="1"
                             className="slider"
                             id="treatmentAdherence"
+                            value={formData.treatmentAdherence } 
                             name="treatmentAdherence"
+                            onInput={handleChange}
                             onChange={handleChange}
+                            onClick={(e) => {
+                              if (formData.treatmentAdherence === 0) {
+                                  handleChange(e); // Ensure the first click registers
+                              }
+                          }}
                         />
                         <div className="slider-labels">
                             <span>לא מתמיד</span>
@@ -296,7 +293,14 @@ const MedicalForm = () => {
                             className="slider"
                             id="winterlleness"
                             name="winterlleness"
+                            onInput={handleChange}
+                            value={formData.winterlleness}
                             onChange={handleChange}
+                            onClick={(e) => {
+                              if (formData.winterlleness === 0) {
+                                  handleChange(e); // Ensure the first click registers
+                              }
+                          }}
                         />
                         <div className="slider-labels">
                             <span>0 - בכלל לא</span>
@@ -321,8 +325,15 @@ const MedicalForm = () => {
                             max="4"
                             step="1"
                             className="slider"
+                            onInput={handleChange}
                             id="doctorduechron"
                             name="doctorduechron"
+                            value={formData.doctorduechron }
+                            onClick={(e) => {
+                              if (formData.doctorduechron === 0) {
+                                  handleChange(e); // Ensure the first click registers
+                              }
+                          }}
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
@@ -351,8 +362,8 @@ const MedicalForm = () => {
 
         {formData.allergies === 'כן' && (
           <div className="form-group">
-            <label htmlFor="allergiesAge"> מאיזה גיל האלרגיה מאובחנת?</label>
-            <input type="number" name="allergiesAge" id="allergiesAge" className="form-control" value={formData.allergiesAge} onChange={handleChange} />
+            <label htmlFor="allergiesAge">? מאיזה גיל האלרגיה מאובחנת</label>
+            <input min = "0" type="number" name="allergiesAge" id="allergiesAge" className="form-control" value={formData.allergiesAge} onChange={handleChange} />
           </div>
         )}
 
@@ -360,10 +371,10 @@ const MedicalForm = () => {
           <div className="form-group">
             <label htmlFor="allergiesForWhat">
             {preferredLanguage === 'לשון זכר' 
-                ? ' למה אתה אלרגי?' 
-                : '  למה את אלרגית?'}
+                ? ' ? למה אתה אלרגי' 
+                : '  ? למה את אלרגית'}
               </label>
-            <input type="number" name="allergiesForWhat" id="allergiesForWhat" className="form-control" value={formData.allergiesForWhat} onChange={handleChange} />
+            <input type="text" name="allergiesForWhat" id="allergiesForWhat" className="form-control" value={formData.allergiesForWhat} onChange={handleChange} />
           </div>
         )}
 
@@ -384,8 +395,8 @@ const MedicalForm = () => {
 
         {formData.foodSensitivity === 'כן' && (
           <div className="form-group">
-            <label htmlFor="foodSensetivityAge"> מאיזה גיל הרגישות?</label>
-            <input type="number" name="foodSensetivityAge" id="foodSensetivityAge" className="form-control" value={formData.foodSensetivityAge} onChange={handleChange} />
+            <label htmlFor="foodSensetivityAge">  ? מאיזה גיל אתה סובל מרגישות</label>
+            <input min = "0" type="number" name="foodSensetivityAge" id="foodSensetivityAge" className="form-control" value={formData.foodSensetivityAge} onChange={handleChange} />
           </div>
         )}
 
@@ -402,15 +413,15 @@ const MedicalForm = () => {
 
         {formData.chronicDiseases === 'כן' && (
           <div className="form-group">
-            <label htmlFor="chronicDiseasesAge"> מאיזה גיל החלו התסמינים?</label>
-            <input type="number" name="chronicDiseasesAge" id="chronicDiseasesAge" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
+            <label htmlFor="chronicDiseasesAge"> ? מאיזה גיל החלו התסמינים</label>
+            <input  type="number" name="chronicDiseasesAge" id="chronicDiseasesAge" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
           </div>
         )}
 
         {formData.chronicDiseases === 'כן' && (
           <div className="form-group">
-            <label htmlFor="chronicDiseasesDiagnose">מאיזה גיל אובחנו התסמינים?</label>
-            <input type="number" name="chronicDiseasesDiagnose" id="chronicDiseasesDiagnose" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
+            <label htmlFor="chronicDiseasesDiagnose">? מאיזה גיל אובחנו התסמינים</label>
+            <input  type="number" name="chronicDiseasesDiagnose" id="chronicDiseasesDiagnose" min = "0" className="form-control" value={formData.chronicDiseasesDiagnose} onChange={handleChange} />
           </div>
         )}
 
@@ -427,7 +438,10 @@ const MedicalForm = () => {
         {formData.hospitalization === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="hospitalizationDetails" className="form-label">
-            אנא פרט/י את האישפוזים:
+          {preferredLanguage === 'לשון זכר' 
+                ? 'אנא פרט את האישפוזים:' 
+                : 'אנא פרטי את האישפוזים:'}
+            
           </label>
           <textarea
             id="hospitalizationDetails"
@@ -435,7 +449,7 @@ const MedicalForm = () => {
             value={formData.hospitalizationDetails}
             onChange={handleChange}
             className="form-control"
-            placeholder="פרט/י את האישפוזים כאן"
+            placeholder=""
           />
         </div>
       )}
@@ -452,22 +466,36 @@ const MedicalForm = () => {
         </div>
 
         {formData.surgeries === "כן" && (
-        <div className="form-group mt-3">
-          <label htmlFor="surgeriesDetails" className="form-label">
-          {preferredLanguage === 'לשון זכר' 
-                ? '  אנא פרט את הניתוחים:' 
-                : '  אנא פרטי את הניתוחים:'}
-          </label>
-          <textarea
-            id="surgeriesDetails"
-            name="surgeriesDetails"
-            value={formData.hospitalizationDetails}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="פרט בבקשה איזה ניתוחים ובאיזה גילאים"
-          />
-        </div>
-      )}
+          <div className="form-group mt-3">
+            <label htmlFor="surgeriesList" className="form-label">
+              {formData.preferredLanguage === "לשון זכר"
+                ? "אנא פרט את הניתוחים שעברת:"
+                : "אנא פרטי את הניתוחים שעברת:"}
+            </label>
+            <textarea
+              id="surgeriesList"
+              name="surgeriesList"
+              value={formData.surgeriesList || ""}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="פרט בבקשה את הניתוחים שעברת"
+            />
+
+            <label htmlFor="surgeriesAges" className="form-label mt-3">
+              {formData.preferredLanguage === "לשון זכר"
+                ? "אנא פרט באיזה גילאים עברת את הניתוחים:"
+                : "אנא פרטי באיזה גילאים עברת את הניתוחים:"}
+            </label>
+            <textarea
+              id="surgeriesAges"
+              name="surgeriesAges"
+              value={formData.surgeriesAges || ""}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="פרט בבקשה את הגילאים שבהם עברת את הניתוחים"
+            />
+          </div>
+        )}
 
         <div className="form-group radio-preferred">
           <label htmlFor="complementaryMedicine" className="form-label" >
@@ -694,45 +722,53 @@ const MedicalForm = () => {
         <label htmlFor="visitNo">לא</label>
       </div>
 
-      <div className="form-check">
-     
+      {/* Option - "פעם במספר חודשים" */}
+      <div className="form-check" style={{ direction: "rtl", textAlign: "right" }}>
         <input
           type="radio"
-          id="visitOnce"
+          id="visitMonths"
           name="familyDoctorVisit"
-          value="once"
+          value="פעם במספר חודשים"
           onChange={handleChange}
-          checked={formData.familyDoctorVisit === "once"}
+          checked={formData.familyDoctorVisit === "פעם במספר חודשים"}
         />
-         
-         <label htmlFor="visitOnce">         
-         {preferredLanguage === 'לשון זכר' 
-                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
-                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}
-           </label>
-        {formData.familyDoctorVisit === "once" && (
-          <input
-          min = "0"
-            type="number"
-            className="form-control mt-2"
-            name="visitFrequency"
-            placeholder="מספר חודשים"
-            value={formData.visitFrequency}
-            onChange={handleChange}
-            style={{ width: "120px", display: "inline-block", marginLeft: "10px" }}
-          />
-        )}
-              <div className="form-check">
+        <label htmlFor="visitMonths">
+          {preferredLanguage === "לשון זכר"
+            ? "אני פוגש את הרופא כל"
+            : "אני פוגשת את הרופא כל"}
+        </label>
+
+        {/* Textbox (Disabled by Default) */}
+        <input
+          type="number"
+          min="0"
+          className="form-control"
+          name="visitMonthsCount"
+          placeholder="מספר חודשים"
+          value={formData.visitMonthsCount || ""}
+          onChange={handleChange}
+          disabled={formData.familyDoctorVisit !== "פעם במספר חודשים"} // Enable only when selected
+          style={{
+            width: "80px",
+            display: "inline-block",
+            margin: "0 10px",
+          }}
+        />
+
+        <label>חודשים</label>
+      </div>
+
+        <div className="form-check">
         <input
           type="radio"
           id="visitOnceAYear"
           name="familyDoctorVisit"
-          value="לא"
+          value="פעם בשנה"
           onChange={handleChange}
           checked={formData.familyDoctorVisit === "פעם בשנה"}
         />
-        <label htmlFor="visitNo">פעם בשנה</label>
-      </div>
+        <label htmlFor="visitOnceAYear">פעם בשנה</label>
+      
       </div>
       </div>
 
@@ -755,48 +791,57 @@ const MedicalForm = () => {
         <label htmlFor="visitYes">כן</label>
       </div>
 
-     <div className="form-check">
+      <div className="form-check">
         <input
           type="radio"
           id="visitNo"
-          name="pointsDoctorVisit"
+          name="dentistDoctorVisit"
           value="לא"
           onChange={handleChange}
-          checked={formData.pointsDoctorVisit === "לא"}
+          checked={formData.dentistDoctorVisit === "לא"}
         />
         <label htmlFor="visitNo">לא</label>
       </div>
 
-      <div className="form-check">
-     
+
+      {/* Option - "פעם במספר חודשים" */}
+      <div className="form-check" style={{ direction: "rtl", textAlign: "right" }}>
         <input
           type="radio"
-          id="visitOnce"
-          name="dentistDoctorVisit"
-          value="once"
+          id="visitFrequencyDentist"
+          name="visitFrequencyDentist"
+          value="פעם במספר חודשים"
           onChange={handleChange}
-          checked={formData.dentistDoctorVisit === "once"}
+          checked={formData.visitFrequencyDentist === "פעם במספר חודשים"}
         />
-         
-         <label htmlFor="visitOnce">          
-          {preferredLanguage === 'לשון זכר' 
-                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
-                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}
-                </label>
-        {formData.dentistDoctorVisit === "once" && (
-          <input
-          min = "0"
-            type="number"
-            className="form-control mt-2"
-            name="visitFrequency"
-            placeholder="מספר חודשים"
-            value={formData.visitFrequencyDentist}
-            onChange={handleChange}
-            style={{ width: "120px", display: "inline-block", marginLeft: "10px" }}
-          />
-        )}
+        <label htmlFor="visitFrequencyDentist">
+          {preferredLanguage === "לשון זכר"
+            ? "אני פוגש את הרופא כל"
+            : "אני פוגשת את הרופא כל"}
+        </label>
+
+        {/* Textbox (Disabled by Default) */}
+        <input
+          type="number"
+          min="0"
+          className="form-control"
+          name="visitFrequencyDentist"
+          placeholder="מספר חודשים"
+          value={formData.visitFrequencyDentist || ""}
+          onChange={handleChange}
+          disabled={formData.visitFrequencyDentist !== "פעם במספר חודשים"} // Enable only when selected
+          style={{
+            width: "80px",
+            display: "inline-block",
+            margin: "0 10px",
+          }}
+        />
+
+        <label>חודשים</label>
       </div>
       </div>
+
+      
 
       <div className="form-group radio-preferred">
           <label htmlFor="dentistDoctorVisit" className="form-label" >
@@ -804,7 +849,7 @@ const MedicalForm = () => {
                 ? '   האם אתה מבצע באופן קבוע אבחון נקודות חן ?' 
                 : '    האם את מבצעת באופן קבוע אבחון נקודות חן ?'}
             
-            האם אתה מבצע באופן קבוע אבחון נקודות חן ?</label>
+           </label>
           <div className="form-check">
         <input
           type="radio"
@@ -829,34 +874,7 @@ const MedicalForm = () => {
         <label htmlFor="visitNo">לא</label>
       </div>
 
-      <div className="form-check">
      
-        <input
-          type="radio"
-          id="visitOnce"
-          name="pointsDoctorVisit"
-          value="once"
-          onChange={handleChange}
-          checked={formData.pointsDoctorVisit === "once"}
-        />
-         
-         <label htmlFor="visitOnce">           
-          {preferredLanguage === 'לשון זכר' 
-                ? ' (מלא מספר חודשים) מבקר את הרופא בתדירות נמוכה ' 
-                : '  (מלאי מספר חודשים) מבקרת את הרופא בתדירות נמוכה '}</label>
-        {formData.dentistDoctorVisit === "once" && (
-          <input
-          min = "0"
-            type="number"
-            className="form-control mt-2"
-            name="visitFrequency"
-            placeholder="מספר חודשים"
-            value={formData.visitFrequencyDentist}
-            onChange={handleChange}
-            style={{ width: "120px", display: "inline-block", marginLeft: "10px" }}
-          />
-        )}
-      </div>
       </div>
       
       <div className="form-group radio-preferred">
@@ -962,7 +980,7 @@ const MedicalForm = () => {
       <div className="form-group radio-preferred">
           <label htmlFor="otherDeases" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
-                ? '   האם אתה נמצא במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?אם אתה לוקח תוסף תזונה באופן קבוע ' 
+                ? '   האם אתה נמצא במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס? ' 
                 : '   האם את נמצאת במעקב רפואי אחר מחלה אחרת פרט לקרוהן/ קוליטיס?'}
             
             </label>
@@ -997,8 +1015,8 @@ const MedicalForm = () => {
           <label className="form-label">
 
           {preferredLanguage === 'לשון זכר' 
-                ? ' באיזו תדירות אתה נוטל תרופות ללא מרשם' 
-                : '   באיזו תדירות את נוטלת תרופות ללא מרשם'}
+                ? '  באיזו תדירות אתה נוטל תרופות ללא מרשם כנגד כאבים כגון (אקמול,אדוויל,נורופן וכד) ' 
+                : '    באיזו תדירות את נוטלת תרופות ללא מרשם כנגד כאבים כגון (אקמול,אדוויל,נורופן וכד)'}
 
          
           </label>
@@ -1009,6 +1027,12 @@ const MedicalForm = () => {
                   max="5"
                   step="1"
                   className="slider"
+                  value={formData.medicationWithoutDoctorAmount }
+                  onClick={(e) => {
+                    if (formData.medicationWithoutDoctorAmount === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   id="medicationWithoutDoctorAmount"
                   name="medicationWithoutDoctorAmount"
                   onChange={handleChange}
@@ -1043,101 +1067,133 @@ const MedicalForm = () => {
         </div>
       <div >
 
+        <h3 >  ? באיזה תדירות אתה סובל מהכאבים הבאים </h3>
 
-      <div className="headacheFrequency">
-          <label className="form-label">
-          תדירות כאבי ראש
-          </label>
-          <div className="slider-container">
-              <input
-                  type="range"
-                  min="1"
-                  max="4"
-                  step="1"
-                  className="slider"
-                  id="headacheFrequency"
-                  name="headacheFrequency"
-                  onChange={handleChange}
-              />
-              <div className="slider-labels">
-                  <span>לעתים נדירות</span>
-                  <span>לפעמים</span>
-                  <span>לעתים תכופות</span>
-                  <span>כל יום</span>
-              </div>
-          </div>
-      </div>
 
-      <div className="abdominalPainFrequency">
-          <label className="form-label">
-          תדירות כאבי בטן
-          </label>
-          <div className="slider-container">
-              <input
-                  type="range"
-                  min="1"
-                  max="4"
-                  step="1"
-                  className="slider"
-                  id="abdominalPainFrequency"
-                  name="abdominalPainFrequency"
-                  onChange={handleChange}
-              />
-              <div className="slider-labels">
-                  <span>לעתים נדירות</span>
-                  <span>לפעמים</span>
-                  <span>לעתים תכופות</span>
-                  <span>כל יום</span>
-              </div>
-          </div>
-      </div>
-      <div className="backPainFrequency">
-          <label className="form-label">
-          תדירות כאבי גב
-          </label>
-          <div className="slider-container">
-              <input
-                  type="range"
-                  min="1"
-                  max="4"
-                  step="1"
-                  className="slider"
-                  id="backPainFrequency"
-                  name="backPainFrequency"
-                  onChange={handleChange}
-              />
-              <div className="slider-labels">
-                  <span>לעתים נדירות</span>
-                  <span>לפעמים</span>
-                  <span>לעתים תכופות</span>
-                  <span>כל יום</span>
-              </div>
-          </div>
-      </div>
+        <div className="headacheFrequency">
+          
+    <label className="form-label">תדירות כאבי ראש</label>
+    <div className="slider-container">
+    <input
+    type="range"
+    min="1"
+    max="5"
+    step="1"
+    className="slider"
+    value={formData.headacheFrequency}  // Always set value from state
+    id="headacheFrequency"
+    name="headacheFrequency"
+    onChange={handleChange}  // Handle value change
+    onClick={(e) => {
+      if (formData.headacheFrequency === 0) {
+          handleChange(e); // Ensure the first click registers
+      }
+  }}
+/>
 
-      <div className="jointsPainFrequency">
-          <label className="form-label">
-          תדירות כאבי מפרקים
-          </label>
-          <div className="slider-container">
-              <input
-                  type="range"
-                  min="1"
-                  max="4"
-                  step="1"
-                  className="slider"
-                  id="jointsPainFrequency"
-                  name="jointsPainFrequency"
-                  onChange={handleChange}
-              />
-              <div className="slider-labels">
-                  <span>לעתים נדירות</span>
-                  <span>לפעמים</span>
-                  <span>לעתים תכופות</span>
-                  <span>כל יום</span>
-              </div>
-          </div>
-      </div>
+        <div className="slider-labels">
+            <span>אף פעם</span>
+            <span>לעתים נדירות</span>
+            <span>לפעמים</span>
+            <span>לעתים תכופות</span>
+            <span>כל יום</span>
+        </div>
+    </div>
+</div>
+
+<div className="abdominalPainFrequency">
+    <label className="form-label">תדירות כאבי בטן</label>
+    <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            value={formData.abdominalPainFrequency }  // Fallback to 0, meaning no value selected
+            id="abdominalPainFrequency"
+            name="abdominalPainFrequency"
+            tabIndex="0" 
+            onInput={handleChange} 
+            onChange={handleChange}
+            onClick={(e) => {
+              if (formData.abdominalPainFrequency === 0) {
+                  handleChange(e); // Ensure the first click registers
+              }
+          }}
+        />
+        <div className="slider-labels">
+            <span>אף פעם</span>
+            <span>לעתים נדירות</span>
+            <span>לפעמים</span>
+            <span>לעתים תכופות</span>
+            <span>כל יום</span>
+        </div>
+    </div>
+</div>
+
+<div className="backPainFrequency">
+    <label className="form-label">תדירות כאבי גב</label>
+    <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            value={formData.backPainFrequency}  // Fallback to 0, meaning no value selected
+            id="backPainFrequency"
+            name="backPainFrequency"
+            tabIndex="0" 
+            onInput={handleChange} 
+            onChange={handleChange}
+            onClick={(e) => {
+              if (formData.backPainFrequency === 0) {
+                  handleChange(e); // Ensure the first click registers
+              }
+          }}
+        />
+        <div className="slider-labels">
+            <span>אף פעם</span>
+            <span>לעתים נדירות</span>
+            <span>לפעמים</span>
+            <span>לעתים תכופות</span>
+            <span>כל יום</span>
+        </div>
+    </div>
+</div>
+
+<div className="jointsPainFrequency">
+    <label className="form-label">תדירות כאבי מפרקים</label>
+    <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            value={formData.jointsPainFrequency }  // Fallback to 0, meaning no value selected
+            id="jointsPainFrequency"
+            name="jointsPainFrequency"
+            tabIndex="0" 
+            onInput={handleChange} 
+            onChange={handleChange}
+            onClick={(e) => {
+              if (formData.jointsPainFrequency === 0) {
+                  handleChange(e); // Ensure the first click registers
+              }
+          }}
+        />
+        <div className="slider-labels">
+            <span>אף פעם</span>
+            <span>לעתים נדירות</span>
+            <span>לפעמים</span>
+            <span>לעתים תכופות</span>
+            <span>כל יום</span>
+        </div>
+    </div>
+</div>
+
 
       <div className="form-group radio-preferred">
           <label htmlFor="cronicDeseas" className="form-label" >
@@ -1175,9 +1231,7 @@ const MedicalForm = () => {
           <label className="form-label">
           {preferredLanguage === 'לשון זכר' 
                 ? 'האם אתה סובל מכיבים בפה?' 
-                : ' האם את סובלת מכיבים בפה?'}
-
-          האם אתה סובל ה (אפטות)
+                : 'האם את סובלת מכיבים בפה?'}
           </label>
           <div className="slider-container">
               <input
@@ -1186,9 +1240,15 @@ const MedicalForm = () => {
                   max="4"
                   step="1"
                   className="slider"
+                  value={formData.isMouthAftha }
                   id="isMouthAftha"
                   name="isMouthAftha"
                   onChange={handleChange}
+                  onClick={(e) => {
+                    if (formData.isMouthAftha === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
               />
               <div className="slider-labels">
                   <span>אף פעם</span>
@@ -1278,6 +1338,45 @@ const MedicalForm = () => {
       </div>
       </div>
 
+      <div className="form-group">
+                    <label className="form-label">מתן צואה ברמיסיה - מספר פעמים ביום </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="rimisia"
+                        value={formData.rimisia}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">מתן צואה בזמן התקף - מספר פעמים ביום </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="poopDuringSuffer"
+                        value={formData.poopDuringSuffer}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">מתן שתן - מספר פעמים ביום בממוצע </label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="averagePiss"
+                        value={formData.averagePiss}
+                        onChange={handleChange}
+                        
+                        min="0" // Ensures only positive numbers are allowed
+                    />
+                </div>
+
       <div className="selfConfidence">
           <label className="form-label">
           האם המחלה השפיעה על הבטחון העצמי שלך?
@@ -1290,6 +1389,13 @@ const MedicalForm = () => {
                   step="1"
                   className="slider"
                   id="selfConfidence"
+                  value={formData.selfConfidence}
+                  onClick={(e) => {
+                    if (formData.selfConfidence === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
+
                   name="selfConfidence"
                   onChange={handleChange}
               />
@@ -1315,6 +1421,12 @@ const MedicalForm = () => {
                   max="5"
                   step="1"
                   className="slider"
+                  value={formData.socialLife }
+                  onClick={(e) => {
+                    if (formData.socialLife === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   id="socialLife"
                   name="socialLife"
                   onChange={handleChange}
@@ -1341,6 +1453,12 @@ const MedicalForm = () => {
                   max="5"
                   step="1"
                   className="slider"
+                  value={formData.mood }
+                  onClick={(e) => {
+                    if (formData.mood === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   id="mood"
                   name="mood"
                   onChange={handleChange}
@@ -1367,6 +1485,12 @@ const MedicalForm = () => {
                   max="5"
                   step="1"
                   className="slider"
+                  value={formData.workAfterIll }
+                  onClick={(e) => {
+                    if (formData.workAfterIll === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   id="workAfterIll"
                   name="workAfterIll"
                   onChange={handleChange}
@@ -1393,6 +1517,12 @@ const MedicalForm = () => {
                   max="5"
                   step="1"
                   className="slider"
+                  value={formData.relationship }
+                  onClick={(e) => {
+                    if (formData.relationship === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   id="relationship"
                   name="relationship"
                   onChange={handleChange}
@@ -1420,6 +1550,12 @@ const MedicalForm = () => {
                   step="1"
                   className="slider"
                   id="parentsAttidude"
+                  value={formData.parentsAttidude }
+                  onClick={(e) => {
+                    if (formData.parentsAttidude === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   name="parentsAttidude"
                   onChange={handleChange}
               />
@@ -1446,6 +1582,12 @@ const MedicalForm = () => {
                   step="1"
                   className="slider"
                   id="outsideActivity"
+                  value={formData.outsideActivity }
+                  onClick={(e) => {
+                    if (formData.outsideActivity === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   name="outsideActivity"
                   onChange={handleChange}
               />
@@ -1472,6 +1614,12 @@ const MedicalForm = () => {
                   step="1"
                   className="slider"
                   id="selfEsteem"
+                  value={formData.selfEsteem }
+                  onClick={(e) => {
+                    if (formData.selfEsteem === 0) {
+                        handleChange(e); // Ensure the first click registers
+                    }
+                }}
                   name="selfEsteem"
                   onChange={handleChange}
               />
@@ -1536,7 +1684,7 @@ const MedicalForm = () => {
 
         {formData.isPshycologicalTreatment === 'כן' && (
                       <div >
-                      <label htmlFor="treatmentAge" className="form-label">באיזה גיל</label>
+                      <label htmlFor="treatmentAge" className="form-label">באיזה גיל עברת טיפול פסיכולוגי</label>
                       <input
                           type="number"
                           min="0"
@@ -1550,7 +1698,7 @@ const MedicalForm = () => {
         )}
  {formData.isPshycologicalTreatment === 'כן' && (
             <div>
-              <label htmlFor="treatmentReason" className="form-label">מה הייתה הסיבה לפניה לטיפול</label>
+              <label htmlFor="treatmentReason" className="form-label">מה הייתה הסיבה לפניה לטיפול פסיכולוגי</label>
               <input
                   type="text"
                   className="form-control"
@@ -1604,44 +1752,7 @@ const MedicalForm = () => {
             </div>
              )}
 
-                <div className="form-group">
-                    <label className="form-label">מתן צואה ברמיסיה - מספר פעמים ביום </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="rimisia"
-                        value={formData.rimisia}
-                        onChange={handleChange}
-                        
-                        min="0" // Ensures only positive numbers are allowed
-                    />
-                </div>
 
-                <div className="form-group">
-                    <label className="form-label">מתן צואה בזמן התקף - מספר פעמים ביום </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="poopDuringSuffer"
-                        value={formData.poopDuringSuffer}
-                        onChange={handleChange}
-                        
-                        min="0" // Ensures only positive numbers are allowed
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label className="form-label">מתן שתן - מספר פעמים ביום בממוצע </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="averagePiss"
-                        value={formData.averagePiss}
-                        onChange={handleChange}
-                        
-                        min="0" // Ensures only positive numbers are allowed
-                    />
-                </div>
 
 
                 <div>

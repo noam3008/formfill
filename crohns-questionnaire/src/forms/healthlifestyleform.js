@@ -6,19 +6,20 @@ import { useEffect } from 'react';
 
 
 const foodItems = [
-    { label: 'כמות אכילת האוכל החריף', name: 'spicyFood' },
-    { label: 'כמות אכילת הבשר', name: 'meatFood' },
-    { label: 'כמות אכילת העוף', name: 'chickenFood' },
-    { label: 'כמות אכילת הירקות', name: 'vegetableFood' },
-    { label: 'כמות אכילת הדגים', name: 'fishFood' },
-    { label: 'כמות אכילת הפירות', name: 'fruitFood' },
-    { label: 'כמות אכילת מנת האגוזים', name: 'nutsFood' },
-    { label: 'כמות אכילת הקטניות', name: 'legumesFood' },
-    { label: 'כמות אכילת החטיפים המלוחים', name: 'saltySnacks' },
-    { label: 'כמות אכילת החטיפים המתוקים', name: 'sweetSnacks' },
-    { label: 'מינון שתיית קפה / תה', name: 'drinkingCoffeeOrTea' },
-    { label: 'מינון שתיית כוסות מים', name: 'drinkingGlassOfWater' },
-  ];
+    { label: 'בחודש האחרון כמה פעמים אכלת אוכל חריף', name: 'spicyFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת בשר', name: 'meatFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת עוף', name: 'chickenFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת ירקות', name: 'vegetableFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת דגים', name: 'fishFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת פירות', name: 'fruitFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת מנת אגוזים', name: 'nutsFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת קטניות', name: 'legumesFood' },
+    { label: 'בחודש האחרון כמה פעמים אכלת חטיפים מלוחים', name: 'saltySnacks' },
+    { label: 'בחודש האחרון כמה פעמים אכלת חטיפים מתוקים', name: 'sweetSnacks' },
+    { label: 'בחודש האחרון כמה פעמים שתית קפה / תה', name: 'drinkingCoffeeOrTea' },
+    { label: 'בחודש האחרון כמה פעמים שתית כוסות מים', name: 'drinkingGlassOfWater' },
+];
+
 const HealthLifestyleForm = () => {
   const location = useLocation();
   const { preferredLanguage } = location.state || {};
@@ -31,9 +32,9 @@ const HealthLifestyleForm = () => {
         drugUseDetails:'',
         AlcoholUse: '',
         AlcoholAmount: '',
-        energyLevel: '',
+        energyLevel: 0,
         sleepDuration: '',
-        appetite: '',
+        appetite: 0,
         exerciseFrequency: '',
         preferredLanguage:preferredLanguage,
         stepsPerDay: '',
@@ -57,6 +58,7 @@ const HealthLifestyleForm = () => {
         legumesFrequency: '',
         saltySnacksFrequency: '',
         sweetSnacksFrequency: '',
+        energyFrequency :0,
         glutenIntake: '',
         glutenFreeGrainsFrequency: '',
         glutenGrainsFrequency: '',
@@ -114,8 +116,10 @@ const HealthLifestyleForm = () => {
         // Handle other fields
         setFormData((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: parseInt(value, 10),
+            
         }));
+        console.log(`Updated ${name} to ${value}`);
     }
 
   // Update form data
@@ -271,7 +275,14 @@ const HealthLifestyleForm = () => {
 
         {formData.drugUse === 'כן' && (
           <div className="form-group">
-            <label htmlFor="drugUseDetails">? איזה סם ובאיזו תדירות</label>
+            <label htmlFor="drugUseDetails">? איזה סם</label>
+            <textarea type="text"  name="drugUseDetails" id="drugUseDetails" className="form-control" value={formData.drugUseDetails} onChange={handleChange} />
+          </div>
+        )}
+
+        {formData.drugUse === 'כן' && (
+          <div className="form-group">
+            <label htmlFor="drugUseDetailsAmount">? באיזו תדירות</label>
             <textarea type="text"  name="drugUseDetails" id="drugUseDetails" className="form-control" value={formData.drugUseDetails} onChange={handleChange} />
           </div>
         )}
@@ -296,8 +307,8 @@ const HealthLifestyleForm = () => {
           <div className="form-group">
             <label htmlFor="AlcoholAmount">
             {preferredLanguage === 'לשון זכר' 
-                ? ' פרט כמה מנות אלכוהול בשבוע ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'
-                : '  פרטי כמה מנות אלכוהול בשבוע ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'}
+                ? ' פרט כמה מנות אלכוהול בחודש ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'
+                : '  פרטי כמה מנות אלכוהול בחודש ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'}
                 
                </label>
             <input type="number" min ="0" name="AlcoholAmount" id="AlcoholAmount" className="form-control" value={formData.AlcoholAmount} onChange={handleChange} />
@@ -320,7 +331,13 @@ const HealthLifestyleForm = () => {
                         className="slider"
                         id="energyLevel"
                         name="energyLevel"
+                        value={formData.energyLevel } 
                         onChange={handleChange}
+                        onClick={(e) => {
+                            if (formData.energyLevel === 0) {
+                                handleChange(e); // Ensure the first click registers
+                            }
+                        }}
                     />
                     <div className="slider-labels">
                         <span value="1">1</span>
@@ -342,7 +359,7 @@ const HealthLifestyleForm = () => {
                 <label className="form-label">
 
                 {preferredLanguage === 'לשון זכר' 
-                ? '? איך תתאר את רמת התאבון שלך'
+                ? ' איך תתאר את רמת התאבון שלך?'
                 : 'איך תתארי את מצב התאבון שלך ? '}
                 </label>
                 <div className="slider-container">
@@ -352,6 +369,12 @@ const HealthLifestyleForm = () => {
                         max="3"
                         step="1"
                         className="slider"
+                        value={formData.appetite } 
+                        onClick={(e) => {
+                            if (formData.appetite === 0) {
+                                handleChange(e); // Ensure the first click registers
+                            }
+                        }}
                         id="appetite"
                         name="appetite"
                         onChange={handleChange}
@@ -489,6 +512,14 @@ const HealthLifestyleForm = () => {
                 <label htmlFor="sleepDifficulty" className="form-label">
                     האם יש לך קשיי הרדמות?
                 </label>
+                <div className="form-check">
+                    <input
+                    type="radio"
+                    name="sleepDifficulty"
+                    value="אף פעם לא"
+                    onChange={handleChange}
+                    /> אף פעם לא
+                </div>
                 <div className="form-check">
                     <input
                     type="radio"
@@ -649,10 +680,17 @@ const HealthLifestyleForm = () => {
                             max="6"
                             step="1"
                             className="slider"
+                            value={formData.energyFrequency || 0} 
                             id="energyFrequency"
                             name="energyFrequency"
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.energyFrequency === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
+                        
                         <div className="slider-labels">
                             <span value="1">מעל 4 פעמים בשבוע</span>
                             <span value="2"> אחת - שלוש פעמים בשבוע </span>
@@ -684,35 +722,6 @@ const HealthLifestyleForm = () => {
             </div>
         </div>
 
-        <div className="form-group radio-preferred">
-        {preferredLanguage === 'לשון זכר' 
-                ? ' :בחר עבור איזה פרק זמן תרצה למלאות את שאלון הארוחות '
-                : '  :בחרי עבור איזה פרק זמן תרצה למלאות את שאלון הארוחות '}
-        <label></label>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="timePeriod"
-              value="month"
-              checked={timePeriod === "month"}
-              onChange={handleTimePeriodChange}
-            />
-            חודש
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="timePeriod"
-              value="week"
-              checked={timePeriod === "week"}
-              onChange={handleTimePeriodChange}
-            />
-            שבוע
-          </label>
-        </div>
-      </div>
-
       <div className="form-group">
         <label>מספר ממוצע של ארוחות ביום</label>
         <select
@@ -733,7 +742,7 @@ const HealthLifestyleForm = () => {
       {foodItems.map((item) => (
             <div key={item.name} className="form-group">
               <label>
-                {item.label} ({timePeriod === "week" ? "בשבוע" : "בחודש"})
+                {item.label}
               </label>
               {item.type === "select" ? (
                 <select

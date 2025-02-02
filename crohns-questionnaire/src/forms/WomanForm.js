@@ -26,6 +26,7 @@ function App() {
         hasMenstrualCycle:'',
         lastMenstrualPeriod:'',
         id_number :'',
+        durationSlider : 0
     });
 
   useEffect(() => {
@@ -171,7 +172,13 @@ function App() {
                             className="slider"
                             id="durationSlider"
                             name="durationSlider"
+                            value={formData.durationSlider}
                             onChange={handleChange}
+                            onClick={(e) => {
+                                if (formData.durationSlider === 0) {
+                                    handleChange(e); // Ensure the first click registers
+                                }
+                            }}
                         />
                         <div className="slider-labels">
                             <span>1-2</span>

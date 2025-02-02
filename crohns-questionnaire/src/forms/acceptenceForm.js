@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import "../css/MyForm.css";
 import { useNavigate } from "react-router-dom";
+import image002 from "../images/image002.jpg"; // Import the image
+import "../css/MyForm.css";
+import { useEffect } from "react";
 
 const AcceptanceForm = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -9,6 +11,10 @@ const AcceptanceForm = () => {
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
+
+    useEffect(() => {
+      window.scrollTo(0, 0); // Scroll to the top of the page on mount
+    }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,34 +28,36 @@ const AcceptanceForm = () => {
 
   return (
     <div className="acceptance-form-container">
+
+      <img src={image002} alt="Study Banner" className="full-width-image" />
       <div className="acceptance-form-content">
         <h2>נעים מאוד</h2>
         <p>
           אנו במרכז קולטון לחקר מחלות אוטואימוניות באוניברסיטת ת"א עורכים/ות מחקר
           בנושא השפעת נתוני רקע סביבתיים משפיעים על מחלות אוטואימוניות. במטרה לקדם ידע,
-          הבנה, מחקר מניעה וטיפול במחלות אוטואימוניות
+          הבנה, מחקר מניעה וטיפול במחלות אוטואימוניות.
         </p>
         <p>
           מחקר נערך במסגרת מחקר רב שנתי באוניברסיטת תל אביב ע"י: פרופ' אורי נבו וד"ר
-          גלי לרמן אנו מזמינים אותך להשתתף במחקר שלנו על ידי מתן מענה על שאלונים
-          מקוונים שאורכו כשעה בנוסף, בעתיד המשתתפים יקבלו שאלונים נוספים ויתבקשו
-          לשלוח העתק של תוצאות מעבדה עדכניות
+          גלי לרמן. אנו מזמינים אותך להשתתף במחקר שלנו על ידי מתן מענה על שאלונים
+          מקוונים שאורכו כשעה. בנוסף, בעתיד המשתתפים יקבלו שאלונים נוספים ויתבקשו
+          לשלוח העתק של תוצאות מעבדה עדכניות.
         </p>
         <p>
           כמו כן, בעתיד ייתכן ונציע לכם לתת דגימות דם/רוק/צואה. אין מחובתכם להסכים
           לתת דגימות אלו בעתיד, ואין קשר בין הסכמתכם למלא את השאלון לבין ההסכמה
-          לספק דגימה
+          לספק דגימה.
         </p>
         <p>
           לפני התחלת המענה על השאלון, נבקשך להצהיר/ה בזאת כי ניתן לך מידע באשר
           למחקר ולמטרותיו וכי מילוי השאלון נעשה מרצונך החופשי, שהנך משתתפ/ת במחקר
-          מתוך הסכמה מלאה, ידוע לך כי אינך חייב/ת להשתתף במחקר וכי בכל שלב את/ה
+          מתוך הסכמה מלאה. ידוע לך כי אינך חייב/ת להשתתף במחקר וכי בכל שלב את/ה
           יכול/ה להפסיק לענות על השאלון. כמו כן אינך מחוייב/ת לענות על כל השאלות
-          בשאלון
+          בשאלון.
         </p>
         <p>
           מובטחת לך סודיות באשר לזהותך האישית ולא יעשה כל שימוש בפרטים שמלאת מלבד
-          לצורך מחקר זה
+          לצורך מחקר זה.
         </p>
         <p>בכל בעיה שקשורה למחקר תוכל/י לפנות אלינו להתייעצות נוספת:</p>
         <p>
@@ -57,17 +65,22 @@ const AcceptanceForm = () => {
             coltontauaic@tauex.tau.ac.il
           </a>
         </p>
-        <p>
-          <label htmlFor="agreement">
-            אני מסכים/ה להשתתף במחקר בהתאם לתנאים המפורטים מעלה
+
+        {/* Checkbox Group */}
+        <div className="checkbox-group">
+          <label htmlFor="acceptance-checkbox" className="form-label">
+            <input
+              type="checkbox"
+              id="acceptance-checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              aria-label="אני מסכים/ה להשתתף במחקר בהתאם לתנאים המפורטים מעלה"
+            />
+            אני מסכים/ה להשתתף במחקר בהתאם לתנאים המפורטים מעלה.
           </label>
-          <input
-            type="checkbox"
-            id="agreement"
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-          />
-        </p>
+        </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           className="submit-button"
