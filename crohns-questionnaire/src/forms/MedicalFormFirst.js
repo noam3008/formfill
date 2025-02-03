@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 
 const MedicalForm = () => {
    const location = useLocation();
+   const [selectedOption, setSelectedOption] = useState(""); // Stores Yes/No selection
+  const [frequency, setFrequency] = useState("");
    const { preferredLanguage } = location.state || {};
   // State management for the form
   const [formData, setFormData] = useState({
@@ -61,6 +63,15 @@ const MedicalForm = () => {
 
   const navigate = useNavigate();
 
+  const handleRadioChange = (e) => {
+    setSelectedOption(e.target.value);
+    setFrequency(""); // Reset dropdown when switching options
+  };
+
+  const handleDropdownChange = (e) => {
+    setFrequency(e.target.value);
+  };
+
     useEffect(() => {
         window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
       }, []); // Empty dependency array to ensure it runs only once when the component mounts
@@ -87,7 +98,7 @@ const MedicalForm = () => {
     e.preventDefault();
     const workIssuesMentalFrequency = formData.workIssuesMentalFrequency;
     console.log(formData);
-    if (formData.diseaseTrigger === 'טראומה'&&workIssuesMentalFrequency >= 10 && workIssuesMentalFrequency <= 30) {
+    if (formData.diseaseTrigger === 'טראומה'&&workIssuesMentalFrequency >1) {
       navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage ,workIssuesMentalFrequency:formData.workIssuesMentalFrequency} });
     }
 
@@ -95,7 +106,7 @@ const MedicalForm = () => {
       navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
       
     }
-    else if (workIssuesMentalFrequency >= 10 && workIssuesMentalFrequency <= 30) {
+    else if (workIssuesMentalFrequency >= 1) {
       navigate("/depressionassessment", { state: { preferredLanguage: formData.preferredLanguage } });
 
     }
@@ -395,7 +406,11 @@ const MedicalForm = () => {
 
         {formData.foodSensitivity === 'כן' && (
           <div className="form-group">
-            <label htmlFor="foodSensetivityAge">  ? מאיזה גיל אתה סובל מרגישות</label>
+            <label htmlFor="foodSensetivityAge"> 
+            {preferredLanguage === 'לשון זכר' 
+                ? ' ? מאיזה גיל אתה סובל מרגישות' 
+                : ' ? מאיזה גיל את סובלת מרגישות'}
+              </label>
             <input min = "0" type="number" name="foodSensetivityAge" id="foodSensetivityAge" className="form-control" value={formData.foodSensetivityAge} onChange={handleChange} />
           </div>
         )}
@@ -478,7 +493,11 @@ const MedicalForm = () => {
               value={formData.surgeriesList || ""}
               onChange={handleChange}
               className="form-control"
-              placeholder="פרט בבקשה את הניתוחים שעברת"
+              placeholder=
+              {formData.preferredLanguage === "לשון זכר"
+                ?  "פרט בבקשה את הניתוחים שעברת"
+                :  "פרטי בבקשה את הניתוחים שעברת"}
+             
             />
 
             <label htmlFor="surgeriesAges" className="form-label mt-3">
@@ -492,7 +511,10 @@ const MedicalForm = () => {
               value={formData.surgeriesAges || ""}
               onChange={handleChange}
               className="form-control"
-              placeholder="פרט בבקשה את הגילאים שבהם עברת את הניתוחים"
+              placeholder=
+              {formData.preferredLanguage === "לשון זכר"
+                ? "פרט בבקשה את הגילאים שבהם עברת את הניתוחים"
+                : "פרטי בבקשה את הגילאים שבהם עברת את הניתוחים"}
             />
           </div>
         )}
@@ -523,7 +545,7 @@ const MedicalForm = () => {
             value={formData.complementaryMedicineReason}
             onChange={handleChange}
             className="form-control"
-            placeholder="מה הסיבה לפניה לטיפול משלים"
+           
           />
         </div>
       )}
@@ -540,7 +562,7 @@ const MedicalForm = () => {
             value={formData.complementaryMedicineWayOfTreatment}
             onChange={handleChange}
             className="form-control"
-            placeholder="מה בוצע בטיפול ?"
+            
           />
         </div>
       )}
@@ -557,7 +579,7 @@ const MedicalForm = () => {
             value={formData.complementaryMedicineWayOfDuration}
             onChange={handleChange}
             className="form-control"
-            placeholder="לאורך כמה זמן טופלת ?"
+            
           />
         </div>
       )}
@@ -573,7 +595,7 @@ const MedicalForm = () => {
             value={formData.complementaryMedicineWayOfBetter}
             onChange={handleChange}
             className="form-control"
-            placeholder="האם הייתה הטבה?"
+            
           />
         </div>
       )}
@@ -589,7 +611,7 @@ const MedicalForm = () => {
             value={formData.treatmentHelp}
             onChange={handleChange}
             className="form-control"
-            placeholder=""
+            
           />
         </div>
 
@@ -603,7 +625,7 @@ const MedicalForm = () => {
             value={formData.aggravatesCondition}
             onChange={handleChange}
             className="form-control"
-            placeholder=""
+            
           />
         </div>
 
@@ -612,16 +634,19 @@ const MedicalForm = () => {
         <div className="form-group radio-preferred">
           <label htmlFor="diseaseTrigger" className="form-label" >האם התפרצות המחלה התרחשה בסמיכות להתפרצות מחלה אחרת/ בסמיכות לארוע משנה חיים/תאונה/ טראומה ?</label>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange}  /> התפרצות מחלה אחרת
+              <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange}  /> כן, התפרצות מחלה אחרת
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="סמיכות לארוע משנה חיים" onChange={handleChange}  /> סמיכות לארוע משנה חיים
+              <input type="radio" name="diseaseTrigger" value="סמיכות לארוע משנה חיים" onChange={handleChange}  /> כן, סמיכות לארוע משנה חיים
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="תאונה" onChange={handleChange}  /> תאונה
+              <input type="radio" name="diseaseTrigger" value="תאונה" onChange={handleChange}  /> כן, תאונה
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="טראומה" onChange={handleChange}  /> טראומה
+              <input type="radio" name="diseaseTrigger" value="טראומה" onChange={handleChange}  /> כן ,טראומה
+          </div>
+          <div className="form-check">
+              <input type="radio" name="diseaseTrigger" value="לא" onChange={handleChange}  /> לא
           </div>
         </div>
 
@@ -721,55 +746,27 @@ const MedicalForm = () => {
         />
         <label htmlFor="visitNo">לא</label>
       </div>
+      {formData.familyDoctorVisit === "כן" && (
+        <div className="form-check " style={{ direction: "rtl", textAlign: "right" }}>
+          <label htmlFor="visitFrequencyFamilyDoctor">
+            {preferredLanguage === "לשון זכר"
+              ? " אני פוגש את הרופא כל"
+              : " אני פוגשת את הרופא כל"}
+          </label>
 
-      {/* Option - "פעם במספר חודשים" */}
-      <div className="form-check" style={{ direction: "rtl", textAlign: "right" }}>
-        <input
-          type="radio"
-          id="visitMonths"
-          name="familyDoctorVisit"
-          value="פעם במספר חודשים"
-          onChange={handleChange}
-          checked={formData.familyDoctorVisit === "פעם במספר חודשים"}
-        />
-        <label htmlFor="visitMonths">
-          {preferredLanguage === "לשון זכר"
-            ? "אני פוגש את הרופא כל"
-            : "אני פוגשת את הרופא כל"}
-        </label>
-
-        {/* Textbox (Disabled by Default) */}
-        <input
-          type="number"
-          min="0"
-          className="form-control"
-          name="visitMonthsCount"
-          placeholder="מספר חודשים"
-          value={formData.visitMonthsCount || ""}
-          onChange={handleChange}
-          disabled={formData.familyDoctorVisit !== "פעם במספר חודשים"} // Enable only when selected
-          style={{
-            width: "80px",
-            display: "inline-block",
-            margin: "0 10px",
-          }}
-        />
-
-        <label>חודשים</label>
-      </div>
-
-        <div className="form-check">
-        <input
-          type="radio"
-          id="visitOnceAYear"
-          name="familyDoctorVisit"
-          value="פעם בשנה"
-          onChange={handleChange}
-          checked={formData.familyDoctorVisit === "פעם בשנה"}
-        />
-        <label htmlFor="visitOnceAYear">פעם בשנה</label>
-      
-      </div>
+          <select
+            id="visitFrequencyDentist"
+            name="visitFrequencyDentist"
+            value={formData.visitFrequencyFamilyDoctor}
+            onChange={handleDropdownChange}
+          >
+            <option value="">בחר</option>
+            <option value="3_months">כל 3 חודשים</option>
+            <option value="6_months">כל 6 חודשים</option>
+            <option value="1_year">כל שנה</option>
+          </select>
+        </div>
+      )}
       </div>
 
 
@@ -803,42 +800,29 @@ const MedicalForm = () => {
         <label htmlFor="visitNo">לא</label>
       </div>
 
+  {/* ✅ Dropdown appears only if "Yes" is selected */}
+  {formData.dentistDoctorVisit === "כן" && (
+        <div className="form-check " style={{ direction: "rtl", textAlign: "right" }}>
+          <label htmlFor="visitFrequencyDentist">
+            {preferredLanguage === "לשון זכר"
+              ? " אני פוגש את הרופא כל"
+              : " אני פוגשת את הרופא כל"}
+          </label>
 
-      {/* Option - "פעם במספר חודשים" */}
-      <div className="form-check" style={{ direction: "rtl", textAlign: "right" }}>
-        <input
-          type="radio"
-          id="visitFrequencyDentist"
-          name="visitFrequencyDentist"
-          value="פעם במספר חודשים"
-          onChange={handleChange}
-          checked={formData.visitFrequencyDentist === "פעם במספר חודשים"}
-        />
-        <label htmlFor="visitFrequencyDentist">
-          {preferredLanguage === "לשון זכר"
-            ? "אני פוגש את הרופא כל"
-            : "אני פוגשת את הרופא כל"}
-        </label>
-
-        {/* Textbox (Disabled by Default) */}
-        <input
-          type="number"
-          min="0"
-          className="form-control"
-          name="visitFrequencyDentist"
-          placeholder="מספר חודשים"
-          value={formData.visitFrequencyDentist || ""}
-          onChange={handleChange}
-          disabled={formData.visitFrequencyDentist !== "פעם במספר חודשים"} // Enable only when selected
-          style={{
-            width: "80px",
-            display: "inline-block",
-            margin: "0 10px",
-          }}
-        />
-
-        <label>חודשים</label>
-      </div>
+          <select
+            id="visitFrequencyDentist"
+            name="visitFrequencyDentist"
+            value={formData.visitFrequencyDentist}
+            onChange={handleDropdownChange}
+          >
+            <option value="">בחר</option>
+            <option value="3_months">כל 3 חודשים</option>
+            <option value="6_months">כל 6 חודשים</option>
+            <option value="1_year">כל שנה</option>
+          </select>
+        </div>
+      )}
+      
       </div>
 
       
@@ -1038,11 +1022,14 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-                  <span>1 - בכלל לא</span>
-                  <span>פעם בחודש</span>
+                  <span> בכלל לא</span>
+                  <span>פעם ביום/יומיים</span>
                   <span>פעם בשבוע</span>
-                  <span>פעם ביומיים</span>
-                  <span>פעם ביום</span>
+                  <span>פעם בחודש</span>
+                  <span>כל שלושה עד שישה חודשים</span>
+                  
+                  
+                  
               </div>
           </div>
       </div>
@@ -1062,12 +1049,20 @@ const MedicalForm = () => {
               <input type="radio" name="bloodType" value="O" onChange={handleChange}  /> O
           </div>
           <div className="form-check">
-              <input type="radio" name="bloodType" value="לא יודע" onChange={handleChange}  /> לא יודע
+              <input type="radio" name="bloodType" value="לא יודע" onChange={handleChange}  /> 
+              {preferredLanguage === 'לשון זכר' 
+                ? ' לא יודע' 
+                : ' לא יודעת'}
+              
           </div>
         </div>
       <div >
 
-        <h3 >  ? באיזה תדירות אתה סובל מהכאבים הבאים </h3>
+        <h3 > 
+        {preferredLanguage === 'לשון זכר' 
+                ? '? באיזה תדירות אתה סובל מהכאבים הבאים ' 
+                : ' ? באיזה תדירות את סובלת מהכאבים הבאים '}
+           </h3>
 
 
         <div className="headacheFrequency">
@@ -1214,7 +1209,11 @@ const MedicalForm = () => {
         {formData.cronicDeseas === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="cronicDeasesDetails" className="form-label">
-          אנא פרט בבקשה
+                        
+          {preferredLanguage === 'לשון זכר' 
+                ? 'אנא פרט בבקשה' 
+                : ' אנא פרטי בבקשה'}
+          
           </label>
           <textarea
             id="cronicDeasesDetails"
@@ -1295,7 +1294,13 @@ const MedicalForm = () => {
           onChange={handleChange}
           checked={formData.wormsSuffer === " לא יודע"}
         />
-        <label htmlFor="visitNo">לא יודע</label>
+        <label htmlFor="visitNo">
+        {preferredLanguage === 'לשון זכר' 
+                ? '  לא יודע' 
+                : '  לא יודעת'}
+            
+          
+         </label>
       </div>
       </div>
 
@@ -1334,7 +1339,11 @@ const MedicalForm = () => {
           onChange={handleChange}
           checked={formData.otherInsectsSuffer === " לא יודע"}
         />
-        <label htmlFor="visitNo">לא יודע</label>
+        <label htmlFor="visitNo">        
+          {preferredLanguage === 'לשון זכר' 
+                ? '  לא יודע' 
+                : '  לא יודעת'}
+                </label>
       </div>
       </div>
 
@@ -1635,7 +1644,7 @@ const MedicalForm = () => {
 
       <div className="form-group">
       <label htmlFor="workIssuesFrequency" className="form-label">
-        בחודש האחרון באיזו תדירות היו לך בעיות לבצע עבודתך (/לימודים) בעקבות בריאותך הפיזית (0-30 יום)
+      בחודש האחרון מה מספר הפעמים בהם היה לך בעיות לבצע עבודתך בעקבות בריאותך הפיזית 
       </label>
       <input
         type="number"
@@ -1651,7 +1660,7 @@ const MedicalForm = () => {
 
       <div className="form-group">
         <label htmlFor="workIssuesMentalFrequency" className="form-label">
-          בחודש האחרון באיזו תדירות היו לך בעיות לבצע עבודתך (/לימודים) בעקבות בריאותך הנפשית (0-30 יום)
+          בחודש האחרון מה מספר הפעמים בהם היה לך בעיות לבצע עבודתך בעקבות בריאותך הנפשית 
         </label>
         <input
           type="number"
@@ -1672,7 +1681,7 @@ const MedicalForm = () => {
 
             {/* Treatment Information */}
             <div className="form-group radio-preferred">
-              <label htmlFor="isPshycologicalTreatment" className="form-label" >האם עברת בעבר או בהווה טיפול פסיכולוגי? </label>
+              <label htmlFor="isPshycologicalTreatment" className="form-label" >האם עברת בעבר או בהווה טיפול פסיכולוגי/רגשי? </label>
               <div className="form-check">
                   <input type="radio" name="isPshycologicalTreatment" value="כן" onChange={handleChange}  /> כן
               </div>
@@ -1684,7 +1693,7 @@ const MedicalForm = () => {
 
         {formData.isPshycologicalTreatment === 'כן' && (
                       <div >
-                      <label htmlFor="treatmentAge" className="form-label">באיזה גיל עברת טיפול פסיכולוגי</label>
+                      <label htmlFor="treatmentAge" className="form-label">באיזה גיל עברת טיפול פסיכולוגי/רגשי</label>
                       <input
                           type="number"
                           min="0"
@@ -1698,7 +1707,7 @@ const MedicalForm = () => {
         )}
  {formData.isPshycologicalTreatment === 'כן' && (
             <div>
-              <label htmlFor="treatmentReason" className="form-label">מה הייתה הסיבה לפניה לטיפול פסיכולוגי</label>
+              <label htmlFor="treatmentReason" className="form-label">מה הייתה הסיבה לפניה לטיפול פסיכולוגי/רגשי</label>
               <input
                   type="text"
                   className="form-control"

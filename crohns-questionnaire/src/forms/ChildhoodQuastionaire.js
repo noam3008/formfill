@@ -118,7 +118,11 @@ const ChildhoodQuestionnaire = () => {
                         
                        </label>
                     <select name="pregnancyRisk" className="form-select" onChange={handleChange}>
-                        <option value="">בחר</option>
+                        <option value="">
+                        {preferredLanguage === "לשון זכר"
+          ? "בחר"
+          : "בחרי"}  
+                            </option>
                         <option value="כן">כן</option>
                         <option value="לא">לא</option>
                         <option value="לא יודע">לא ידוע</option>
@@ -128,7 +132,11 @@ const ChildhoodQuestionnaire = () => {
                 <div >
                     <label className="form-label">באיזה סוג לידה נולדת?</label>
                     <select name="birthType" className="form-select" onChange={handleChange}>
-                        <option value="">בחר</option>
+                        <option value="">
+                        {preferredLanguage === "לשון זכר"
+          ? "בחר"
+          : "בחרי"}  
+                            </option>
                         <option value="רגילה (וגינלית)">רגילה (וגינלית)</option>
                         <option value="מכשירנית">מכשירנית</option>
                         <option value="קיסרית">קיסרית</option>
@@ -143,7 +151,11 @@ const ChildhoodQuestionnaire = () => {
           : "  האם נולדת פגה?"}
                        </label>
                     <select name="preterm" className="form-select" onChange={handleChange}>
-                        <option value="">בחר</option>
+                        <option value="">
+                        {preferredLanguage === "לשון זכר"
+          ? "בחר"
+          : "בחרי"}  
+                            </option>
                         <option value="כן">כן</option>
                         <option value="לא">לא</option>
                     </select>
@@ -157,7 +169,11 @@ const ChildhoodQuestionnaire = () => {
           : "    האם ינקת כתינוקת או שניזונת מתחליפי חלב?"}
                      </label>
                     <select name="feedingMethod" className="form-select" onChange={handleChange}>
-                        <option value="">בחר</option>
+                        <option value="">
+                        {preferredLanguage === "לשון זכר"
+          ? "בחר"
+          : "בחרי"}  
+                            </option>
                         <option value="הנקה">הנקה</option>
                         <option value="תחליפי חלב">תחליפי חלב</option>
                         <option value="לא יודע">לא ידוע</option>
@@ -199,6 +215,7 @@ const ChildhoodQuestionnaire = () => {
                                 <label className="form-label">באיזה גיל עלית</label>
                                 <input
                                     type="number"
+                                    min = "0"
                                     name="immigrationAge"
                                     className="form-control"
                                     onChange={handleChange}

@@ -150,7 +150,7 @@ const HealthLifestyleForm = () => {
     e.preventDefault();
     // Handle form submission logic
     console.log(formData);
-    navigate("/mspssquastionaire", { state: { preferredLanguage: formData.preferredLanguage } });
+    navigate("/leisureactivityquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
   };
 
 
@@ -290,8 +290,8 @@ const HealthLifestyleForm = () => {
         <div className="form-group radio-preferred">
             <label htmlFor="AlcoholUse" className="form-label" >
             {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה שותה אלכוהול  ?'
-                : '    האם את שותה אלכוהול  ?'}
+                ? '  האם אתה שותה אלכוהול '
+                : '    האם את שותה אלכוהול  '}
                 
                </label>
             <div className="form-check">
@@ -414,8 +414,8 @@ const HealthLifestyleForm = () => {
         <div className="form-group  radio-preferred">
             <label htmlFor="mainConcern" className="form-label">
             {preferredLanguage === 'לשון זכר' 
-                ? '      מה הבעיה המרכזית בחייך ? בחר' 
-                : '       מה הבעיה המרכזית בחייך ? בחרי'}
+                ? '      מה הבעיה המרכזית שמעסיקה אותך בחודש האחרון ? בחר' 
+                : '       מה הבעיה המרכזית שמעסיקה אותך בחודש האחרון ? בחרי'}
           
             </label>
             <div className="form-check">
@@ -594,8 +594,8 @@ const HealthLifestyleForm = () => {
                     <div className="form-group radio-preferred">
                         <label htmlFor="vacationFlights" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? '   כמה פעמים בשנה אתה טס לחו"ל לחופש' 
-                : '  כמה פעמים בשנה את טסה לחו"ל לחופש'}
+                ? '   כמה פעמים טסת בשנה האחרונה לחופש בחול' 
+                : '  כמה פעמים טסת בשנה האחרונה לחופש בחול'}
                           
                         </label>
                         <div className="form-check">
@@ -618,8 +618,8 @@ const HealthLifestyleForm = () => {
                         <div className="form-group radio-preferred">
                         <label htmlFor="workFlights" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? '   כמה פעמים בשנה אתה טס לחו"ל למטרת עבודה' 
-                : '  כמה פעמים בשנה את טסה לחו"ל למטרת עבודה'}
+                ? ' כמה פעמים טסת בשנה האחרונה לחול למטרת עבודה'  
+                : '  כמה פעמים טסת בשנה האחרונה לחול למטרת עבודה' }
                             
                         </label>
                         <div className="form-check">
@@ -642,8 +642,8 @@ const HealthLifestyleForm = () => {
                         <div className="form-group radio-preferred">
                         <label htmlFor="booksRead" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? '  כמה ספרים אתה קורא בשנה'
-                : '  כמה ספרים את קוראת בשנה'}
+                ? ' כמה ספרים קראת בשנה האחרונה'
+                : ' כמה ספרים קראת בשנה האחרונה'}
                            
                         </label>
                         <div className="form-check">
@@ -785,17 +785,23 @@ const HealthLifestyleForm = () => {
                 <input type="radio" name="glutenIntake" value="לא" onChange={handleChange} /> לא
             </div>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="נמנע" onChange={handleChange} /> נמנע
+                <input type="radio" name="glutenIntake" value="נמנע" onChange={handleChange} /> 
+                {preferredLanguage === 'לשון זכר' 
+                ? ' נמנע'
+                : ' נמנעת'}
             </div>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="ממעט" onChange={handleChange} /> ממעט
+                <input type="radio" name="glutenIntake" value="ממעט" onChange={handleChange} /> 
+                {preferredLanguage === 'לשון זכר' 
+                ? ' ממעט'
+                : ' ממעטת'}
             </div>
         </div>
 
         <div className="form-group  radio-preferred">
             <label className="form-label">בחודש האחרון, כמה פעמים בשבוע אכלת דגנים (ללא גלוטן) אורז, תירס, קינואה, טף, דוחן וכו'</label>
             <div className="form-check">
-                <input type="number" name="grainFrequencyWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />
+                <input type="number" min = "0" name="grainFrequencyWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />
             </div>
         </div>
 
@@ -942,7 +948,7 @@ const HealthLifestyleForm = () => {
                         <label htmlFor="eatingOutFrequency" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
                 ? '         כמה פעמים בחודש אתה אוכל בחוץ/ מזמין אוכל'
-                : '         כמה פעמים בחודש את אוכלת בחוץ/ מזמין אוכל'}
+                : '         כמה פעמים בחודש את אוכלת בחוץ/ מזמינה אוכל'}
                          
                         </label>
                         <div className="form-check-group">

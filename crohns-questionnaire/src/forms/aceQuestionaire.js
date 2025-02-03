@@ -67,7 +67,7 @@ const ACEQuestionnaire = () => {
 
   return (
     <form onSubmit={handlesubmit}>
-      <h3 className="text-center">ACE - שאלון חוויות ילדות מזיקות</h3>
+      <h3 className="text-center">ACE - שאלון חוויות ילדות</h3>
 
       {/* Iterate through the questions based on preferredLanguage */}
       {questions.map((question, index) => (

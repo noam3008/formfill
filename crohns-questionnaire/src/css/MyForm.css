@@ -146,24 +146,7 @@ body {
     color: #333;
 }
 
-.acceptance-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f9f9f9; /* Soft background */
-    padding: 20px;
-}
 
-.acceptance-form-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
-    direction: rtl; /* Ensure all text is right-to-left */
-}
 
 h2 {
     text-align: right; /* Align the header to the right */
@@ -281,14 +264,20 @@ button.submit-button:hover:not(:disabled) {
 }
 
 /* Slider labels styling */
+/* Slider labels styling */
 .slider-labels {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
-    font-size: 0.9rem;
     color: #555;
     text-align: center;
+    font-size: 12px;
+    min-width: 12%; /* Prevents labels from shrinking too much */
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 5px; /* Adds spacing between labels */
   }
+  
   
   .slider-labels span {
     flex: 1;
@@ -338,8 +327,51 @@ form {
     margin-top: 20px;
 }
 
-.full-width-image {
-    width: 50%;
-    height:max-content; /* Ensures aspect ratio is maintained */
-    display: block; /* Removes extra spacing below the image */
+.acceptance-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    min-height: 100vh; /* Prevents content from disappearing */
   }
+  
+  .acceptance-form-content {
+    max-width: 800px; /* Ensures consistent width */
+    width: 100%;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centers the image */
+    margin-bottom: 20px; /* Adds spacing below the logo */
+  }
+  
+  .logo-container img {
+    max-width: 100%; /* Prevents stretching */
+    height: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .acceptance-form-content {
+      padding: 10px;
+    }
+    .slider-labels {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .slider-label {
+        width: 30%; /* Labels take more space and wrap */
+        text-align: center;
+    }
+}
+      
+  
+

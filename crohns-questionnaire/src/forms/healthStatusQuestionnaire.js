@@ -8,7 +8,12 @@ const HealthStatusQuestionnaire = () => {
     const location = useLocation();
     const { preferredLanguage } = location.state || {}; // Extract preferred language from state
   
+const [formData, setFormData] = useState({
+  listenDiagnose: '',
+  treatmentDetailsDisturb:'',
+  treatmentListenInWhat:''
 
+})
   // Health-related questions
   const questions = [
     "כאבי ראש חוזרים, התעלפויות, סחרחורות, התכווצויות",
@@ -30,9 +35,6 @@ const HealthStatusQuestionnaire = () => {
     "מחלות מפרקים",
     "מחלות עור",
     "מחלות כבד",
-    "מחלות כליה, הפרעה במתן שתן, הרטבת לילה",
-    "לבנים - בעיות באשכים, בקע מפשעתי, כאבים במפשעה",
-    "לבנות - הפרעות במחזור החודשי, מחלה גניקולוגית",
     "מחלה ממארת בעבר/בהווה",
     "האם עברת ניתוחים/אשפוזים בעבר? (שלא מפורט בסעיפים הקודמים)",
     "האם הינך נשא/חולה במחלות זיהומיות כרוניות (HIV, צהבת נגיפית, מחלות אחרות)",
@@ -47,8 +49,6 @@ const HealthStatusQuestionnaire = () => {
     "מחלות דרכי העיכול והכבד",
     "מחלות פרקים, הפרעות שלד (כולל שברים בעצמות)",
     "מחלות ממאירות",
-    "הפרעות נפשיות מאובחנות? אם כן מה? האם מטופל? במה?",
-    "הפרעות קשב וריכוז מאובחנות? אם כן, האם מטופל תרופתית? במה?",
     "האם יש במשפחתך (דרגה ראשונה) מחלות ממאירות (סרטן)?",
     "האם יש במשפחתך מוות פתאומי מתחת לגיל 45 מסיבה שאינה ידועה או מסיבה לבבית?",
     "האם יש במשפחתך (דרגה ראשונה) מחלות ריאה כרוניות כגון שחפת?",
@@ -65,6 +65,14 @@ const HealthStatusQuestionnaire = () => {
     updatedAnswers[index] = value === "yes" ? 1 : 0;
     setAnswers(updatedAnswers);
   };
+  
+  const handleChangeQUestions = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+    useEffect(() => {
+      window.scrollTo(0, 0); // Scrolls to the top of the page on mount
+    }, []);
 
   // Handle additional details input
   const handleDetailsChange = (index, value) => {
@@ -83,7 +91,13 @@ const HealthStatusQuestionnaire = () => {
   return (
     <form onSubmit={handlesubmit}>
       <h3 className="text-center">שאלון מצב בריאותי</h3>
-
+      <h4 className="mt-4">
+        
+      {preferredLanguage === "לשון זכר"
+          ? " האם אתה סובל מאחד התסמינים הבאים? סמן כן/לא"
+          : " האם את סובלת מאחד התסמינים הבאים? סמני כן/לא"}
+        
+       </h4>
       {questions.map((question, index) => (
         <div className="form-group radio-preferred" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
@@ -129,6 +143,177 @@ const HealthStatusQuestionnaire = () => {
           )}
         </div>
       ))}
+
+            {/* Conditionally Render Section based on preferredLanguage */}
+            {preferredLanguage === "לשון זכר" && (
+        <div className="form-group radio-preferred">
+          <label className="form-label">בעיות באשכים, בקע מפשעתי, כאבים במפשעה?</label>
+          {/* Yes/No radio buttons */}
+          <div className="form-check">
+            <input
+              type="radio"
+              name="boysSymptom"
+              value="yes"
+              onChange={(e) => handleChange("boysSymptom", e.target.value)}
+              checked={answers["boysSymptom"] === 1}
+            />
+            <label>כן</label>
+          </div>
+          <div className="form-check">
+            <input
+              type="radio"
+              name="boysSymptom"
+              value="no"
+              onChange={(e) => handleChange("boysSymptom", e.target.value)}
+              checked={answers["boysSymptom"] === 0}
+            />
+            <label>לא</label>
+          </div>
+        </div>
+      )}
+
+            {/* Conditionally Render Section based on preferredLanguage */}
+        {preferredLanguage != "לשון זכר" && (
+        <div className="form-group radio-preferred">
+          <label className="form-label"> הפרעות במחזור החודשי, מחלה גניקולוגית?</label>
+          {/* Yes/No radio buttons */}
+          <div className="form-check">
+            <input
+              type="radio"
+              name="girlSymptom"
+              value="yes"
+              onChange={(e) => handleChange("girlSymptom", e.target.value)}
+              checked={answers["girlSymptom"] === 1}
+            />
+            <label>כן</label>
+          </div>
+          <div className="form-check">
+            <input
+              type="radio"
+              name="girlSymptom"
+              value="no"
+              onChange={(e) => handleChange("girlSymptom", e.target.value)}
+              checked={answers["girlSymptom"] === 0}
+            />
+            <label>לא</label>
+          </div>
+        </div>
+      )}
+         {/* Treatment Information */}
+         <div className="form-group radio-preferred">
+         <label className="form-label"> הפרעות נפשיות מאובחנות?</label>
+              <div className="form-check">
+                  <input type="radio" name="mentalDiagnose" value="כן" onChange={handleChangeQUestions}  /> כן
+              </div>
+              <div className="form-check">
+                  <input type="radio" name="mentalDiagnose" value="לא" onChange={handleChangeQUestions}  /> לא
+              </div>
+            </div>
+
+        {formData.mentalDiagnose === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentDetails" className="form-label">
+                      {preferredLanguage === "לשון זכר"
+                      ? "תוכל לפרט יותר על ההפרעה הנפשית המאובחנת"
+                      : "תוכל לפרט יותר על ההפרעה הנפשית המאובחנת"}
+                       </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="treatmentDetails"
+                          name="treatmentDetails"
+                          value={formData.treatmentDetails}
+                          onChange={handleChangeQUestions}
+                      />
+                    </div>
+       
+       )}
+       {formData.mentalDiagnose === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentTakeCare" className="form-label">
+                      {preferredLanguage === "לשון זכר"
+                      ? "האם אתה מטופל על ההפרעה הנפשית המאובחנת"
+                      : "האם את מטופלת על ההפרעה הנפשית המאובחנת"}
+                       </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="treatmentTakeCare"
+                          name="treatmentTakeCare"
+                          value={formData.treatmentTakeCare}
+                          onChange={handleChangeQUestions}
+                      />
+                    </div>
+       
+       )}
+              {formData.mentalDiagnose === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentInWhat" className="form-label">
+                      {preferredLanguage === "לשון זכר"
+                      ? "במה אתה מטופל על ההפרעה הנפשית המאובחנת"
+                      : "במה את מטופלת על ההפרעה הנפשית המאובחנת"}
+                       </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="treatmentInWhat"
+                          name="treatmentInWhat"
+                          value={formData.treatmentInWhat}
+                          onChange={handleChangeQUestions}
+                      />
+                    </div>
+       
+       )}
+
+                {/* Treatment Information */}
+                <div className="form-group radio-preferred">
+         <label className="form-label"> הפרעות קשב וריכוז?</label>
+              <div className="form-check">
+                  <input type="radio" name="listenDiagnose" value="כן" onChange={handleChangeQUestions}  /> כן
+              </div>
+              <div className="form-check">
+                  <input type="radio" name="listenDiagnose" value="לא" onChange={handleChangeQUestions}  /> לא
+              </div>
+            </div>
+
+
+        {formData.listenDiagnose === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentDetails" className="form-label">
+                      {preferredLanguage === "לשון זכר"
+                      ? "האם מטופל תרופתית"
+                      : "האם מטופלת תרופתית"}
+                       </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="treatmentDetailsDisturb"
+                          name="treatmentDetailsDisturb"
+                          value={formData.treatmentDetailsDisturb}
+                          onChange={handleChangeQUestions}
+                      />
+                    </div>
+       
+       )}
+              {formData.listenDiagnose === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentInWhat" className="form-label">
+                      {preferredLanguage === "לשון זכר"
+                      ? "במה אתה מטופל על הפרעת קשב והריכוז"
+                      : "במה את מטופלת על הפרעת קשב והריכוז"}
+                       </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="treatmentListenInWhat"
+                          name="treatmentListenInWhat"
+                          value={formData.treatmentListenInWhat}
+                          onChange={handleChangeQUestions}
+                      />
+                    </div>
+       
+       )}
+
 
       <button type="submit" className="btn btn-primary mt-4">
         

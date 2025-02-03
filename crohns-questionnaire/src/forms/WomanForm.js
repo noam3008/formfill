@@ -657,7 +657,7 @@ function App() {
         <input 
             type="text" 
             name="hormonalProfileDetails" 
-            placeholder="הכנס פרטים נוספים" 
+            placeholder="הכניסי פרטים נוספים" 
             className="form-control" 
             onChange={handleChange} 
             disabled={!formData.hormonalProfile || formData.hormonalProfile !== 'נבדק ונמצא כי________'} 

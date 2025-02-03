@@ -13,6 +13,19 @@
   width: 75%;
 }
 
+h4 {
+  font-size: 20px; /* Set the font size */
+  font-weight: bold; /* Make the title bold */
+  text-align: right; /* Align the text to the right */
+  direction: rtl; /* Ensure the text is from right to left */
+  margin-top: 20px; /* Add some spacing above the title */
+  margin-bottom: 10px; /* Add some spacing below the title */
+  color: #333; /* Dark color for the text */
+  padding-right: 15px; /* Add padding to the right side */
+  background-color: #f9f9f9; /* Light background for contrast */
+}
+
+
   /* Hide slider thumb when value is 0 */
 .slider[value="0"]::-webkit-slider-thumb {
   visibility: hidden;  /* Hide the thumb when value is 0 */
@@ -26,6 +39,19 @@
 /* Show thumb and enable interaction when value is greater than 0 */
 .slider:not([value="0"])::-webkit-slider-thumb {
   visibility: visible !important;  /* Thumb visible when value > 0 */
+}
+
+@media (max-width: 768px) {
+  .slider-labels {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .slider-label {
+    width: 30%; /* Labels take more space and wrap */
+    text-align: center;
+  }
 }
 
 /* General slider styling */
@@ -66,9 +92,13 @@
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
-  font-size: 0.9rem;
   color: #555;
   text-align: center;
+  font-size: 12px;
+  min-width: 12%; /* Prevents labels from shrinking too much */
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 5px; /* Adds spacing between labels */
 }
 
 .slider-labels span {

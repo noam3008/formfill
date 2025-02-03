@@ -11,6 +11,7 @@ const PersonalForm = () => {
   const [formData, setFormData] = useState({
     maritalStatus: '',
     numberOfChildren: '',
+    changeTime : '',
     height: '',
     weight: '',
     weightChange: '',
@@ -137,6 +138,7 @@ const PersonalForm = () => {
       <label htmlFor={`siblingAge-${index}`}>גיל אח/אחות {index + 1}</label>
       <input
         type="number"
+        min = "0"
         id={`siblingAge-${index}`}
         className="form-control"
         value={formData.siblingAges[index] || ''}
@@ -189,7 +191,8 @@ const PersonalForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="weight">משקל (בק"ג)</label>
+          <label htmlFor="weight">משקל (בק"ג
+            )</label>
           <input type="number" name="weight" id="weight" min ="0" className="form-control" value={formData.weight} onChange={handleChange} />
         </div>
 
@@ -206,17 +209,43 @@ const PersonalForm = () => {
         {/* Conditional rendering for additional fields if "Yes" is selected */}
         {formData.weightChange === 'כן' && (
                 <div>
-                  <div className="form-group">
-                    <label htmlFor="changeTime" className="form-label"> מתי?</label>
-                    <input
-                      type="text"
-                      id="changeTime"
-                      name="changeTime"
-                      className="form-control"
-                      value={formData.changeTime}
-                      onChange={handleChange}
-                    />
-                  </div>
+                
+          {/* Month and Year input */}
+          <div className="form-group">
+            <label htmlFor="changeTime" className="form-label">
+              מתי?
+            </label>
+            <div className="d-flex">
+              {/* Month Dropdown */}
+              <select
+                id="month"
+                name="changeTime"
+                className="form-control"
+                value={formData.changeTime.split("-")[0] || ""}
+                onChange={(e) => handleChange({ target: { name: "changeTime", value: `${e.target.value}-${formData.changeTime.split("-")[1] || ""}` } })}
+              >
+                <option value="">בחר חודש</option>
+                {["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"].map((month, index) => (
+                  <option key={index} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+
+              {/* Year Input */}
+              <input
+                type="number"
+                id="year"
+                min = "1900"
+                name="changeTime"
+                className="form-control"
+                placeholder="שנה"
+                value={formData.changeTime.split("-")[1] || ""}
+                onChange={(e) => handleChange({ target: { name: "changeTime", value: `${formData.changeTime.split("-")[0] || ""}-${e.target.value}` } })}
+                style={{ marginLeft: "10px", width: "100px" }}
+              />
+            </div>
+            </div>
                   
                   <div className="form-group">
                     <label htmlFor="diseaseImpact" className="form-label">
@@ -375,7 +404,7 @@ const PersonalForm = () => {
 
         <div className="form-group">
           <label htmlFor="familyOrder">מקומך בסדר המשפחתי</label>
-          <input type="number" name="familyOrder" id="familyOrder" className="form-control" value={formData.familyOrder} onChange={handleChange} />
+          <input type="number" name="familyOrder" min = "0" id="familyOrder" className="form-control" value={formData.familyOrder} onChange={handleChange} />
         </div>
 
         <div className="form-group">
@@ -407,7 +436,7 @@ const PersonalForm = () => {
         {formData.petOwner === 'כן' && (
           <div className="form-group">
             <label htmlFor="petAge"> ?מאיזה גיל יש לך חיית מחמד</label>
-            <input type="number" name="petAge" id="petAge" className="form-control" value={formData.petAge} onChange={handleChange} />
+            <input type="number" name="petAge" min = "0" id="petAge" className="form-control" value={formData.petAge} onChange={handleChange} />
           </div>
         )}
 
@@ -424,7 +453,7 @@ const PersonalForm = () => {
         {formData.experiencedLoss === 'כן' && (
           <div className="form-group">
             <label htmlFor="ageAtLoss"> ?באיזה גיל היית בזמן המאורע</label>
-            <input type="number" name="ageAtLoss" id="ageAtLoss" className="form-control" value={formData.ageAtLoss} onChange={handleChange} />
+            <input type="number" name="ageAtLoss" min = "0" id="ageAtLoss" className="form-control" value={formData.ageAtLoss} onChange={handleChange} />
           </div>
         )}
 

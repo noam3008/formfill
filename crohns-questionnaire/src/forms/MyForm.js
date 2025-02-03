@@ -76,6 +76,7 @@ const MyForm = () => {
             name="idNumber"
             value={formData.idNumber}
             onChange={handleChange}
+            min ="0"
           />
           {errors.idNumber && <div className="invalid-feedback">{errors.idNumber}</div>}
         </div>
@@ -141,6 +142,7 @@ const MyForm = () => {
             name="age"
             value={formData.age}
             onChange={handleChange}
+            min = "0"
           />
           {errors.age && <div className="invalid-feedback">{errors.age}</div>}
         </div>
