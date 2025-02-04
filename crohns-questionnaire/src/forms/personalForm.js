@@ -271,9 +271,22 @@ const PersonalForm = () => {
         <div className="form-group">
           <label htmlFor="currentOccupation">עיסוק נוכחי</label>
           <select name="currentOccupation" id="currentOccupation" className="form-control" value={formData.currentOccupation} onChange={handleChange} >
-            <option value="" disabled>בחר עיסוק</option>
-            <option value="תלמיד.ה">תלמיד</option>
-            <option value="סטודנט.ית">סטודנט</option>
+            <option value="" disabled>
+            {preferredLanguage === "לשון זכר"
+          ? " בחר עיסוק"
+          : " בחרי עיסוק"}
+             </option>
+            <option value="תלמיד">
+            {preferredLanguage === "לשון זכר"
+          ? "תלמיד"
+          : " תלמידה"}
+              </option>
+            <option value="סטודנט.ית">
+            {preferredLanguage === "לשון זכר"
+          ? "סטודנט"
+          : " סטודנטית"}
+              
+              </option>
             <option value="מחשוב">מחשוב</option>
             <option value="כח אדם">כח אדם</option>
             <option value="בנקאות">בנקאות</option>
@@ -309,7 +322,12 @@ const PersonalForm = () => {
         value={formData.employmentType}
         onChange={handleChange}
       >
-        <option value="" disabled>בחר אופי העסקה</option>
+        <option value="" disabled>
+        {preferredLanguage === "לשון זכר"
+          ? "בחר אופי העסקה"
+          : " בחרי אופי העסקה"}
+          
+          </option>
         {employmentOptions.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
@@ -327,7 +345,12 @@ const PersonalForm = () => {
         value={formData.dailyActivity}
         onChange={handleChange}
       >
-        <option value="" disabled>בחר פעילות</option>
+        <option value="" disabled>
+        {preferredLanguage === "לשון זכר"
+          ? "בחר פעילות"
+          : "בחרי פעילות"}
+          
+          </option>
         {dailyActivityOptions.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
@@ -339,7 +362,12 @@ const PersonalForm = () => {
         <div className="form-group">
           <label htmlFor="education">השכלה</label>
           <select name="education" id="education" className="form-control" value={formData.education} onChange={handleChange} >
-            <option value="" disabled>בחר השכלה</option>
+            <option value="" disabled>
+            {preferredLanguage === "לשון זכר"
+          ? "בחר השכלה"
+          : "בחרי השכלה"}
+              
+              </option>
             <option value="יסודי">יסודי</option>
             <option value="תיכונית">תיכונית</option>
             <option value="הנדסאי">הנדסאי</option>

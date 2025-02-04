@@ -21,6 +21,9 @@ const MedicalForm = () => {
     mood :0,
     socialLife :0,
     isMouthAftha : 0,
+    chronicDiseases: "", // Yes/No selection
+    chronicCount: 0, // Number of chronic diseases
+    diseases: [] ,// Array to store disease details dynamicall
     crohnAge: '',
     diagnosisAge: '',
     treatmentType: '',
@@ -63,6 +66,12 @@ const MedicalForm = () => {
 
   const navigate = useNavigate();
 
+  const handleDiseaseChange = (index, field, value) => {
+    const updatedDiseases = [...formData.diseases];
+    updatedDiseases[index][field] = value;
+    setFormData({ ...formData, diseases: updatedDiseases });
+  };
+
   const handleRadioChange = (e) => {
     setSelectedOption(e.target.value);
     setFrequency(""); // Reset dropdown when switching options
@@ -79,12 +88,29 @@ const MedicalForm = () => {
   // Handler to update state on form change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Changed ${name} to ${value}`);
-    setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-    }));
-};
+
+    if (name === "chronicDiseases") {
+      // Reset if "No" is selected
+      setFormData({
+        chronicDiseases: value,
+        chronicCount: 0,
+        diseases: []
+      });
+    } else if (name === "chronicCount") {
+      // Set the number of diseases dynamically
+      const count = parseInt(value, 10) || 0;
+      setFormData((prevState) => ({
+        ...prevState,
+        chronicCount: count,
+        diseases: Array.from({ length: count }, (_, index) => ({
+          id: index + 1,
+          name: "",
+          symptomsAge: "",
+          diagnosisAge: ""
+        }))
+      }));
+    }
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -415,30 +441,82 @@ const MedicalForm = () => {
           </div>
         )}
 
-        <div className="form-group radio-preferred">
-          <label htmlFor="chronicDiseases" className="form-label" >האם יש לך מחלות כרוניות נוספות?</label>
-          <div className="form-check">
-              <input type="radio" name="chronicDiseases" value="כן" onChange={handleChange}  /> כן
-          </div>
-          <div className="form-check">
-              <input type="radio" name="chronicDiseases" value="לא" onChange={handleChange}  /> לא
-          </div>
+<div className="form-group radio-preferred">
+        <label className="form-label">האם יש לך מחלות כרוניות נוספות?</label>
+        <div className="form-check">
+          <input
+            type="radio"
+            name="chronicDiseases"
+            value="כן"
+            onChange={handleChange}
+            checked={formData.chronicDiseases === "כן"}
+          />{" "}
+          כן
         </div>
+        <div className="form-check">
+          <input
+            type="radio"
+            name="chronicDiseases"
+            value="לא"
+            onChange={handleChange}
+            checked={formData.chronicDiseases === "לא"}
+          />{" "}
+          לא
+        </div>
+      </div>
+        
 
+              {/* Number of Chronic Diseases Input */}
+      {formData.chronicDiseases === "כן" && (
+        <div className="form-group">
+          <label>?כמה מחלות כרוניות יש לך</label>
+          <input
+            type="number"
+            name="chronicCount"
+            min="1"
+            className="form-control"
+            value={formData.chronicCount || ""}
+            onWheel={(e) => e.target.blur()}
+            onChange={handleChange}
+          />
+        </div>
+      )}
 
-        {formData.chronicDiseases === 'כן' && (
-          <div className="form-group">
-            <label htmlFor="chronicDiseasesAge"> ? מאיזה גיל החלו התסמינים</label>
-            <input  type="number" name="chronicDiseasesAge" id="chronicDiseasesAge" min = "0" className="form-control" value={formData.chronicDiseasesAge} onChange={handleChange} />
+ {/* Dynamic Fields for Chronic Diseases */}
+ {formData.chronicDiseases === "כן" &&
+        formData.diseases.length > 0 &&
+        formData.diseases.map((disease, index) => (
+          <div key={index} className="form-group disease-group">
+            <h4>מחלה {index + 1}</h4>
+            <label>שם המחלה</label>
+            <input
+              type="text"
+              className="form-control"
+              value={disease.name}
+              onChange={(e) => handleDiseaseChange(index, "name", e.target.value)}
+            />
+
+            <label>?מאיזה גיל החלו התסמינים</label>
+            <input
+              type="number"
+              min="0"
+              className="form-control"
+              value={disease.symptomsAge}
+              onChange={(e) => handleDiseaseChange(index, "symptomsAge", e.target.value)}
+            />
+
+            <label>?מאיזה גיל אובחנה המחלה</label>
+            <input
+              type="number"
+              min="0"
+              className="form-control"
+              value={disease.diagnosisAge}
+              onChange={(e) => handleDiseaseChange(index, "diagnosisAge", e.target.value)}
+            />
           </div>
-        )}
+        ))}
 
-        {formData.chronicDiseases === 'כן' && (
-          <div className="form-group">
-            <label htmlFor="chronicDiseasesDiagnose">? מאיזה גיל אובחנו התסמינים</label>
-            <input  type="number" name="chronicDiseasesDiagnose" id="chronicDiseasesDiagnose" min = "0" className="form-control" value={formData.chronicDiseasesDiagnose} onChange={handleChange} />
-          </div>
-        )}
+
 
         <div className="form-group radio-preferred">
           <label htmlFor="hospitalization" className="form-label" >האם  עברת אישפוזים בעשור האחרון?</label>
@@ -914,7 +992,11 @@ const MedicalForm = () => {
         {formData.takeMedicen === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="takeMedicenWhich" className="form-label">
-          אנא פרט בבקשה
+         
+
+          {preferredLanguage === 'לשון זכר' 
+                ? '   אנא פרט בבקשה' 
+                : '    אנא פרטי בבקשה'}
           </label>
           <textarea
             id="takeMedicenWhich"

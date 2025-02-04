@@ -262,7 +262,8 @@ const HealthLifestyleForm = () => {
             {preferredLanguage === 'לשון זכר' 
                 ? '  האם אתה צורך היום או בעבר סמים  ?'
                 : '   האם את צורכת היום או בעבר סמים  ?'}
-                
+                <br></br>
+                (ניתן לדלג על השאלה)
                </label>
             <div className="form-check">
                 <input type="radio" name="drugUse" value="כן" onChange={handleChange}  /> כן

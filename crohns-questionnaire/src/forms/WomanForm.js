@@ -11,7 +11,9 @@ function App() {
         menstrualLength: '',
         painDuringMenstruation: '',
         selectedSymptoms :'',
-        pmsSymptoms: [],
+        pmsSymptoms: "", // Yes/No selection for PMS symptoms
+        additionalSymptoms: [], // Array to track selected symptoms
+        customSymptom: "", // Text input for "Other - Specify"
         isGlulotInPast :'',
         isBikurKavua:'',
         childrenCount: '',
@@ -96,6 +98,11 @@ function App() {
         setNumberOfChildren(e.target.value);
     };
 
+     // Handle Text Input for "Other - Specify"
+  const handleCustomSymptomChange = (e) => {
+    setFormData({ ...formData, customSymptom: e.target.value });
+  };
+
     const handleGlulotInPastChange = (e) => {
         setIsGlulotInPast(e.target.value);
     };
@@ -119,6 +126,8 @@ function App() {
         }));
     };
 
+    
+
 
     const handlesubmit = (e) => {
         e.preventDefault();
@@ -134,14 +143,17 @@ function App() {
 
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
-            setSelectedSymptoms((prevSymptoms) => {
-                if (checked) {
-                    return [...prevSymptoms, value];
-                } else {
-                    return prevSymptoms.filter(symptom => symptom !== value);
-                }
-            });
-    };
+        let updatedSymptoms = [...formData.additionalSymptoms];
+    
+        if (checked) {
+          updatedSymptoms.push(value);
+        } else {
+          updatedSymptoms = updatedSymptoms.filter((symptom) => symptom !== value);
+        }
+    
+        setFormData({ ...formData, additionalSymptoms: updatedSymptoms });
+      };
+    
 
     return (
         <div className="form-container">
@@ -203,54 +215,83 @@ function App() {
                     </div>
                 </div>
 
-                <div className="form-group radio-preferred">
-                    <label htmlFor="pmsSymptoms" className="form-label">
-                        האם את סובלת מסמפטומים של תסמונת קדם וסתית PMS, באופן קבוע?
-                    </label>
-                    <div className="form-check">
-                        <input type="radio" name="pmsSymptoms" value="כן" onChange={handleChange} />
-                        <label htmlFor="pmsSymptoms">כן</label>
-                    </div>
-                    <div className="form-check">
-                        <input type="radio" name="pmsSymptoms" value="לא" onChange={handleChange} />
-                        <label htmlFor="pmsSymptoms">לא</label>
-                    </div>
-                </div>
+                
+                <div>
+      {/* Yes/No Radio Selection for PMS Symptoms */}
+      <div className="form-group radio-preferred">
+        <label className="form-label">האם את חווה תסמיני תסמונת קדם וסתית (PMS)?</label>
+        <div className="form-check">
+          <input
+            type="radio"
+            name="pmsSymptoms"
+            value="כן"
+            onChange={handleChange}
+            checked={formData.pmsSymptoms === "כן"}
+          />
+          <label>כן</label>
+        </div>
+        <div className="form-check">
+          <input
+            type="radio"
+            name="pmsSymptoms"
+            value="לא"
+            onChange={handleChange}
+            checked={formData.pmsSymptoms === "לא"}
+          />
+          <label>לא</label>
+        </div>
+      </div>
 
-                {formData.pmsSymptoms === 'כן' && (
-                <div className="form-group radio-preferred">
-                        <label htmlFor="additionalSymptoms" className="form-label">
-                            אילו תסמינים נוספים חווים בקשר לתסמונת קדם וסתית PMS?
-                        </label>
-                        {[
-                            "דכאון",
-                            "עצבנות",
-                            "חרדה",
-                            "אקנה",
-                            "נדודי שינה",
-                            "עייפות",
-                            "עצירות",
-                            "כאבי פרקים",
-                            "כאבי שרירים",
-                            "כאבי בטן",
-                            "רגישות בשדיים",
-                            "תנודות בחשק המיני",
-                            "שינויים במצב הרוח",
-                            "אחר- פרטי"
-                        ].map((symptom, index) => (
-                            <div key={index} className="form-check">
-                                <input
-                                    type="checkbox"
-                                    name="additionalSymptoms"
-                                    value={symptom}
-                                    onChange={handleCheckboxChange}
-                                    checked={selectedSymptoms.includes(symptom)}
-                                />
-                                <label htmlFor={symptom}>{symptom}</label>
-                            </div>
-                        ))}
-                    </div>
-                 )}
+      {/* Display Additional Symptoms if "Yes" is Selected */}
+      {formData.pmsSymptoms === "כן" && (
+        <div className="form-group radio-preferred">
+          <label className="form-label">
+            אילו תסמינים נוספים חווים בקשר לתסמונת קדם וסתית PMS?
+          </label>
+          {[
+            "דכאון",
+            "עצבנות",
+            "חרדה",
+            "אקנה",
+            "נדודי שינה",
+            "עייפות",
+            "עצירות",
+            "כאבי פרקים",
+            "כאבי שרירים",
+            "כאבי בטן",
+            "רגישות בשדיים",
+            "תנודות בחשק המיני",
+            "שינויים במצב הרוח",
+            "אחר- פרטי",
+          ].map((symptom, index) => (
+            <div key={index} className="form-check">
+              <input
+                type="checkbox"
+                name="additionalSymptoms"
+                value={symptom}
+                onChange={handleCheckboxChange}
+                checked={formData.additionalSymptoms.includes(symptom)}
+              />
+              <label htmlFor={symptom}>{symptom}</label>
+            </div>
+          ))}
+
+          {/* Show Text Input if "Other - Specify" is Selected */}
+          {formData.additionalSymptoms.includes("אחר- פרטי") && (
+            <div className="form-group">
+              <label className="form-label">האם תוכלי להרחיב?</label>
+              <input
+                type="text"
+                className="form-control"
+                name="customSymptom"
+                value={formData.customSymptom}
+                onChange={handleCustomSymptomChange}
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
 
             
             <div className="form-group radio-preferred">
@@ -623,7 +664,7 @@ function App() {
             value={formData.breastSurgeonVisitFrequency}
             onChange={handleChange}
         >
-            <option value="">בחר תדירות</option>
+            <option value="">בחרי תדירות</option>
             <option value="אחת לשנתיים">אחת לשנתיים</option>
             <option value="אחת לשנה">אחת לשנה</option>
             <option value="אחת לחצי שנה">אחת לחצי שנה</option>
