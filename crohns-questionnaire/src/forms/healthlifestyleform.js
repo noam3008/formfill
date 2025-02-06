@@ -724,14 +724,25 @@ const HealthLifestyleForm = () => {
         </div>
 
       <div className="form-group">
-        <label>מספר ממוצע של ארוחות ביום</label>
+        <label>
+        {preferredLanguage === 'לשון זכר' 
+                ? '?כמה ארוחות אתה אוכל ביום ממוצע '
+                : '  ?כמה ארוחות את אוכלת ביום ממוצע '}
+
+
+        </label>
         <select
           name="averageMeals"
           onChange={handleInputChange}
           value={answers.averageMeals || ""}
           className="form-select"
         >
-          <option value="">בחר</option>
+          <option value="">
+            
+          {preferredLanguage === 'לשון זכר' 
+                ? 'בחר'
+                : ' בחרי'}
+            בחר</option>
           {['1', '2', '3', '4', '5', '6', '>6'].map((option) => (
             <option key={option} value={option}>
               {option}
@@ -741,35 +752,33 @@ const HealthLifestyleForm = () => {
       </div>
 
       {foodItems.map((item) => (
-            <div key={item.name} className="form-group">
-              <label>
-                {item.label}
-              </label>
-              {item.type === "select" ? (
-                <select
-                  name={item.name}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  {item.options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  name={item.name}
-                  value={answers[item.name] || ""}
-                  onChange={handleInputChange}
-                  className="form-control"
-                />
-              )}
-              </div>
-      ))}
+  <div key={item.name} className="form-group">
+    <label>{item.label}</label>
+    {item.type === "select" ? (
+      <select
+        name={item.name}
+        onChange={handleInputChange}
+        className="form-select"
+      >
+        {item.options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <input
+        type="number"
+        min="0"
+        max="10"
+        name={item.name}
+        value={answers[item.name] ?? ""} // Ensure 0 is selectable
+        onChange={handleInputChange}
+        className="form-control"
+      />
+    )}
+  </div>
+))}
 
 
         <div className="form-group radio-preferred">

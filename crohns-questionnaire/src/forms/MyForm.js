@@ -50,17 +50,36 @@ const MyForm = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
-    // Post the form data to the backend
-
-    // Navigate based on the preferred language
-    if (formData.preferredLanguage === "לשון נקבה") {
-      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage } });
-    } else {
+  
+    try {
+      const response = await axios.post("http://ec2-18-208-193-34.compute-1.amazonaws.com:3002/submit", formData);
+  
+      if (response.status === 201) {
+        alert("הנתונים נשלחו בהצלחה!");
+        
+        // Navigate based on preferred language
+        navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
+          state: { preferredLanguage: formData.preferredLanguage } 
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // alert("שגיאה בשליחת הטופס, נסה שוב.");
+    }
+    if(formData.preferredLanguage === "לשון נקבה"&&formData.gender==="גבר"){
       navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
     }
+    else if(formData.preferredLanguage === "לשון זכר"&&formData.gender==="אישה"){
+      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage } });
+    }
+    else{
+      navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
+      state: { preferredLanguage: formData.preferredLanguage } 
+    });
+  }
+  
   };
 
   return (

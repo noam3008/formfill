@@ -4,35 +4,30 @@ import { useEffect } from "react";
 import "../css/traumaStyle.css";
 
 const LeisureActivityQuestionnaire = () => {
-    const location = useLocation();
-    const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+  const location = useLocation();
+  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
   const navigate = useNavigate();
 
-  // State initialization for frequency of activities and score calculation
+  // State initialization for questions
   const [formData, setFormData] = useState({
-    strenuous: "", // Strenuous exercise frequency
-    moderate: "",  // Moderate exercise frequency
-    light: "",     // Light exercise frequency
+    sufficientExercise: "", // Yes/No question
+    strenuous: "", // Intense exercise frequency
+    moderate: "", // Moderate exercise frequency
+    light: "", // Light exercise frequency
+    sweatingFrequency: "", // How often the user exercises enough to sweat
   });
 
-    useEffect(() => {
-      window.scrollTo(0, 0); // Scroll to the top of the page on mount
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top of the page on mount
+  }, []);
 
-  // Handle input change for the exercise types
+  // Handle input change for all questions
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: parseInt(value, 10),
+      [name]: value,
     });
-  };
-
-  // Calculate the total score for leisure activity
-  const calculateScore = () => {
-    const totalScore =
-      9 * formData.strenuous + 5 * formData.moderate + 3 * formData.light;
-    return totalScore;
   };
 
   // Handle form submission
@@ -44,67 +39,132 @@ const LeisureActivityQuestionnaire = () => {
 
   return (
     <form onSubmit={handlesubmit}>
-      <h3 className="text-center">שאלון פעילות גופנית בשעות פנאי</h3>
+      <h3 className="text-center">שאלון הרגלי פעילות גופנית בשעות הפנאי</h3>
+
+      {/* Question 1: Do you think you exercise enough? */}
+      <div className="form-group radio-preferred">
+        <label className="form-label">
+          {preferredLanguage === "לשון זכר"
+            ? "האם לדעתך, אתה מבצע מספיק פעילות גופנית?"
+            : "האם לדעתך, את מבצעת מספיק פעילות גופנית?"}
+        </label>
+        <div className="form-check">
+          <input
+            type="radio"
+            id="sufficientYes"
+            name="sufficientExercise"
+            value="כן"
+            onChange={handleChange}
+            checked={formData.sufficientExercise === "כן"}
+          />
+          <label htmlFor="sufficientYes">כן</label>
+        </div>
+        <div className="form-check">
+          <input
+            type="radio"
+            id="sufficientNo"
+            name="sufficientExercise"
+            value="לא"
+            onChange={handleChange}
+            checked={formData.sufficientExercise === "לא"}
+          />
+          <label htmlFor="sufficientNo">לא</label>
+        </div>
+      </div>
+
+      {/* Question 2: How often do you engage in different types of exercise? */}
+
+      <label className="form-label">
+      {preferredLanguage === "לשון זכר"
+            ? "במהלך 7 ימים (שבוע), כמה פעמים בממוצע אתה מבצע את הפעילויות הבאות למשך 15 דקות לפחות?"
+            : "במהלך 7 ימים (שבוע), כמה פעמים בממוצע את מבצעת את הפעילויות הבאות למשך 15 דקות לפחות?"}
+      </label>
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-        {preferredLanguage === "לשון זכר"
-          ? "ציין את כמות הפעמים בשבוע בה אתה עוסק בפעילות גופנית מאומצת (ריצה, כדורגל, כדורסל, וכו') למשך יותר מ-15 דקות?"
-
-          : "צייני את כמות הפעמים בשבוע בה את עוסקת בפעילות גופנית מאומצת (ריצה, כדורגל, כדורסל, וכו') למשך יותר מ-15 דקות"
-}
-       
+          פעילות עצימה (הלב פועם במהירות) - ריצה, כדורגל, כדורסל, ג'ודו, החלקה, שחייה נמרצת, רכיבה נמרצת על אופניים
         </label>
         <input
           type="number"
-          min = "0"
+          min="0"
           className="form-control"
           name="strenuous"
           value={formData.strenuous}
           onChange={handleChange}
-          placeholder="פעמים בשבוע"
+          placeholder="מספר פעמים בשבוע"
         />
       </div>
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-        {preferredLanguage === "לשון זכר"
-          ? "ציין את כמות הפעמים בשבוע בה אתה עוסק בפעילות גופנית מתונה (הליכה מהירה, רכיבה על אופניים, וכו') למשך יותר מ-15 דקות?"
-
-          : "צייני את כמות הפעמים בשבוע בה את עוסקת בפעילות גופנית מתונה (הליכה מהירה, רכיבה על אופניים, וכו') למשך יותר מ-15 דקות?"
-}
-       
-          ציין את כמות הפעמים בשבוע בה אתה עוסק בפעילות גופנית מתונה (הליכה מהירה, רכיבה על אופניים, וכו') למשך יותר מ-15 דקות?
+          פעילות מתונה (לא מתישה) - הליכה מהירה, טניס, רכיבה איטית על אופניים, כדורעף, שחייה קלה, ריקוד וכו'
         </label>
         <input
           type="number"
-          min = "0"
+          min="0"
           className="form-control"
           name="moderate"
           value={formData.moderate}
           onChange={handleChange}
-          placeholder="פעמים בשבוע"
+          placeholder="מספר פעמים בשבוע"
         />
       </div>
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-        {preferredLanguage === "לשון זכר"
-          ? "ציין את כמות הפעמים בשבוע אתה עוסק בפעילות גופנית קלה (הליכה קלה, מתיחות, וכו') למשך יותר מ-15 דקות?"
-
-          : "צייני את כמות הפעמים בשבוע בה את עוסקת בפעילות גופנית קלה (הליכה קלה, מתיחות, וכו') למשך יותר מ-15 דקות?"
-}
-          
+          פעילות קלה (מאמץ מינימלי) - יוגה, פילאטיס, רכיבה על סוסים, כדורת (באולינג), הליכה איטית
         </label>
         <input
           type="number"
-          min = "0"
+          min="0"
           className="form-control"
           name="light"
           value={formData.light}
           onChange={handleChange}
-          placeholder="פעמים בשבוע"
+          placeholder="מספר פעמים בשבוע"
         />
+      </div>
+
+      {/* Question 3: How often do you exercise enough to sweat? */}
+      <div className="form-group radio-preferred">
+        <label className="form-label">
+          {preferredLanguage === "לשון זכר"
+            ? "במהלך שבוע ממוצע, באיזו תדירות אתה עוסק בפעילות גופנית מספיק זמן על מנת להזיע (פעימות לב מהירות)?"
+            : "במהלך שבוע ממוצע, באיזו תדירות את עוסקת בפעילות גופנית מספיק זמן על מנת להזיע (פעימות לב מהירות)?"}
+        </label>
+        <div className="form-check">
+          <input
+            type="radio"
+            id="often"
+            name="sweatingFrequency"
+            value="לעיתים קרובות"
+            onChange={handleChange}
+            checked={formData.sweatingFrequency === "לעיתים קרובות"}
+          />
+          <label htmlFor="often">לעיתים קרובות</label>
+        </div>
+        <div className="form-check">
+          <input
+            type="radio"
+            id="sometimes"
+            name="sweatingFrequency"
+            value="לפעמים"
+            onChange={handleChange}
+            checked={formData.sweatingFrequency === "לפעמים"}
+          />
+          <label htmlFor="sometimes">לפעמים</label>
+        </div>
+        <div className="form-check">
+          <input
+            type="radio"
+            id="rarely"
+            name="sweatingFrequency"
+            value="אף פעם / לעיתים נדירות"
+            onChange={handleChange}
+            checked={formData.sweatingFrequency === "אף פעם / לעיתים נדירות"}
+          />
+          <label htmlFor="rarely">אף פעם / לעיתים נדירות</label>
+        </div>
       </div>
 
       <button type="submit" className="btn btn-primary mt-4">

@@ -314,50 +314,48 @@ const PersonalForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="employmentType">?כיצד אתה מגדיר את אופי העסקתך</label>
-          <select
-        name="employmentType"
-        id="employmentType"
-        className="form-control"
-        value={formData.employmentType}
-        onChange={handleChange}
-      >
-        <option value="" disabled>
-        {preferredLanguage === "לשון זכר"
-          ? "בחר אופי העסקה"
-          : " בחרי אופי העסקה"}
-          
-          </option>
-        {employmentOptions.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-        </div>
+  <label htmlFor="employmentType">?כיצד אתה מגדיר את אופי העסקתך</label>
+  <select
+    name="employmentType"
+    id="employmentType"
+    className="form-control"
+    value={formData.employmentType}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      {preferredLanguage === "לשון זכר" ? "בחר אופי העסקה" : "בחרי אופי העסקה"}
+    </option>
+    {employmentOptions.map((option, index) => (
+      <option key={index} value={option.value}>
+        {option.label}
+      </option>
+    ))}
+  </select>
+</div>
 
-        <div className="form-group">
-          <label htmlFor="dailyActivity">:ביום עבודה ממוצע המצב שגופך נמצא בו </label>
-          <select
-        name="dailyActivity"
-        id="dailyActivity"
-        className="form-control"
-        value={formData.dailyActivity}
-        onChange={handleChange}
-      >
-        <option value="" disabled>
-        {preferredLanguage === "לשון זכר"
-          ? "בחר פעילות"
-          : "בחרי פעילות"}
-          
-          </option>
-        {dailyActivityOptions.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-        </div>
+{/* Only show this if employmentType is NOT "לא עובד" or "לא עובדת" */}
+{formData.employmentType !== "לא עובד" && formData.employmentType !== "לא עובדת" && (
+  <div className="form-group">
+    <label htmlFor="dailyActivity">:ביום עבודה ממוצע המצב שגופך נמצא בו</label>
+    <select
+      name="dailyActivity"
+      id="dailyActivity"
+      className="form-control"
+      value={formData.dailyActivity}
+      onChange={handleChange}
+    >
+      <option value="" disabled>
+        {preferredLanguage === "לשון זכר" ? "בחר פעילות" : "בחרי פעילות"}
+      </option>
+      {dailyActivityOptions.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
 
         <div className="form-group">
           <label htmlFor="education">השכלה</label>

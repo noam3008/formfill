@@ -5,12 +5,14 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-db_config = {
-    'host': 'database-1.cz2i42m6u7g1.us-east-1.rds.amazonaws.com',
-    'user': 'admin',
-    'password': 'Fd[t4#iBIeiX13EuQX!kWDr2X-L*',
-    'database': 'dataformanagement'
-}
+
+db = mysql.connector.connect(
+    host="database-1.cz2i42m6u7g1.us-east-1.rds.amazonaws.com",
+    user="admin",
+    password="eP?_baP?HPtH*-OaCar6V7TWxMep",
+    database="dataformanagement"
+)
+cursor = db.cursor()
     
 
 @app.route('/submit', methods=['POST'])
@@ -19,16 +21,23 @@ def submit_form():
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        sql = """
+        query = """
         INSERT INTO Users (id_number, first_name, last_name, email, phone, age, health_fund, gender, sex, preferred_language)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         values = (
-            data['idNumber'], data['firstName'], data['lastName'], data['email'], 
-            data['phone'], data['age'], data['healthFund'], data['gender'], 
-            data['sex'], data['preferredLanguage']
+            data['idNumber'],
+            data['firstName'],
+            data['lastName'],
+            data['email'],
+            data['phone'],
+            data['age'],
+            data['healthFund'],
+            data['gender'],
+            data['sex'],
+            data['preferredLanguage']
         )
-        cursor.execute(sql, values)
+        cursor.execute(query, values)
         conn.commit()
         return jsonify({"message": "Data inserted successfully!"}), 200
     except mysql.connector.errors.IntegrityError as e:

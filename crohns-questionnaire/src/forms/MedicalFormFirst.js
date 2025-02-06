@@ -62,6 +62,11 @@ const MedicalForm = () => {
     outsideActivity : 0,
     physicalHealthImpact: '',
     mentalHealthImpactWork: '',  // Initial value 0
+    familyDoctorVisit: "",
+    dentistDoctorVisit: "",
+    pointsDoctorVisit: "",
+    visitFrequencyFamilyDoctor: "",
+    visitFrequencyDentist: "",
 });
 
   const navigate = useNavigate();
@@ -110,6 +115,14 @@ const MedicalForm = () => {
         }))
       }));
     }
+    else{
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      };
+    
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -793,59 +806,58 @@ const MedicalForm = () => {
         </div>
       )}
 
-        <div className="form-group radio-preferred">
-          <label htmlFor="familyDoctorVisit" className="form-label" >
-          {preferredLanguage === 'לשון זכר' 
-                ? ' האם אתה מבקר באופן קבוע אצל רופא משפחה ?' 
-                : '  האם את מבקרת באופן קבוע אצל רופא משפחה ?'}
-         
-           
-            </label>
-          <div className="form-check">
-        <input
-          type="radio"
-          id="visitYes"
-          name="familyDoctorVisit"
-          value="כן"
-          onChange={handleChange}
-          checked={formData.familyDoctorVisit === "כן"}
-        />
-        <label htmlFor="visitYes">כן</label>
-      </div>
+<div className="form-group radio-preferred">
+  <label htmlFor="familyDoctorVisit" className="form-label">
+    {preferredLanguage === "לשון זכר"
+      ? " האם אתה מבקר באופן קבוע אצל רופא משפחה ?"
+      : " האם את מבקרת באופן קבוע אצל רופא משפחה ?"}
+  </label>
 
-      <div className="form-check">
-        <input
-          type="radio"
-          id="visitNo"
-          name="familyDoctorVisit"
-          value="לא"
-          onChange={handleChange}
-          checked={formData.familyDoctorVisit === "לא"}
-        />
-        <label htmlFor="visitNo">לא</label>
-      </div>
-      {formData.familyDoctorVisit === "כן" && (
-        <div className="form-check " style={{ direction: "rtl", textAlign: "right" }}>
-          <label htmlFor="visitFrequencyFamilyDoctor">
-            {preferredLanguage === "לשון זכר"
-              ? " אני פוגש את הרופא כל"
-              : " אני פוגשת את הרופא כל"}
-          </label>
+  <div className="form-check">
+    <input
+      type="radio"
+      id="visitYes"
+      name="familyDoctorVisit"
+      value="כן"
+      onChange={handleChange}
+      checked={formData.familyDoctorVisit === "כן"}
+    />
+    <label htmlFor="visitYes">כן</label>
+  </div>
 
-          <select
-            id="visitFrequencyDentist"
-            name="visitFrequencyDentist"
-            value={formData.visitFrequencyFamilyDoctor}
-            onChange={handleDropdownChange}
-          >
-            <option value="">בחר</option>
-            <option value="3_months">כל 3 חודשים</option>
-            <option value="6_months">כל 6 חודשים</option>
-            <option value="1_year">כל שנה</option>
-          </select>
-        </div>
-      )}
-      </div>
+  <div className="form-check">
+    <input
+      type="radio"
+      id="visitNo"
+      name="familyDoctorVisit"
+      value="לא"
+      onChange={handleChange}
+      checked={formData.familyDoctorVisit === "לא"}
+    />
+    <label htmlFor="visitNo">לא</label>
+  </div>
+
+  {formData.familyDoctorVisit === "כן" && (
+    <div className="form-check" style={{ direction: "rtl", textAlign: "right" }}>
+      <label htmlFor="visitFrequencyFamilyDoctor">
+        {preferredLanguage === "לשון זכר" ? " אני פוגש את הרופא כל" : " אני פוגשת את הרופא כל"}
+      </label>
+
+      <select
+        id="visitFrequencyFamilyDoctor"
+        name="visitFrequencyFamilyDoctor"
+        value={formData.visitFrequencyFamilyDoctor}
+        onChange={handleChange} // Make sure this is the correct function
+      >
+        <option value="">בחר</option>
+        <option value="3_months">כל 3 חודשים</option>
+        <option value="6_months">כל 6 חודשים</option>
+        <option value="1_year">כל שנה</option>
+      </select>
+    </div>
+  )}
+</div>
+
 
 
       <div className="form-group radio-preferred">
@@ -891,7 +903,7 @@ const MedicalForm = () => {
             id="visitFrequencyDentist"
             name="visitFrequencyDentist"
             value={formData.visitFrequencyDentist}
-            onChange={handleDropdownChange}
+            onChange={handleChange}
           >
             <option value="">בחר</option>
             <option value="3_months">כל 3 חודשים</option>
@@ -906,7 +918,7 @@ const MedicalForm = () => {
       
 
       <div className="form-group radio-preferred">
-          <label htmlFor="dentistDoctorVisit" className="form-label" >
+          <label htmlFor="PointsDoctorVisit" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
                 ? '   האם אתה מבצע באופן קבוע אבחון נקודות חן ?' 
                 : '    האם את מבצעת באופן קבוע אבחון נקודות חן ?'}
@@ -935,8 +947,6 @@ const MedicalForm = () => {
         />
         <label htmlFor="visitNo">לא</label>
       </div>
-
-     
       </div>
       
       <div className="form-group radio-preferred">
