@@ -15,6 +15,7 @@ import MSPSSQuestionnaire  from './forms/mspssquastionaire';
 import ACEQuestionnaire from './forms/aceQuestionaire';
 import HealthStatusQuestionnaire from './forms/healthStatusQuestionnaire';
 import LeisureActivityQuestionnaire from './forms/leisureactivityquestionnaire';
+import SubmitForm from './forms/sumbitForm';
 
 
 // Create this component
@@ -37,6 +38,7 @@ function App() {
           <Route path="/acequastionaire" element={<ACEQuestionnaire/>}/>
           <Route path='/healthstatusquestionnaire' element = {<HealthStatusQuestionnaire/>}/>
           <Route path='/leisureactivityquestionnaire' element = {<LeisureActivityQuestionnaire/>}/>
+          <Route path='/test_insert' element = {<SubmitForm/>}/>
 
       </Routes>
     </Router>

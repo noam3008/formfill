@@ -1,38 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../css/MyForm.css";
-import { useEffect } from 'react';
 
 const MyForm = () => {
-  const [formData, setFormData] = useState({
-    idNumber: "",
-    firstName: "", // New: First Name
-    lastName: "",  // New: Last Name
-    email: "",      // New: Email
-    phone: "",      // New: Phone
-    age: "",
-    healthFund: "",
-    gender: "",
-    sex: "",
-    preferredLanguage: ""
-  });
-
+  const [formData, setFormData] = useState({});
+  const [questions, setQuestions] = useState([]); // Store questions from DB
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  // Fetch the questions from the Flask server
+  useEffect(() => {
+    axios.get("http://localhost:3002/test_questions_registration")
+      .then((response) => {
+        setQuestions(response.data); // Set questions in state
+        const initialFormData = {};
+        response.data.forEach(q => {
+          initialFormData[q.field_name] = ""; // Initialize form data
+        });
+        setFormData(initialFormData);
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+      });
+       window.scrollTo(0, 0); 
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
-  }, []); // Empty dependency array to ensure it runs only once when the component mounts
-      
-
   const validateForm = () => {
     const newErrors = {};
+    // Add form validation here
     if (!formData.idNumber.match(/^\d+$/)) newErrors.idNumber = "תעודת הזהות חייבת להיות מספר";
     if (!formData.firstName) newErrors.firstName = "שם פרטי נדרש";
     if (!formData.lastName) newErrors.lastName = "שם משפחה נדרש";
@@ -52,209 +53,88 @@ const MyForm = () => {
     e.preventDefault();
   
     if (!validateForm()) return;
-  
+
     try {
-      const response = await axios.post("http://ec2-18-208-193-34.compute-1.amazonaws.com:3002/submit", formData);
+      const response = await fetch("http://localhost:3002/test_insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
   
-      if (response.status === 201) {
-        alert("הנתונים נשלחו בהצלחה!");
-        
-        // Navigate based on preferred language
-        navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
-          state: { preferredLanguage: formData.preferredLanguage } 
-        });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      // alert("שגיאה בשליחת הטופס, נסה שוב.");
-    }
-    if(formData.preferredLanguage === "לשון נקבה"&&formData.gender==="גבר"){
-      navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
-    }
-    else if(formData.preferredLanguage === "לשון זכר"&&formData.gender==="אישה"){
-      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage } });
-    }
-    else{
-      navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
-      state: { preferredLanguage: formData.preferredLanguage } 
-    });
-  }
   
+      const result = await response.json();
+      localStorage.setItem('userData', JSON.stringify(result));
+      console.log(result.message);  // Log success message
+  
+    } catch (error) {
+      console.error("Error:", error.message);  // Handle errors
+    }
+
+    // Navigate to the next page based on user input
+    if (formData.preferredLanguage === "לשון נקבה" && formData.gender === "גבר") {
+      navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
+    } else if (formData.preferredLanguage === "לשון זכר" && formData.gender === "אישה") {
+      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage } });
+    } else {
+      navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
+        state: { preferredLanguage: formData.preferredLanguage }
+      });
+    }
   };
 
   return (
     <div className="form-container">
       <h2>טופס הרשמה</h2>
       <form onSubmit={handlesubmit}>
-        {/* ID Number */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">תעודת זהות</label>
-          <input
-            type="text"
-            className={`form-control ${errors.idNumber ? "is-invalid" : ""}`}
-            name="idNumber"
-            value={formData.idNumber}
-            onChange={handleChange}
-            min ="0"
-          />
-          {errors.idNumber && <div className="invalid-feedback">{errors.idNumber}</div>}
-        </div>
+        {questions.length > 0 && questions.map((q) => (
+          <div key={q.id} className="form-group radio-preferred">
+            <label className="form-label">{q.question_text}</label>
 
-        {/* First Name */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">שם פרטי</label>
-          <input
-            type="text"
-            className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
-        </div>
-
-        {/* Last Name */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">שם משפחה</label>
-          <input
-            type="text"
-            className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-          {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
-        </div>
-
-        {/* Email */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">מייל</label>
-          <input
-            type="email"
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-        </div>
-
-        {/* Phone */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">טלפון</label>
-          <input
-            type="text"
-            className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-        </div>
-
-        {/* Age */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">גיל</label>
-          <input
-            type="number"
-            className={`form-control ${errors.age ? "is-invalid" : ""}`}
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            min = "0"
-          />
-          {errors.age && <div className="invalid-feedback">{errors.age}</div>}
-        </div>
-
-        {/* Health Fund */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">קופת חולים</label>
-          <select
-            className={`form-control ${errors.healthFund ? "is-invalid" : ""}`}
-            name="healthFund"
-            value={formData.healthFund}
-            onChange={handleChange}
-          >
-            <option value="" disabled>בחר</option>
-            <option value="כללית">כללית</option>
-            <option value="מכבי">מכבי</option>
-            <option value="לאומית">לאומית</option>
-            <option value="מאוחדת">מאוחדת</option>
-          </select>
-          {errors.healthFund && <div className="invalid-feedback">{errors.healthFund}</div>}
-        </div>
-
-        {/* Gender */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">מגדר</label>
-          <div className="radio-group">
-            <div className="form-check">
+            {q.question_type === "text" || q.question_type === "email" || q.question_type === "number" ? (
               <input
-                type="radio"
-                name="gender"
-                value="גבר"
+                type={q.question_type}
+                className={`form-control ${errors[q.field_name] ? "is-invalid" : ""}`}
+                name={q.field_name}
+                value={formData[q.field_name] || ""}
                 onChange={handleChange}
-              /> גבר
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                name="gender"
-                value="אישה"
+                min={q.question_type === "number" ? 0 : undefined}  // Add min="0" for number fields
+
+              />
+            ) : q.question_type === "select" ? (
+              <select
+                className={`form-control ${errors[q.field_name] ? "is-invalid" : ""}`}
+                name={q.field_name}
+                value={formData[q.field_name] || ""}
                 onChange={handleChange}
-              /> אישה
-            </div>
+              >
+                <option value="" disabled>בחר</option>
+                {q.options && q.options.map((option, index) => (
+                  <option key={index} value={option}>{option}</option>
+                ))}
+              </select>
+            ) : q.question_type === "radio" ? (
+              q.options && q.options.map((option, index) => (
+                <div key={index} className="form-check">
+                  <input
+                    type="radio"
+                    name={q.field_name}
+                    value={option}
+                    checked={formData[q.field_name] === option}
+                    onChange={handleChange}
+                  />
+                  <label>{option}</label>
+                </div>
+              ))
+            ) : null}
+
+            {errors[q.field_name] && <div className="invalid-feedback">{errors[q.field_name]}</div>}
           </div>
-          {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
-        </div>
-
-        {/* Sex */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">מין</label>
-          <div className="radio-group">
-            <div className="form-check">
-              <input
-                type="radio"
-                name="sex"
-                value="זכר"
-                onChange={handleChange}
-              /> זכר
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                name="sex"
-                value="נקבה"
-                onChange={handleChange}
-              /> נקבה
-            </div>
-          </div>
-          {errors.sex && <div className="invalid-feedback">{errors.sex}</div>}
-        </div>
-
-        {/* Preferred Language */}
-        <div className="form-group radio-preferred">
-          <label className="form-label">מה ניסוח הפניה המועדף עליך?</label>
-          <div className="radio-group">
-            <div className="form-check">
-              <input
-                type="radio"
-                name="preferredLanguage"
-                value="לשון זכר"
-                onChange={handleChange}
-              /> לשון זכר
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                name="preferredLanguage"
-                value="לשון נקבה"
-                onChange={handleChange}
-              /> לשון נקבה
-            </div>
-          </div>
-          {errors.preferredLanguage && <div className="invalid-feedback">{errors.preferredLanguage}</div>}
-        </div>
+        ))}
 
         <button type="submit" className="btn btn-primary">שלח</button>
       </form>

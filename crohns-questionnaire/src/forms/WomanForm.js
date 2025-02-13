@@ -3,13 +3,16 @@ import '../css/MyForm.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useLocation } from "react-router-dom";
+import axios from 'axios';
 
 function App() {
       const location = useLocation();
       const { preferredLanguage } = location.state || {};
+      const [questions, setQuestions] = useState([]); // Store questions from DB
     const [formData, setFormData] = useState({
         menstrualLength: '',
         painDuringMenstruation: '',
+        contraceptiveUsing :'',
         selectedSymptoms :'',
         pmsSymptoms: "", // Yes/No selection for PMS symptoms
         additionalSymptoms: [], // Array to track selected symptoms
@@ -32,7 +35,19 @@ function App() {
     });
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+    axios.get("http://localhost:3002/test_questions_woman")
+      .then((response) => {
+        setQuestions(response.data); // Set questions in state
+        const initialFormData = {};
+        response.data.forEach(q => {
+          initialFormData[q.field_name] = ""; // Initialize form data
+        });
+        setFormData(initialFormData);
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+      });
+       window.scrollTo(0, 0); 
   }, []); // Empty dependency array to ensure it runs only once when the component mounts
 
 
@@ -160,7 +175,9 @@ function App() {
             <h2 className="mb-4 text-center">Woman information form</h2>
             <form onSubmit={handlesubmit}>
                 <div className="form-group">
-                    <label className="form-label">גיל הופעת וסת ראשונה </label>
+                    <label className="form-label">
+                    {questions.find(q => q.field_name === "menstrualLength")?.question_text || "שאלה לא זמינה"}
+                        </label>
                     <input
                         type="number"
                         className="form-control"
@@ -173,7 +190,7 @@ function App() {
 
                 <div className="averageDuration">
                     <label className="form-label">
-                        מה אורך וסת הממוצע שלך בימים?
+                    {questions.find(q => q.field_name === "durationSlider")?.question_text || "שאלה לא זמינה"}
                     </label>
                     <div className="slider-container">
                         <input
@@ -203,7 +220,7 @@ function App() {
 
                 <div className="form-group radio-preferred">
                     <label htmlFor="menstrualPain" className="form-label">
-                        האם את סובלת מכאבים בזמן מחזור?
+                    {questions.find(q => q.field_name === "menstrualPain")?.question_text || "שאלה לא זמינה"}
                     </label>
                     <div className="form-check">
                         <input type="radio" name="menstrualPain" value="כן" onChange={handleChange} />
@@ -219,7 +236,9 @@ function App() {
                 <div>
       {/* Yes/No Radio Selection for PMS Symptoms */}
       <div className="form-group radio-preferred">
-        <label className="form-label">האם את חווה תסמיני תסמונת קדם וסתית (PMS)?</label>
+        <label className="form-label">
+        {questions.find(q => q.field_name === "pmsSymptoms")?.question_text || "שאלה לא זמינה"}
+            </label>
         <div className="form-check">
           <input
             type="radio"
@@ -246,7 +265,7 @@ function App() {
       {formData.pmsSymptoms === "כן" && (
         <div className="form-group radio-preferred">
           <label className="form-label">
-            אילו תסמינים נוספים חווים בקשר לתסמונת קדם וסתית PMS?
+          {questions.find(q => q.field_name === "additionalSymptoms")?.question_text || "שאלה לא זמינה"}
           </label>
           {[
             "דכאון",
@@ -295,8 +314,9 @@ function App() {
 
             
             <div className="form-group radio-preferred">
-            <label htmlFor="additionalSymptoms" className="form-label">           
-                האם קיבלת מחזור בשנה האחרונה?                    
+            <label htmlFor="hasMenstrualCycle" className="form-label">   
+            {questions.find(q => q.field_name === "hasMenstrualCycle")?.question_text || "שאלה לא זמינה"}        
+                   
             </label>
                 <div className="form-check">
                     <input
@@ -319,7 +339,8 @@ function App() {
             {hasMenstrualCycle === 'לא' && (
                 <div className="form-group">
                     <label className="form-label">
-                        מתי הייתה גיל הופעת הוסת האחרונה שלך?
+                    {questions.find(q => q.field_name === "lastMenstrualPeriod")?.question_text || "שאלה לא זמינה"} 
+
                     </label>
                     <input
                         type="number"
@@ -334,7 +355,8 @@ function App() {
 
             <div className="form-group radio-preferred">
                 <label htmlFor="pregnancyStatus" className="form-label">
-                    האם היית בהריון?
+                {questions.find(q => q.field_name === "pregnancyStatus")?.question_text || "שאלה לא זמינה"} 
+
                 </label>
                 <div className="form-check">
                     <input
@@ -357,7 +379,7 @@ function App() {
             {pregnancyStatus === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
-                        צייני את מספר ההריונות שלך:
+                    {questions.find(q => q.field_name === "pregnancyCount")?.question_text || "שאלה לא זמינה"}  
                     </label>
                     <input
                         type="number"
@@ -372,7 +394,7 @@ function App() {
             {pregnancyStatus === 'כן' && (
             <div className="form-group">
                 <label className="form-label">
-                    צייני את מספר הילדים שלך:
+                {questions.find(q => q.field_name === "childrenCount")?.question_text || "שאלה לא זמינה"}  
                 </label>
                 <input
                     type="number"
@@ -388,7 +410,7 @@ function App() {
             {pregnancyStatus === 'כן' && (
             <div className="form-group radio-preferred">
                 <label htmlFor="postpartumDepression" className="form-label">
-                    האם סבלת מדכאון אחרי לידה?
+                {questions.find(q => q.field_name === "postpartumDepression")?.question_text || "שאלה לא זמינה"}  
                 </label>
                 <div className="form-check">
                     <input
@@ -413,7 +435,7 @@ function App() {
                 <>
                     <div className="form-group radio-preferred">
                         <label htmlFor="diagnosed" className="form-label">
-                            האם אובחנת?
+                        {questions.find(q => q.field_name === "diagnosedDepression")?.question_text || "שאלה לא זמינה"}  
                         </label>
                         <div className="form-check">
                             <input
@@ -435,7 +457,7 @@ function App() {
 
                     <div className="form-group radio-preferred">
                         <label htmlFor="treated" className="form-label">
-                            האם טופלת?
+                        {questions.find(q => q.field_name === "treatedDepression")?.question_text || "שאלה לא זמינה"}  
                         </label>
                         <div className="form-check">
                             <input
@@ -458,7 +480,7 @@ function App() {
                     {postpartumDepression.treated === 'כן' && (
                         <div className="form-group">
                             <label className="form-label">
-                                כיצד טופלת?
+                            {questions.find(q => q.field_name === "treatmentMethod")?.question_text || "שאלה לא זמינה"}  
                             </label>
                             <input
                                 type="text"
@@ -472,7 +494,7 @@ function App() {
                     {postpartumDepression.treated === 'כן' && (
                     <div className="form-group radio-preferred">
                         <label htmlFor="stillTreated" className="form-label">
-                            האם את עדיין מטופלת?
+                        {questions.find(q => q.field_name === "stillTreated")?.question_text || "שאלה לא זמינה"}  
                         </label>
                         <div className="form-check">
                             <input
@@ -497,7 +519,7 @@ function App() {
 
             <div className="form-group radio-preferred">
             <label htmlFor="treated" className="form-label">
-                האם את משתמשת באמצעי מניעה?
+            {questions.find(q => q.field_name === "contraceptiveUsing")?.question_text || "שאלה לא זמינה"}  
             </label>
                 <div className="form-check">
                     <input
@@ -520,19 +542,19 @@ function App() {
             {contraceptiveMethods.using === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
-                        איזה סוג אמצעי מניעה את משתמשת?
+                    {questions.find(q => q.field_name === "contraceptiveType")?.question_text || "שאלה לא זמינה"}  
                     </label>
                     <select
                         className="form-control"
                         value={contraceptiveMethods.type}
                         onChange={(e) => handleContraceptiveChange('type', e.target.value)}
                     >
-                        <option value="">בחרי סוג</option>
+                       <option value="">בחרי סוג</option>
                         <option value="גלולות">גלולות</option>
                         <option value="התקן הורמונלי">התקן הורמונלי</option>
                         <option value="התקן לא הורמונלי">התקן לא הורמונלי</option>
-                        <option value="התקן הורמונלי">ימים בטוחים</option>
-                        <option value="התקן לא הורמונלי">השיטה הטבעית למודות לפוריות</option>
+                        <option value="ימים בטוחים">ימים בטוחים</option>  
+                        <option value="השיטה הטבעית למודעות לפוריות">השיטה הטבעית למודעות לפוריות</option>
                         {/* Add more options as needed */}
                     </select>
                 </div>
@@ -541,7 +563,7 @@ function App() {
             {contraceptiveMethods.type === 'גלולות' && (
                 <div className="form-group">
                     <label className="form-label">
-                        מאיזה גיל התחלת להשתמש בגלולות?
+                    {questions.find(q => q.field_name === "contraceptiveAgeStarted")?.question_text || "שאלה לא זמינה"}  
                     </label>
                     <input
                         type="number"
@@ -553,10 +575,11 @@ function App() {
                 </div>
             )}
 
-            {(contraceptiveMethods.type === 'התקן הורמונלי' || contraceptiveMethods.type === 'התקן לא הורמונלי') && (
+{contraceptiveMethods.using === 'כן' && 
+  (contraceptiveMethods.type === 'התקן הורמונלי' || contraceptiveMethods.type === 'התקן לא הורמונלי') && (
                 <div className="form-group">
                     <label className="form-label">
-                        מאיזה גיל התחלת להשתמש בהתקן?
+                    {questions.find(q => q.field_name === "deviceAgeStarted")?.question_text || "שאלה לא זמינה"}  
                     </label>
                     <input
                         type="number"
@@ -570,7 +593,7 @@ function App() {
 
         <div className="form-group radio-preferred">
             <label htmlFor="isGlulotInPast" className="form-label">
-            האם השתמשת בעבר בגלולות למניעת הריון
+            {questions.find(q => q.field_name === "isGlulotInPast")?.question_text || "שאלה לא זמינה"}  
             </label>
                 <div className="form-check">
                 <input
@@ -593,7 +616,7 @@ function App() {
             {isGlulotInPast === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
-                        מאיזה גיל התחלת להשתמש בגלולות?
+                    {questions.find(q => q.field_name === "contraceptiveAgeStarted")?.question_text || "שאלה לא זמינה"}  
                     </label>
                     <input
                         type="number"
@@ -607,7 +630,7 @@ function App() {
 
 <div className="form-group radio-preferred">
             <label htmlFor="isBikurKavua" className="form-label">
-            האם את מבקרת באופן קבוע אצל רופא נשים
+            {questions.find(q => q.field_name === "isBikurKavua")?.question_text || "שאלה לא זמינה"}  
             </label>
                 <div className="form-check">
                 <input
@@ -630,7 +653,8 @@ function App() {
             {isBikurKavua === 'כן' && (
                 <div className="form-group radio-preferred">
                     <label className="form-label">
-                    כמה פעמים בשנה לא כולל מעקב הריון/פוריות
+                    {questions.find(q => q.field_name === "annualVisits")?.question_text || "שאלה לא זמינה"}  
+            
                     </label>
                     <input
                         type="number"
@@ -644,7 +668,10 @@ function App() {
             )}
 
 <div className="form-group radio-preferred">
-    <label className="form-label">האם את מבקרת באופן קבוע אצל כירוגית שד?</label>
+    <label className="form-label">
+    {questions.find(q => q.field_name === "breastSurgeonVisits")?.question_text || "שאלה לא זמינה"} 
+        
+    </label>
     <div className="form-check">
         <input type="radio" name="breastSurgeonVisits" value="כן" onChange={handleChange} />
         <label>כן</label>
@@ -657,7 +684,9 @@ function App() {
 
     {formData.breastSurgeonVisits === 'כן' && (
     <div className="form-group radio-preferred">
-        <label className="form-label">באיזו תדירות את מבקרת?</label>
+        <label className="form-label">
+        {questions.find(q => q.field_name === "breastSurgeonVisitFrequency")?.question_text || "שאלה לא זמינה"} 
+           </label>
         <select
             className="form-control"
             name="breastSurgeonVisitFrequency"
@@ -675,7 +704,10 @@ function App() {
 
 
 <div className="form-group radio-preferred">
-    <label className="form-label">האם יש היסטוריה של סרטן שד/שחלות במשפחה?</label>
+    <label className="form-label">
+    {questions.find(q => q.field_name === "familyBreastOvarianCancer")?.question_text || "שאלה לא זמינה"} 
+        
+    </label>
     <div className="form-check">
         <input type="radio" name="familyBreastOvarianCancer" value="כן" onChange={handleChange} />
         <label>כן</label>
@@ -687,7 +719,10 @@ function App() {
 </div>
 
 <div className="form-group radio-preferred">
-    <label className="form-label">פרופיל הורמונלי תקין?</label>
+    <label className="form-label">
+    {questions.find(q => q.field_name === "hormonalProfile")?.question_text || "שאלה לא זמינה"} 
+        
+        </label>
     <div className="form-check">
         <input type="radio" name="hormonalProfile" value="נבדק ונמצא תקין" onChange={handleChange} />
         <label>נבדק ונמצא תקין</label>
