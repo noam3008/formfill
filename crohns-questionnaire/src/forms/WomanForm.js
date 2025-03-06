@@ -5,11 +5,13 @@ import { useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 
-function App() {
+function WomanForm() {
       const location = useLocation();
-      const { preferredLanguage } = location.state || {};
+      const { preferredLanguage ,idNumber} = location.state || {};
       const [questions, setQuestions] = useState([]); // Store questions from DB
     const [formData, setFormData] = useState({
+        idNumber: location.state?.idNumber,
+        preferredLanguage: location.state?.preferredLanguage || "",
         menstrualLength: '',
         painDuringMenstruation: '',
         contraceptiveUsing :'',
@@ -19,6 +21,7 @@ function App() {
         customSymptom: "", // Text input for "Other - Specify"
         isGlulotInPast :'',
         isBikurKavua:'',
+        preferredLanguage : preferredLanguage,
         childrenCount: '',
         usedContraceptives: '',
         contraceptiveType: '',
@@ -30,26 +33,47 @@ function App() {
         setHasMenstrualCycle : '',
         hasMenstrualCycle:'',
         lastMenstrualPeriod:'',
-        id_number :'',
+        menstrualPain:'',
+        postpartumDepression : '',
         durationSlider : 0
     });
 
-  useEffect(() => {
-    axios.get("http://localhost:3002/test_questions_woman")
-      .then((response) => {
-        setQuestions(response.data); // Set questions in state
-        const initialFormData = {};
-        response.data.forEach(q => {
-          initialFormData[q.field_name] = ""; // Initialize form data
-        });
-        setFormData(initialFormData);
-      })
-      .catch((error) => {
-        console.error("Error fetching questions:", error);
-      });
-       window.scrollTo(0, 0); 
-  }, []); // Empty dependency array to ensure it runs only once when the component mounts
 
+    useEffect(() => {
+        axios.get("http://localhost:3002/test_questions_woman")
+            .then((response) => {
+                setQuestions(response.data); // Set questions in state
+                const initialFormData = {};
+                response.data.forEach(q => {
+                    initialFormData[q.field_name] = ""; // Initialize form data for each field
+                });
+                
+                // Only set formData if it's not set yet, or add missing fields
+                setFormData(prevData => ({
+                    ...prevData,   // Keep any previous formData values
+                    ...initialFormData // Add or override the new form fields
+                }));
+            })
+            .catch((error) => {
+                console.error("Error fetching questions:", error);
+            });
+    
+            window.scrollTo(0, 0); 
+    
+         // Set idNumber from location.state if not already in formData
+    if (location.state?.idNumber && !formData.idNumber) {
+        setFormData(prevData => ({
+            ...prevData,
+            idNumber: location.state.idNumber
+        }));
+    }
+    if (location.state?.preferredLanguage && !formData.preferredLanguage) {
+        setFormData(prevData => ({
+            ...prevData,
+            preferredLanguage: location.state.preferredLanguage
+        }));
+    }
+}, [location.state?.idNumber]); // Only rerun if location.state.idNumber changes
 
 
     const pmsSymptoms = [
@@ -77,10 +101,11 @@ function App() {
     const [isBikurKavua, setisBikurKavua] = useState('');
     const [numberOfChildren, setNumberOfChildren] = useState('');
     const [postpartumDepression, setPostpartumDepression] = useState({
-        suffered: '',
-        diagnosed: '',
-        treated: '',
-        stillTreated: ''
+        suffered: "",
+        diagnosed: "",
+        treated: "",
+        treatmentMethod: "",
+        stillTreated: ""
     });
 
     const [contraceptiveMethods, setContraceptiveMethods] = useState({
@@ -95,22 +120,46 @@ function App() {
     const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
+    
 
     const handleLastMenstrualPeriodChange = (e) => {
-        setLastMenstrualPeriod(e.target.value);
+        const value = e.target.value;
+        setLastMenstrualPeriod(value);
+        setFormData((prevData) => ({
+            ...prevData,
+            lastMenstrualPeriod: value
+        }));
     };
     const handlePregnancyChange = (e) => {
-        setPregnancyStatus(e.target.value);
+        const value = e.target.value;
+        setPregnancyStatus(value);
+        setFormData((prevData) => ({
+            ...prevData,
+            pregnancyStatus: value
+        }));
     };
 
     const handlePregnancyCountChange = (e) => {
-        setPregnancyCount(e.target.value);
+        const value = e.target.value;
+        setPregnancyCount(value);
+        setFormData((prevData) => ({
+            ...prevData,
+            pregnancyCount: value
+        }));
     };
 
     const handleChildrenCountChange = (e) => {
-        setNumberOfChildren(e.target.value);
+        const value = e.target.value;
+        setNumberOfChildren(value);
+        setFormData((prevData) => ({
+            ...prevData,
+            childrenCount: value
+        }));
     };
 
      // Handle Text Input for "Other - Specify"
@@ -119,41 +168,108 @@ function App() {
   };
 
     const handleGlulotInPastChange = (e) => {
-        setIsGlulotInPast(e.target.value);
+        const value = e.target.value;
+        setIsGlulotInPast(value);
+        setFormData((prevData) => ({
+            ...prevData,
+            isGlulotInPast: value
+        }));
+
     };
 
     const handleBikurKavua = (e) => {
-        setisBikurKavua(e.target.value);
-    };
-
-
-    const handlePostpartumDepressionChange = (field, value) => {
-        setPostpartumDepression((prevState) => ({
-            ...prevState,
-            [field]: value
+        const value = e.target.value;
+    
+        // Update the isBikurKavua state
+        setisBikurKavua(value);
+    
+        // Update the formData state with the value of 'isBikurKavua'
+        setFormData((prevData) => ({
+            ...prevData,
+            isBikurKavua: value
         }));
     };
-
-    const handleContraceptiveChange = (field, value) => {
-        setContraceptiveMethods((prevState) => ({
-            ...prevState,
-            [field]: value
-        }));
-    };
-
     
 
 
-    const handlesubmit = (e) => {
+    const handlePostpartumDepressionChange = (field, value) => {
+        setPostpartumDepression((prevState) => {
+            const updatedDepression = { ...prevState, [field]: value };
+    
+            // Use functional update to ensure latest state is applied
+            setFormData((prevData) => ({
+                ...prevData,
+                postpartumDepression: updatedDepression.suffered, // Match DB column
+                diagnosedDepression: updatedDepression.diagnosed,
+                treatedDepression: updatedDepression.treated,
+                treatmentMethod: updatedDepression.treatmentMethod,
+                stillTreated: updatedDepression.stillTreated
+            }));
+    
+            return updatedDepression;
+        });
+    };
+
+    const handleContraceptiveChange = (field, value) => {
+        setContraceptiveMethods((prevState) => {
+          const updatedMethods = { ...prevState, [field]: value };
+      
+          // Now update formData with the latest contraceptive data
+          setFormData((prevData) => ({
+            ...prevData,
+            contraceptiveUsing: updatedMethods.using,
+            contraceptiveType: updatedMethods.type,
+            contraceptiveAgeStarted: updatedMethods.ageStarted,
+            deviceAgeStarted: updatedMethods.ageDeviceStarted
+          }));
+      
+          return updatedMethods; // Ensure state updates correctly
+        });
+      };
+      
+    
+
+    
+    const handlesubmit = async (e) => {
         e.preventDefault();
-        navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
-        // You can add an API call here
+        console.log("FormData before sending:", formData);
+      
+    
+        try {
+          const response = await fetch("http://localhost:3002/insert_woman", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+      
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+      
+          const result = await response.json();
+          localStorage.setItem('userData', JSON.stringify(result));
+          console.log(result.message);  // Log success message
+      
+        } catch (error) {
+          console.error("Error:", error.message);  // Handle errors
+        }
+        navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage ,idNumber : formData.idNumber} });
     };
 
-    const handleRadioChange = (e) => {
-        setHasMenstrualCycle(e.target.value);
-    };
 
+    const handleRadioChange = (value) => {
+        setFormData(prevData => {
+          // If the value is already selected, reset the state
+          const newValue = prevData.hasMenstrualCycle === value ? "" : value;
+          
+          return {
+            ...prevData,
+            hasMenstrualCycle: newValue,
+          };
+        });
+      };
     const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 
     const handleCheckboxChange = (e) => {
@@ -187,47 +303,64 @@ function App() {
                         min="0" // Ensures only positive numbers are allowed
                     />
                 </div>
+                
 
                 <div className="averageDuration">
-                    <label className="form-label">
-                    {questions.find(q => q.field_name === "durationSlider")?.question_text || "שאלה לא זמינה"}
-                    </label>
-                    <div className="slider-container">
-                        <input
-                            type="range"
-                            min="1"
-                            max="4"
-                            step="1"
-                            className="slider"
-                            id="durationSlider"
-                            name="durationSlider"
-                            value={formData.durationSlider}
-                            onChange={handleChange}
-                            onClick={(e) => {
-                                if (formData.durationSlider === 0) {
-                                    handleChange(e); // Ensure the first click registers
-                                }
-                            }}
-                        />
-                        <div className="slider-labels">
-                            <span>1-2</span>
-                            <span>3-4</span>
-                            <span>4-5</span>
-                            <span>שישה ימים ומעלה</span>
-                        </div>
-                    </div>
-                </div>
+    <label className="form-label">
+        {questions.find(q => q.field_name === "durationSlider")?.question_text || "שאלה לא זמינה"}
+    </label>
+    <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            id="durationSlider"
+            name="durationSlider"
+            value={formData.durationSlider || 0}  // Initial value is 0
+            onChange={handleChange}
+            onClick={(e) => {
+                if (formData.durationSlider === 0) {
+                    handleChange(e);  // Ensure the first click registers
+                }
+            }}
+        />
+        <div className="slider-labels">
+            <span>לא נבחרה תשובה</span>
+            <span>1-2</span>
+            <span>3-4</span>
+            <span>4-5</span>
+            <span>שישה ימים ומעלה</span>
+        </div>
+    </div>
+</div>
 
                 <div className="form-group radio-preferred">
                     <label htmlFor="menstrualPain" className="form-label">
                     {questions.find(q => q.field_name === "menstrualPain")?.question_text || "שאלה לא זמינה"}
                     </label>
                     <div className="form-check">
-                        <input type="radio" name="menstrualPain" value="כן" onChange={handleChange} />
+                        <input 
+                        type="radio" 
+                        name="menstrualPain" 
+                        value="כן" 
+                        checked={formData.menstrualPain === "כן"}
+                        onClick={() => handleChange({ target: { name: "menstrualPain", value: formData.menstrualPain === "כן" ? "" : "כן" } })}
+                  
+                        onChange={handleChange} />
                         <label htmlFor="menstrualPain">כן</label>
                     </div>
                     <div className="form-check">
-                        <input type="radio" name="menstrualPain" value="לא" onChange={handleChange} />
+                        <input 
+                        type="radio" 
+                        name="menstrualPain" 
+                        value="לא" 
+                        checked={formData.menstrualPain === "לא"}
+                        onClick={() => handleChange({ target: { name: "menstrualPain", value: formData.menstrualPain === "לא" ? "" : "לא" } })}
+                  
+                        onChange={handleChange} 
+                        />
                         <label htmlFor="menstrualPain">לא</label>
                     </div>
                 </div>
@@ -246,6 +379,8 @@ function App() {
             value="כן"
             onChange={handleChange}
             checked={formData.pmsSymptoms === "כן"}
+            onClick={() => handleChange({ target: { name: "pmsSymptoms", value: formData.pmsSymptoms === "כן" ? "" : "כן" } })}
+
           />
           <label>כן</label>
         </div>
@@ -256,6 +391,7 @@ function App() {
             value="לא"
             onChange={handleChange}
             checked={formData.pmsSymptoms === "לא"}
+            onClick={() => handleChange({ target: { name: "pmsSymptoms", value: formData.pmsSymptoms === "לא" ? "" : "לא" } })}
           />
           <label>לא</label>
         </div>
@@ -304,53 +440,53 @@ function App() {
                 className="form-control"
                 name="customSymptom"
                 value={formData.customSymptom}
-                onChange={handleCustomSymptomChange}
+                onChange={handleChange}
               />
             </div>
           )}
         </div>
       )}
     </div>
+    <div className="form-group radio-preferred">
+  <label htmlFor="hasMenstrualCycle" className="form-label">
+    {questions.find(q => q.field_name === "hasMenstrualCycle")?.question_text || "שאלה לא זמינה"}
+  </label>
+  
+  <div className="form-check">
+    <input
+      type="radio"
+      name="hasMenstrualCycle"
+      value="כן"
+      onChange={() => handleRadioChange("כן")}
+      checked={formData.hasMenstrualCycle === "כן"}
+    /> כן
+  </div>
 
-            
-            <div className="form-group radio-preferred">
-            <label htmlFor="hasMenstrualCycle" className="form-label">   
-            {questions.find(q => q.field_name === "hasMenstrualCycle")?.question_text || "שאלה לא זמינה"}        
-                   
-            </label>
-                <div className="form-check">
-                    <input
-                        type="radio"
-                        name="hasMenstrualCycle"
-                        value="כן"
-                        onChange={handleRadioChange}
-                    /> כן
-                </div>
-                <div className="form-check">
-                    <input
-                        type="radio"
-                        name="hasMenstrualCycle"
-                        value="לא"
-                        onChange={handleRadioChange}
-                    /> לא
-                </div>
-            </div>
+  <div className="form-check">
+    <input
+      type="radio"
+      name="hasMenstrualCycle"
+      value="לא"
+      onChange={() => handleRadioChange("לא")}
+      checked={formData.hasMenstrualCycle === "לא"}
+    /> לא
+  </div>
+</div>
 
-            {hasMenstrualCycle === 'לא' && (
-                <div className="form-group">
-                    <label className="form-label">
-                    {questions.find(q => q.field_name === "lastMenstrualPeriod")?.question_text || "שאלה לא זמינה"} 
-
-                    </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        min = "0"
-                        value={lastMenstrualPeriod}
-                        onChange={handleLastMenstrualPeriodChange}
-                    />
-                </div>
-            )}
+{formData.hasMenstrualCycle === 'לא' && (
+  <div className="form-group">
+    <label className="form-label">
+      {questions.find(q => q.field_name === "lastMenstrualPeriod")?.question_text || "שאלה לא זמינה"}
+    </label>
+    <input
+      type="number"
+      className="form-control"
+      min="0"
+      value={formData.lastMenstrualPeriod || ''}
+      onChange={handleLastMenstrualPeriodChange}
+    />
+  </div>
+)}
 
 
             <div className="form-group radio-preferred">
@@ -364,6 +500,10 @@ function App() {
                         name="pregnancyStatus"
                         value="כן"
                         onChange={handlePregnancyChange}
+                        checked={formData.pregnancyStatus === "כן"}
+                        onClick={() => handleChange({ target: { name: "pregnancyStatus", value: formData.pregnancyStatus === "כן" ? "" : "כן" } })}
+
+                        
                     /> כן
                 </div>
                 <div className="form-check">
@@ -372,6 +512,9 @@ function App() {
                         name="pregnancyStatus"
                         value="לא"
                         onChange={handlePregnancyChange}
+                        checked={formData.pregnancyStatus === "לא"}
+                        onClick={() => handleChange({ target: { name: "pregnancyStatus", value: formData.pregnancyStatus === "לא" ? "" : "לא" } })}
+
                     /> לא
                 </div>
             </div>
@@ -418,6 +561,9 @@ function App() {
                         name="postpartumDepression"
                         value="כן"
                         onChange={(e) => handlePostpartumDepressionChange('suffered', e.target.value)}
+                        checked={formData.postpartumDepression === "כן"}
+                        onClick={() => handleChange({ target: { name: "postpartumDepression", value: formData.postpartumDepression === "כן" ? "" : "כן" } })}
+                        
                     /> כן
                 </div>
                 <div className="form-check">
@@ -426,6 +572,10 @@ function App() {
                         name="postpartumDepression"
                         value="לא"
                         onChange={(e) => handlePostpartumDepressionChange('suffered', e.target.value)}
+                        checked={formData.postpartumDepression === "לא"}
+                        onClick={() => handleChange({ target: { name: "postpartumDepression", value: formData.postpartumDepression === "לא" ? "" : "לא" } })}
+
+
                     /> לא
                 </div>
             </div>
@@ -443,6 +593,8 @@ function App() {
                                 name="diagnosed"
                                 value="כן"
                                 onChange={(e) => handlePostpartumDepressionChange('diagnosed', e.target.value)}
+                                checked={formData.diagnosed === "כן"}
+                                onClick={() => handleChange({ target: { name: "diagnosed", value: formData.diagnosed === "כן" ? "" : "כן" } })}
                             /> כן
                         </div>
                         <div className="form-check">
@@ -451,6 +603,8 @@ function App() {
                                 name="diagnosed"
                                 value="לא"
                                 onChange={(e) => handlePostpartumDepressionChange('diagnosed', e.target.value)}
+                                checked={formData.diagnosed === "לא"}
+                                onClick={() => handleChange({ target: { name: "diagnosed", value: formData.diagnosed === "לא" ? "" : "לא" } })}
                             /> לא
                         </div>
                     </div>
@@ -464,6 +618,8 @@ function App() {
                                 type="radio"
                                 name="treated"
                                 value="כן"
+                                checked={formData.treated === "כן"}
+                                onClick={() => handleChange({ target: { name: "treated", value: formData.treated === "כן" ? "" : "כן" } })}
                                 onChange={(e) => handlePostpartumDepressionChange('treated', e.target.value)}
                             /> כן
                         </div>
@@ -473,6 +629,8 @@ function App() {
                                 name="treated"
                                 value="לא"
                                 onChange={(e) => handlePostpartumDepressionChange('treated', e.target.value)}
+                                checked={formData.treated === "לא"}
+                                onClick={() => handleChange({ target: { name: "treated", value: formData.treated === "לא" ? "" : "לא" } })}
                             /> לא
                         </div>
                     </div>
@@ -500,6 +658,9 @@ function App() {
                             <input
                                 type="radio"
                                 name="stillTreated"
+                                checked={formData.stillTreated === "כן"}
+                                onClick={() => handleChange({ target: { name: "stillTreated", value: formData.stillTreated === "כן" ? "" : "כן" } })}
+  
                                 value="כן"
                                 onChange={(e) => handlePostpartumDepressionChange('stillTreated', e.target.value)}
                             /> כן
@@ -508,6 +669,8 @@ function App() {
                             <input
                                 type="radio"
                                 name="stillTreated"
+                                checked={formData.stillTreated === "לא"}
+                                onClick={() => handleChange({ target: { name: "stillTreated", value: formData.stillTreated === "לא" ? "" : "לא" } })}
                                 value="לא"
                                 onChange={(e) => handlePostpartumDepressionChange('stillTreated', e.target.value)}
                             /> לא
@@ -521,18 +684,22 @@ function App() {
             <label htmlFor="treated" className="form-label">
             {questions.find(q => q.field_name === "contraceptiveUsing")?.question_text || "שאלה לא זמינה"}  
             </label>
+            <div className="form-check">
+    <input
+      type="radio"
+      name="contraceptiveUsing"
+      checked={formData.contraceptiveUsing === "כן"} // Ensures that the button is checked based on the state
+      onClick={() => handleContraceptiveChange("using", formData.contraceptiveUsing === "כן" ? "" : "כן")}
+      value="כן"
+    /> כן
+  </div>
                 <div className="form-check">
                     <input
                         type="radio"
                         name="contraceptiveUsing"
-                        value="כן"
-                        onChange={(e) => handleContraceptiveChange('using', e.target.value)}
-                    /> כן
-                </div>
-                <div className="form-check">
-                    <input
-                        type="radio"
-                        name="contraceptiveUsing"
+                        checked={formData.contraceptiveUsing === "לא"}
+                        onClick={() => handleChange({ target: { name: "contraceptiveUsing", value: formData.contraceptiveUsing === "לא" ? "" : "לא" } })}
+
                         value="לא"
                         onChange={(e) => handleContraceptiveChange('using', e.target.value)}
                     /> לא
@@ -601,6 +768,9 @@ function App() {
                             name="isGlulotInPast"
                             value="כן"
                             onChange={handleGlulotInPastChange}
+                            checked={formData.isGlulotInPast === "כן"}
+                            onClick={() => handleChange({ target: { name: "isGlulotInPast", value: formData.isGlulotInPast === "כן" ? "" : "כן" } })}
+                            
                         /> כן
                 </div>
                 <div className="form-check">
@@ -608,6 +778,8 @@ function App() {
                             type="radio"
                             name="isGlulotInPast"
                             value="לא"
+                            checked={formData.isGlulotInPast === "לא"}
+                            onClick={() => handleChange({ target: { name: "isGlulotInPast", value: formData.isGlulotInPast === "לא" ? "" : "לא" } })}
                             onChange={handleGlulotInPastChange}
                         /> לא
                 </div>
@@ -638,6 +810,8 @@ function App() {
                             name="isBikurKavua"
                             value="כן"
                             onChange={handleBikurKavua}
+                            checked={formData.isBikurKavua === "כן"}
+                            onClick={() => handleChange({ target: { name: "isBikurKavua", value: formData.isBikurKavua === "כן" ? "" : "כן" } })}
                         /> כן
                 </div>
                 <div className="form-check">
@@ -646,6 +820,8 @@ function App() {
                             name="isBikurKavua"
                             value="לא"
                             onChange={handleBikurKavua}
+                            checked={formData.isBikurKavua === "לא"}
+                            onClick={() => handleChange({ target: { name: "isBikurKavua", value: formData.isBikurKavua === "לא" ? "" : "לא" } })}
                         /> לא
                 </div>
             </div>
@@ -673,11 +849,20 @@ function App() {
         
     </label>
     <div className="form-check">
-        <input type="radio" name="breastSurgeonVisits" value="כן" onChange={handleChange} />
+        <input type="radio" name="breastSurgeonVisits" value="כן" onChange={handleChange}
+             checked={formData.breastSurgeonVisits === "כן"}
+             onClick={() => handleChange({ target: { name: "breastSurgeonVisits", value: formData.breastSurgeonVisits === "כן" ? "" : "כן" } })}
+
+         />
         <label>כן</label>
     </div>
     <div className="form-check">
-        <input type="radio" name="breastSurgeonVisits" value="לא" onChange={handleChange} />
+        <input type="radio" name="breastSurgeonVisits" value="לא" onChange={handleChange} 
+        
+        checked={formData.breastSurgeonVisits === "לא"}
+        onClick={() => handleChange({ target: { name: "breastSurgeonVisits", value: formData.breastSurgeonVisits === "לא" ? "" : "לא" } })}
+
+        />
         <label>לא</label>
     </div>
     </div>
@@ -709,11 +894,18 @@ function App() {
         
     </label>
     <div className="form-check">
-        <input type="radio" name="familyBreastOvarianCancer" value="כן" onChange={handleChange} />
+        <input type="radio" name="familyBreastOvarianCancer" value="כן" onChange={handleChange}
+           checked={formData.familyBreastOvarianCancer === "כן"}
+           onClick={() => handleChange({ target: { name: "familyBreastOvarianCancer", value: formData.familyBreastOvarianCancer === "כן" ? "" : "כן" } })}
+
+/>
         <label>כן</label>
     </div>
     <div className="form-check">
-        <input type="radio" name="familyBreastOvarianCancer" value="לא" onChange={handleChange} />
+        <input type="radio" name="familyBreastOvarianCancer" value="לא" onChange={handleChange}
+           checked={formData.familyBreastOvarianCancer === "לא"}
+           onClick={() => handleChange({ target: { name: "familyBreastOvarianCancer", value: formData.familyBreastOvarianCancer === "לא" ? "" : "לא" } })}
+    />
         <label>לא</label>
     </div>
 </div>
@@ -745,8 +937,9 @@ function App() {
     </div>
 </div>
 
-
-<button type="submit" className="btn btn-primary">שלחי</button>
+<h3>שלח שאלון מס 2 מתוך 15</h3>
+<button type="submit" className="btn btn-primary">שלחי
+</button>
 
 
             </form>
@@ -754,4 +947,4 @@ function App() {
     );
 }
 
-export default App;
+export default WomanForm;

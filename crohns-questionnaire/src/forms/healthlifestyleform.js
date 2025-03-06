@@ -156,7 +156,7 @@ const HealthLifestyleForm = () => {
 
   return (
       <div className="form-container">
-          <h2 >Health Lifestyle Form</h2>
+          <h2 >שאלון אורח חיים</h2>
         <form onSubmit={handleSubmit}>
 
           <div className="form-group radio-preferred">
@@ -595,8 +595,8 @@ const HealthLifestyleForm = () => {
                     <div className="form-group radio-preferred">
                         <label htmlFor="vacationFlights" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? '   כמה פעמים טסת בשנה האחרונה לחופש בחול' 
-                : '  כמה פעמים טסת בשנה האחרונה לחופש בחול'}
+                ? '   כמה פעמים טסת בשנה האחרונה לחופש בחו"ל' 
+                : '  כמה פעמים טסת בשנה האחרונה לחופש בחו"ל'}
                           
                         </label>
                         <div className="form-check">
@@ -619,8 +619,8 @@ const HealthLifestyleForm = () => {
                         <div className="form-group radio-preferred">
                         <label htmlFor="workFlights" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? ' כמה פעמים טסת בשנה האחרונה לחול למטרת עבודה'  
-                : '  כמה פעמים טסת בשנה האחרונה לחול למטרת עבודה' }
+                ? ' כמה פעמים טסת בשנה האחרונה לחו"ל למטרת עבודה'  
+                : '  כמה פעמים טסת בשנה האחרונה לחו"ל למטרת עבודה' }
                             
                         </label>
                         <div className="form-check">
@@ -694,11 +694,11 @@ const HealthLifestyleForm = () => {
                         
                         <div className="slider-labels">
                             <span value="1">מעל 4 פעמים בשבוע</span>
-                            <span value="2"> אחת - שלוש פעמים בשבוע </span>
-                            <span value="3">אחת - שתי פעמים בחודש</span>
-                            <span value="4"> אחת - שתי פעמים בחצי שנה </span>
-                            <span value="5">פעם אחת בשנה</span>
-                            <span value="6">אפס פעמים בשנה</span>
+                            <span value="2">פעם 1 - שלוש פעמים בשבוע</span>
+                            <span value="3">פעם 1 - 2 פעמים בחודש</span>
+                            <span value="4"> פעם 1 - שתי פעמים בחצי שנה</span>
+                            <span value="5">פעם 1 בשנה</span>
+                            <span value="6">בשנה  0 פעמים </span>
                         </div>
                     </div>
             </div>
@@ -770,7 +770,7 @@ const HealthLifestyleForm = () => {
       <input
         type="number"
         min="0"
-        max="10"
+        max="100"
         name={item.name}
         value={answers[item.name] ?? ""} // Ensure 0 is selectable
         onChange={handleInputChange}
@@ -902,9 +902,7 @@ const HealthLifestyleForm = () => {
 
             <div className="form-group  radio-preferred">
             <label className="form-label">
-            {preferredLanguage === 'לשון זכר' 
-                ? ' בחודש האחרון כמה פעמים בשבוע אתה שותה שתיה ממותקת?'
-                : '  בחודש האחרון כמה פעמים בשבוע את שותה שתיה ממותקת?'}
+            בחודש האחרון כמה פעמים שתית שתייה ממותקת?
                </label>
             <div className="form-check">
                 <input type="number" name="drinkingSweetAmountPerWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />

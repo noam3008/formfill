@@ -50,7 +50,8 @@ body {
 }
 
 .form-select option {
-    text-align: right; /* Aligns text in dropdown options */
+   direction: right; /* Aligns text in dropdown options */
+    text-align: right;
 }
 
 /* Margin for checkboxes and radios */
@@ -233,11 +234,10 @@ button.submit-button:hover:not(:disabled) {
     opacity: 0 !important;
 }
 
-/* Ensure the slider is still clickable at 0 */
+/* Ensure the slider is still clickable at 0, and the background is faint */
 .slider[value="0"] {
     pointer-events: auto !important;
-    background: #3b82f6; /* Light blue */
-
+    background: rgba(200, 200, 200, 0.2); /* Light background */
 }
 
 /* Show thumb and track when value > 0 */
@@ -251,6 +251,13 @@ button.submit-button:hover:not(:disabled) {
     cursor: pointer;
 }
 
+.option-spacing {
+  margin-bottom: 10px;
+}
+
+.option-spacing label {
+    margin-right: 15px; /* Adjust the space as needed */
+  }
 /* When a value is selected, make the track fully visible */
 .slider:not([value="0"])::-webkit-slider-runnable-track {
     background: linear-gradient(
@@ -371,6 +378,8 @@ form {
         width: 30%; /* Labels take more space and wrap */
         text-align: center;
     }
+
+      
 }
       
   

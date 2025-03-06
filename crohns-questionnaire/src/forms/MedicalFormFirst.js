@@ -3,14 +3,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
 import { useNavigate ,useLocation} from 'react-router-dom';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const MedicalForm = () => {
    const location = useLocation();
    const [selectedOption, setSelectedOption] = useState(""); // Stores Yes/No selection
+   const [questions, setQuestions] = useState([]); // Store questions from DB
   const [frequency, setFrequency] = useState("");
-   const { preferredLanguage } = location.state || {};
+  const { preferredLanguage ,idNumber} = location.state || {};
   // State management for the form
   const [formData, setFormData] = useState({
+    idNumber: location.state?.idNumber,
+    preferredLanguage: location.state?.preferredLanguage || "",
     diagnosis: '',
     workIssuesMentalFrequency : '',
     medicationWithoutDoctorAmount :0,
@@ -28,7 +32,6 @@ const MedicalForm = () => {
     diagnosisAge: '',
     treatmentType: '',
     treatmentDuration: '',
-    preferredLanguage:preferredLanguage,
     treatmentChanges: '',
     treatmentAdherence: 0,
     backgroundDiseases: '',
@@ -86,9 +89,42 @@ const MedicalForm = () => {
     setFrequency(e.target.value);
   };
 
-    useEffect(() => {
-        window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
-      }, []); // Empty dependency array to ensure it runs only once when the component mounts
+  useEffect(() => {
+    axios.get("http://localhost:3002/test_questions_medical")
+        .then((response) => {
+            setQuestions(response.data); // Set questions in state
+            const initialFormData = {};
+            response.data.forEach(q => {
+                initialFormData[q.field_name] = ""; // Initialize form data for each field
+            });
+            
+            // Only set formData if it's not set yet, or add missing fields
+            setFormData(prevData => ({
+                ...prevData,   // Keep any previous formData values
+                ...initialFormData // Add or override the new form fields
+            }));
+        })
+        .catch((error) => {
+            console.error("Error fetching questions:", error);
+        });
+
+        window.scrollTo(0, 0); 
+
+    // Set idNumber from location.state if not already in formData
+    if (location.state?.idNumber && !formData.idNumber) {
+        setFormData(prevData => ({
+            ...prevData,
+            idNumber: location.state.idNumber
+        }));
+    }
+    if (location.state?.preferredLanguage && !formData.preferredLanguage) {
+        setFormData(prevData => ({
+            ...prevData,
+            preferredLanguage: location.state.preferredLanguage
+        }));
+    }
+}, [location.state?.idNumber]); // Only rerun if location.state.idNumber changes
+
 
   // Handler to update state on form change
   const handleChange = (e) => {
@@ -166,7 +202,10 @@ const MedicalForm = () => {
 
             {/* Diagnosis Information */}
             <div >
-              <label htmlFor="diagnosis" className="form-label">אבחנה (Diagnosis)</label>
+              <label htmlFor="diagnosis" className="form-label">
+              {questions.find(q => q.field_name === "diagnosis")?.question_text || "שאלה לא זמינה"}
+                
+               </label>
               <input
                   type="text"
                   className="form-control"
@@ -178,7 +217,10 @@ const MedicalForm = () => {
             </div>
 
             <div >
-              <label htmlFor="crohnAge" className="form-label">גיל פריצת הקרוהן (Crohn's Age Onset)</label>
+              <label htmlFor="crohnAge" className="form-label">
+                
+              {questions.find(q => q.field_name === "crohnAge")?.question_text || "שאלה לא זמינה"}
+                </label>
               <input
                   type="number"
                   className="form-control"
@@ -191,7 +233,9 @@ const MedicalForm = () => {
             </div>
 
             <div >
-              <label htmlFor="diagnosisAge" className="form-label">גיל אבחון הקרוהן (Age of Diagnosis)</label>
+              <label htmlFor="diagnosisAge" className="form-label">
+              {questions.find(q => q.field_name === "diagnosisAge")?.question_text || "שאלה לא זמינה"}
+               </label>
               <input
                   type="number"
                   className="form-control"
@@ -209,8 +253,8 @@ const MedicalForm = () => {
             <div className="form-group radio-preferred">
             <label htmlFor="isTreat" className="form-label">
               {preferredLanguage === 'לשון זכר' 
-                ? 'האם כרגע אתה מקבל טיפול כנגד המחלה?' 
-                : 'האם כרגע את מקבלת טיפול כנגד המחלה?'}
+                ? questions.find(q => q.field_name === "isTreat_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "isTreat_women")?.question_text || "שאלה לא זמינה"}
             </label>
               <div className="form-check">
                   <input type="radio" name="isTreat" value="כן" onChange={handleChange}  /> כן
@@ -223,7 +267,10 @@ const MedicalForm = () => {
 
         {formData.isTreat === 'כן' && (
                       <div >
-                      <label htmlFor="treatmentType" className="form-label">סוג הטיפול הנוכחי (Current Treatment Type)</label>
+                      <label htmlFor="treatmentType" className="form-label">
+                        
+                        {questions.find(q => q.field_name === "treatmentType")?.question_text || "שאלה לא זמינה"}
+                        </label>
                       <input
                           type="text"
                           className="form-control"
@@ -236,7 +283,10 @@ const MedicalForm = () => {
         )}
  {formData.isTreat === 'כן' && (
             <div>
-              <label htmlFor="treatmentDuration" className="form-label">משך הטיפול (Treatment Duration)</label>
+              <label htmlFor="treatmentDuration" className="form-label">
+              {questions.find(q => q.field_name === "treatmentDuration")?.question_text || "שאלה לא זמינה"}
+                
+                </label>
               <input
                   type="text"
                   className="form-control"
@@ -253,7 +303,9 @@ const MedicalForm = () => {
           {formData.isTreat === 'כן' && (
   
             <div className="form-group radio-preferred">
-                      <label htmlFor="treatmentChanges" className="form-label" >האם היו שינויים בטיפול/ במינון ?</label>
+                      <label htmlFor="treatmentChanges" className="form-label" >
+                      {questions.find(q => q.field_name === "treatmentDateAndReason")?.question_text || "שאלה לא זמינה"}
+                       </label>
                       <div className="form-check">
                           <input type="radio" name="treatmentChanges" value="כן" onChange={handleChange}  /> כן
                       </div>
@@ -266,7 +318,9 @@ const MedicalForm = () => {
 
             {formData.treatmentChanges === 'כן' && (
             <div>
-              <label htmlFor="treatmentDateAndReason" className="form-label">מתי היה השינוי בטיפול או המינון ? </label>
+              <label htmlFor="treatmentDateAndReason" className="form-label">
+              {questions.find(q => q.field_name === "treatmentDate")?.question_text || "שאלה לא זמינה"}
+                </label>
               <input
                   type="text"
                   className="form-control"
@@ -280,7 +334,9 @@ const MedicalForm = () => {
 
           {formData.treatmentChanges === 'כן' && (
             <div>
-              <label htmlFor="treatmentChangeReason" className="form-label">מדוע בוצע השינוי בטיפול או המינון? </label>
+              <label htmlFor="treatmentChangeReason" className="form-label">
+              {questions.find(q => q.field_name === "treatmentReason")?.question_text || "שאלה לא זמינה"}
+              </label>
               <input
                   type="text"
                   className="form-control"
@@ -296,7 +352,9 @@ const MedicalForm = () => {
          {formData.isTreat === 'כן' && (
             <div className="treatmentAdherence">
                     <label className="form-label">
-                   האם אתה מתמיד בטיפול?</label>
+
+                    {questions.find(q => q.field_name === "treatmentAdherence")?.question_text || "שאלה לא זמינה"}
+                  </label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -331,8 +389,8 @@ const MedicalForm = () => {
             <div className="winterlleness">
                     <label className="form-label">
                     {preferredLanguage === 'לשון זכר' 
-                ? ' כמה פעמים בממוצע בשנה אתה חולה במחלות "חורף" כגון שפעת, דלקת בגרון וכדומה ?' 
-                : ' כמה פעמים בממוצע בשנה את חולה במחלות "חורף" כגון שפעת, דלקת בגרון וכדומה ?'}
+                ? questions.find(q => q.field_name === "winterIllness_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "winterIllness_woman")?.question_text || "שאלה לא זמינה"}
                    </label>
                     <div className="slider-container">
                         <input
@@ -364,8 +422,8 @@ const MedicalForm = () => {
                 <div className="doctorduechron">
                     <label className="form-label">
                     {preferredLanguage === 'לשון זכר' 
-                ? ' כמה פעמים בשנה אתה מבקר רופא בעקבות הקרוהן?' 
-                : ' כמה פעמים בשנה את מבקרת רופא בעקבות הקרוהן?'}
+                ? questions.find(q => q.field_name === "doctorDueChron_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "doctorDueChron_women")?.question_text || "שאלה לא זמינה"}
                     
                     </label>
                     <div className="slider-container">
@@ -398,8 +456,8 @@ const MedicalForm = () => {
         <div className="form-group radio-preferred">
           <label htmlFor="allergies" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה סובל מאלרגיה מאובחנת?' 
-                : '  האם את סובלת מאלרגיה מאובחנת?'}
+                ? questions.find(q => q.field_name === "allergies_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "allergies_women")?.question_text || "שאלה לא זמינה"}
           </label>
           <div className="form-check">
               <input type="radio" name="allergies" value="כן" onChange={handleChange}  /> כן
@@ -412,7 +470,10 @@ const MedicalForm = () => {
 
         {formData.allergies === 'כן' && (
           <div className="form-group">
-            <label htmlFor="allergiesAge">? מאיזה גיל האלרגיה מאובחנת</label>
+            <label htmlFor="allergiesAge">
+              
+              {questions.find(q => q.field_name === "allergiesAge")?.question_text || "שאלה לא זמינה"}
+              </label>
             <input min = "0" type="number" name="allergiesAge" id="allergiesAge" className="form-control" value={formData.allergiesAge} onChange={handleChange} />
           </div>
         )}
@@ -421,8 +482,8 @@ const MedicalForm = () => {
           <div className="form-group">
             <label htmlFor="allergiesForWhat">
             {preferredLanguage === 'לשון זכר' 
-                ? ' ? למה אתה אלרגי' 
-                : '  ? למה את אלרגית'}
+                ? questions.find(q => q.field_name === "allergiesForWhat_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "allergiesForWhat_woman")?.question_text || "שאלה לא זמינה"}
               </label>
             <input type="text" name="allergiesForWhat" id="allergiesForWhat" className="form-control" value={formData.allergiesForWhat} onChange={handleChange} />
           </div>
@@ -431,8 +492,8 @@ const MedicalForm = () => {
 <div className="form-group radio-preferred">
           <label htmlFor="foodSensitivity" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
-                ? 'האם אתה סובל מרגישות לסוגי מזון?' 
-                : 'האם את סובלת מרגישות לסוגי מזון?'}
+                ? questions.find(q => q.field_name === "foodSensitivity_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "foodSensitivity_women")?.question_text || "שאלה לא זמינה"}
             </label>
           <div className="form-check">
               <input type="radio" name="foodSensitivity" value="כן" onChange={handleChange}  /> כן
@@ -447,15 +508,18 @@ const MedicalForm = () => {
           <div className="form-group">
             <label htmlFor="foodSensetivityAge"> 
             {preferredLanguage === 'לשון זכר' 
-                ? ' ? מאיזה גיל אתה סובל מרגישות' 
-                : ' ? מאיזה גיל את סובלת מרגישות'}
+                ? questions.find(q => q.field_name === "foodSensetivityAge_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "foodSensetivityAge_women")?.question_text || "שאלה לא זמינה"}
               </label>
             <input min = "0" type="number" name="foodSensetivityAge" id="foodSensetivityAge" className="form-control" value={formData.foodSensetivityAge} onChange={handleChange} />
           </div>
         )}
 
 <div className="form-group radio-preferred">
-        <label className="form-label">האם יש לך מחלות כרוניות נוספות?</label>
+        <label className="form-label">
+        {questions.find(q => q.field_name === "chronicDiseases")?.question_text || "שאלה לא זמינה"}
+          
+          </label>
         <div className="form-check">
           <input
             type="radio"
@@ -482,7 +546,9 @@ const MedicalForm = () => {
               {/* Number of Chronic Diseases Input */}
       {formData.chronicDiseases === "כן" && (
         <div className="form-group">
-          <label>?כמה מחלות כרוניות יש לך</label>
+          <label>
+          {questions.find(q => q.field_name === "chronicCount")?.question_text || "שאלה לא זמינה"}
+            </label>
           <input
             type="number"
             name="chronicCount"
@@ -501,7 +567,9 @@ const MedicalForm = () => {
         formData.diseases.map((disease, index) => (
           <div key={index} className="form-group disease-group">
             <h4>מחלה {index + 1}</h4>
-            <label>שם המחלה</label>
+            <label>
+            {questions.find(q => q.field_name === "disease_name")?.question_text || "שאלה לא זמינה"}
+              שם המחלה</label>
             <input
               type="text"
               className="form-control"
@@ -509,7 +577,9 @@ const MedicalForm = () => {
               onChange={(e) => handleDiseaseChange(index, "name", e.target.value)}
             />
 
-            <label>?מאיזה גיל החלו התסמינים</label>
+            <label>
+            {questions.find(q => q.field_name === "symptomsAge")?.question_text || "שאלה לא זמינה"}
+             </label>
             <input
               type="number"
               min="0"
@@ -518,7 +588,9 @@ const MedicalForm = () => {
               onChange={(e) => handleDiseaseChange(index, "symptomsAge", e.target.value)}
             />
 
-            <label>?מאיזה גיל אובחנה המחלה</label>
+            <label>
+            {questions.find(q => q.field_name === "diagnosisAgeChronic")?.question_text || "שאלה לא זמינה"}
+             </label>
             <input
               type="number"
               min="0"
@@ -532,7 +604,9 @@ const MedicalForm = () => {
 
 
         <div className="form-group radio-preferred">
-          <label htmlFor="hospitalization" className="form-label" >האם  עברת אישפוזים בעשור האחרון?</label>
+          <label htmlFor="hospitalization" className="form-label" >
+          {questions.find(q => q.field_name === "hospitalization")?.question_text || "שאלה לא זמינה"}
+           </label>
           <div className="form-check">
               <input type="radio" name="hospitalization" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -545,8 +619,8 @@ const MedicalForm = () => {
         <div className="form-group mt-3">
           <label htmlFor="hospitalizationDetails" className="form-label">
           {preferredLanguage === 'לשון זכר' 
-                ? 'אנא פרט את האישפוזים:' 
-                : 'אנא פרטי את האישפוזים:'}
+                ? questions.find(q => q.field_name === "hospitalizationDetails_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "hospitalizationDetails_woman")?.question_text || "שאלה לא זמינה"}
             
           </label>
           <textarea
@@ -562,7 +636,9 @@ const MedicalForm = () => {
 
 
 <div className="form-group radio-preferred">
-          <label htmlFor="surgeries" className="form-label" >האם  עברת ניתוח כלשהו?</label>
+          <label htmlFor="surgeries" className="form-label" >
+          {questions.find(q => q.field_name === "surgeries")?.question_text || "שאלה לא זמינה"}
+           </label>
           <div className="form-check">
               <input type="radio" name="surgeries" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -574,9 +650,7 @@ const MedicalForm = () => {
         {formData.surgeries === "כן" && (
           <div className="form-group mt-3">
             <label htmlFor="surgeriesList" className="form-label">
-              {formData.preferredLanguage === "לשון זכר"
-                ? "אנא פרט את הניתוחים שעברת:"
-                : "אנא פרטי את הניתוחים שעברת:"}
+              {questions.find(q => q.field_name === "surgeriesList")?.question_text || "שאלה לא זמינה"}
             </label>
             <textarea
               id="surgeriesList"
@@ -592,9 +666,8 @@ const MedicalForm = () => {
             />
 
             <label htmlFor="surgeriesAges" className="form-label mt-3">
-              {formData.preferredLanguage === "לשון זכר"
-                ? "אנא פרט באיזה גילאים עברת את הניתוחים:"
-                : "אנא פרטי באיזה גילאים עברת את הניתוחים:"}
+            {questions.find(q => q.field_name === "surgeriesAges")?.question_text || "שאלה לא זמינה"}
+
             </label>
             <textarea
               id="surgeriesAges"
@@ -613,9 +686,7 @@ const MedicalForm = () => {
         <div className="form-group radio-preferred">
           <label htmlFor="complementaryMedicine" className="form-label" >
 
-          {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה מטופל כרגע או טופלת בעבר ברפואה משלימה?' 
-                : ' האם את מטופלת כרגע או טופלת בעבר ברפואה משלימה?'}
+          {questions.find(q => q.field_name === "complementaryMedicine")?.question_text || "שאלה לא זמינה"}
             </label>
           <div className="form-check">
             <input type="radio" name="complementaryMedicine" value="כן" onChange={handleChange}  /> כן
@@ -628,7 +699,7 @@ const MedicalForm = () => {
         {formData.complementaryMedicine === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineReason" className="form-label">
-          מה הסיבה לפניה לטיפול משלים?
+          {questions.find(q => q.field_name === "complementaryMedicineReason")?.question_text || "שאלה לא זמינה"}
           </label>
           <textarea
             id="complementaryMedicineReason"
@@ -645,7 +716,8 @@ const MedicalForm = () => {
         {formData.complementaryMedicine === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineWayOfTreatment" className="form-label">
-          מה בוצע בטיפול?
+            {questions.find(q => q.field_name === "complementaryMedicineWayOfTreatment")?.question_text || "שאלה לא זמינה"}
+
           </label>
           <textarea
             id="complementaryMedicineWayOfTreatment"
@@ -662,7 +734,7 @@ const MedicalForm = () => {
         {formData.complementaryMedicine === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineWayOfDuration" className="form-label">
-          לאורך כמה זמן טופלת?
+          {questions.find(q => q.field_name === "complementaryMedicineWayOfDuration")?.question_text || "שאלה לא זמינה"}
           </label>
           <textarea
             id="complementaryMedicineWayOfDuration"
@@ -678,7 +750,8 @@ const MedicalForm = () => {
         {formData.complementaryMedicine === "כן" && (
         <div className="form-group mt-3">
           <label htmlFor="complementaryMedicineWayOfBetter" className="form-label">
-           האם הייתה הטבה במצבך ?
+          {questions.find(q => q.field_name === "complementaryMedicineWayOfBetter")?.question_text || "שאלה לא זמינה"}
+
           </label>
           <textarea
             id="complementaryMedicineWayOfBetter"
@@ -694,7 +767,8 @@ const MedicalForm = () => {
 
             <div className="form-group mt-3">
           <label htmlFor="treatmentHelp" className="form-label">
-          לתחושתך, מה גורם להטבה במצבך?
+          {questions.find(q => q.field_name === "treatmentHelp")?.question_text || "שאלה לא זמינה"}
+
           </label>
           <textarea
             id="treatmentHelp"
@@ -708,7 +782,8 @@ const MedicalForm = () => {
 
         <div className="form-group mt-3">
           <label htmlFor="aggravatesCondition" className="form-label">
-          לתחושתך, מה גורם להחמרה במצבך?
+          {questions.find(q => q.field_name === "aggravatesCondition")?.question_text || "שאלה לא זמינה"}
+
           </label>
           <textarea
             id="aggravatesCondition"
@@ -723,7 +798,9 @@ const MedicalForm = () => {
         
 
         <div className="form-group radio-preferred">
-          <label htmlFor="diseaseTrigger" className="form-label" >האם התפרצות המחלה התרחשה בסמיכות להתפרצות מחלה אחרת/ בסמיכות לארוע משנה חיים/תאונה/ טראומה ?</label>
+          <label htmlFor="diseaseTrigger" className="form-label" >
+            
+          {questions.find(q => q.field_name === "diseaseTrigger")?.question_text || "שאלה לא זמינה"}</label>
           <div className="form-check">
               <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange}  /> כן, התפרצות מחלה אחרת
           </div>
@@ -744,9 +821,7 @@ const MedicalForm = () => {
       {formData.diseaseTrigger && (
         <div className="form-group mt-3">
           <label htmlFor="triggerDetails" className="form-label">
-          {preferredLanguage === 'לשון זכר' 
-                ? 'פרט פרטים נוספים על המקרה:' 
-                : 'פרטי פרטים נוספים על המקרה:'}
+          {questions.find(q => q.field_name === "triggerDetails")?.question_text || "שאלה לא זמינה"}
           </label>
           <textarea
             id="triggerDetails"
@@ -761,9 +836,7 @@ const MedicalForm = () => {
 
             <div className="form-group mt-3">
                 <label htmlFor="bestTakeCareByClient" className="form-label">
-                {preferredLanguage === 'לשון זכר' 
-                ? 'מה הטיפול שעזר / עוזר לך ביותר - פרט:' 
-                : '  מה הטיפול שעזר / עוזר לך ביותר - פרטי'}
+                {questions.find(q => q.field_name === "bestTakeCareByClient")?.question_text || "שאלה לא זמינה"}
               
                 </label>
                 <textarea
@@ -778,7 +851,9 @@ const MedicalForm = () => {
 
 
             <div className="form-group radio-preferred">
-          <label htmlFor="cronNegative" className="form-label" >האם יש משהו שהמחלת קרוהן מונעת ממך לעשות? </label>
+          <label htmlFor="cronNegative" className="form-label" >
+
+          {questions.find(q => q.field_name === "cronNegative")?.question_text || "שאלה לא זמינה"} </label>
           <div className="form-check">
               <input type="radio" name="cronNegative" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -808,9 +883,10 @@ const MedicalForm = () => {
 
 <div className="form-group radio-preferred">
   <label htmlFor="familyDoctorVisit" className="form-label">
-    {preferredLanguage === "לשון זכר"
-      ? " האם אתה מבקר באופן קבוע אצל רופא משפחה ?"
-      : " האם את מבקרת באופן קבוע אצל רופא משפחה ?"}
+  {preferredLanguage === 'לשון זכר' 
+                ? questions.find(q => q.field_name === "doctorDueChron_men")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "doctorDueChron_women")?.question_text || "שאלה לא זמינה"}
+
   </label>
 
   <div className="form-check">
@@ -863,8 +939,9 @@ const MedicalForm = () => {
       <div className="form-group radio-preferred">
           <label htmlFor="dentistDoctorVisit" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
-                ? ' האם אתה מבקר באופן קבוע אצל רופא שיניים ?' 
-                : '  האם את מבקרת באופן קבוע אצל רופא שיניים ?'}
+                ? questions.find(q => q.field_name === "dentistDueChron_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "dentistDueChron_women")?.question_text || "שאלה לא זמינה"}
+
            </label>
           <div className="form-check">
         <input
@@ -920,8 +997,8 @@ const MedicalForm = () => {
       <div className="form-group radio-preferred">
           <label htmlFor="PointsDoctorVisit" className="form-label" >
           {preferredLanguage === 'לשון זכר' 
-                ? '   האם אתה מבצע באופן קבוע אבחון נקודות חן ?' 
-                : '    האם את מבצעת באופן קבוע אבחון נקודות חן ?'}
+                ? questions.find(q => q.field_name === "PointsDoctorVisit_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "PointsDoctorVisit_woman")?.question_text || "שאלה לא זמינה"}
             
            </label>
           <div className="form-check">
@@ -950,39 +1027,38 @@ const MedicalForm = () => {
       </div>
       
       <div className="form-group radio-preferred">
-        <label htmlFor="vaccinationStatus" className="form-label">
-          {preferredLanguage === 'לשון זכר' 
-            ? 'מלא מצב פנקס חיסונים'
-            : 'מלאי מצב פנקס חיסונים'}
-        </label>
-        <select
-          id="vaccinationStatus"
-          name="vaccinationStatus"
-          value={formData.vaccinationStatus}
-          onChange={handleChange}
-          className="form-select"
-        >
-          <option value="" disabled>
-            {preferredLanguage === 'לשון זכר' 
-              ? 'בחר מצב פנקס חיסונים'
-              : 'בחרי מצב פנקס חיסונים'}
-          </option>
-          <option value="full">
-            {preferredLanguage === 'לשון זכר' ? 'מלא' : 'מלא'}
-          </option>
-          <option value="comprehensive">
-            {preferredLanguage === 'לשון זכר' 
-              ? 'מלא פרט לקורונה ו/או שפעת' 
-              : 'מלא פרט לקורונה ו/או שפעת'}
-          </option>
-          <option value="partial">
-            {preferredLanguage === 'לשון זכר' ? 'חלקי' : 'חלקית'}
-          </option>
-          <option value="not-vaccinated">
-            {preferredLanguage === 'לשון זכר' ? 'לא מחוסן' : 'לא מחוסנת'}
-          </option>
-        </select>
-      </div>
+  <label htmlFor="vaccinationStatus" className="form-label">
+    מהו מצב פנקס החיסונים?
+  </label>
+  <select
+    id="vaccinationStatus"
+    name="vaccinationStatus"
+    value={formData.vaccinationStatus || ""}
+    onChange={handleChange}
+    className="form-select"
+    style={{ direction: "rtl", textAlign: "right" }}
+  >
+    <option value="" disabled hidden={formData.vaccinationStatus !== ""}>
+      {preferredLanguage === 'לשון זכר' 
+        ? 'בחר מצב פנקס חיסונים' 
+        : 'בחרי מצב פנקס חיסונים'}
+    </option>
+    <option value="full">
+      {preferredLanguage === 'לשון זכר' ? 'מלא' : 'מלא'}
+    </option>
+    <option value="comprehensive">
+      {preferredLanguage === 'לשון זכר' 
+        ? 'מלא פרט לקורונה ו/או שפעת' 
+        : 'מלא פרט לקורונה ו/או שפעת'}
+    </option>
+    <option value="partial">
+      {preferredLanguage === 'לשון זכר' ? 'חלקי' : 'חלקית'}
+    </option>
+    <option value="not-vaccinated">
+      {preferredLanguage === 'לשון זכר' ? 'לא מחוסן' : 'לא מחוסנת'}
+    </option>
+  </select>
+</div>
 
         <div className="form-group radio-preferred">
           <label htmlFor="takeMedicen" className="form-label" >
@@ -1705,7 +1781,7 @@ const MedicalForm = () => {
       
       <div className="selfEsteem">
           <label className="form-label">
-          האם המחלה השפיעה על הערכה העצמית שלך?
+          האם המחלה השפיעה על ההערכה העצמית שלך?
           </label>
           <div className="slider-container">
               <input
@@ -1736,7 +1812,7 @@ const MedicalForm = () => {
 
       <div className="form-group">
       <label htmlFor="workIssuesFrequency" className="form-label">
-      בחודש האחרון מה מספר הפעמים בהם היה לך בעיות לבצע עבודתך בעקבות בריאותך הפיזית 
+      בחודש האחרון, מה מס' הפעמים שבריאותך הפיזית הקשתה עליך לבצע את עבודתך?
       </label>
       <input
         type="number"
@@ -1813,7 +1889,7 @@ const MedicalForm = () => {
 
 {formData.isPshycologicalTreatment === 'כן' && (
             <div>
-              <label htmlFor="treatmentConnection" className="form-label">אם ראית קשר בין מצב המחלה לבין הטיפול הרגשי?</label>
+              <label htmlFor="treatmentConnection" className="form-label">האם ראית קשר בין מצב המחלה לבין הטיפול הרגשי?</label>
               <input
                   type="text"
                   className="form-control"

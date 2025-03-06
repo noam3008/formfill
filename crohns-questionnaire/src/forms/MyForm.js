@@ -77,12 +77,12 @@ const MyForm = () => {
 
     // Navigate to the next page based on user input
     if (formData.preferredLanguage === "לשון נקבה" && formData.gender === "גבר") {
-      navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage } });
+      navigate("/personalform", { state: { preferredLanguage: formData.preferredLanguage ,idNumber:formData.idNumber} });
     } else if (formData.preferredLanguage === "לשון זכר" && formData.gender === "אישה") {
-      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage } });
+      navigate("/woman", { state: { preferredLanguage: formData.preferredLanguage ,idNumber:formData.idNumber} });
     } else {
       navigate(formData.preferredLanguage === "לשון נקבה" ? "/woman" : "/personalform", { 
-        state: { preferredLanguage: formData.preferredLanguage }
+        state: { preferredLanguage: formData.preferredLanguage ,idNumber:formData.idNumber}
       });
     }
   };
@@ -135,7 +135,7 @@ const MyForm = () => {
             {errors[q.field_name] && <div className="invalid-feedback">{errors[q.field_name]}</div>}
           </div>
         ))}
-
+<h3>שלח שאלון מס 1 מתוך 15</h3>
         <button type="submit" className="btn btn-primary">שלח</button>
       </form>
     </div>

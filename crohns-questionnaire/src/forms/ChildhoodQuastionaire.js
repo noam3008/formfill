@@ -113,8 +113,8 @@ const ChildhoodQuestionnaire = () => {
                 <div>
                     <label className="form-label">
                     {preferredLanguage === "לשון זכר"
-          ? " האם אתה יודע אם ההריון שלך כעובר, היה בסיכון?"
-          : "  האם את יודעת אם ההריון שלך כעובר, היה בסיכון?"}
+          ? " האם ההריון שלך כעובר, היה בסיכון?"
+          : "  האם ההריון שלך כעובר, היה בסיכון?"}
                         
                        </label>
                     <select name="pregnancyRisk" className="form-select" onChange={handleChange}>
@@ -250,7 +250,7 @@ const ChildhoodQuestionnaire = () => {
                 {/* Hospitalization Information */}
                 <div className="form-group radio-preferred">
                 <label htmlFor="hospitalization" className="form-label">
-                    האם עברת אישפוז בילדות?
+                     (עד גיל 18 )האם עברת אישפוז בילדות?
                 </label>
                 <div className="form-check">
                     <input
@@ -700,7 +700,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">החינוך בבית חם</label>
+                    <label className="form-label">החינוך בבית היה חם</label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -920,27 +920,27 @@ const ChildhoodQuestionnaire = () => {
 
                 <div className="checkbox-group">
                     <label className="form-label">
-                        בילדותי ביליתי הרבה בקריאת בבית
+                        בילדותי ביליתי הרבה בקריאה בבית
                     </label>
                     <input
                         type="checkbox"
                         name="childhoodDescription"
                         value="בילדותי ביליתי הרבה בקריאת בבית"
                         onChange={handleCheckboxChange}
-                        checked={formData.childhoodDescription?.includes("בילדותי ביליתי הרבה בקריאת בבית")}
+                        checked={formData.childhoodDescription?.includes("בילדותי ביליתי הרבה בקריאה בבית")}
                     />
                 </div>
 
                 <div className="checkbox-group">
                     <label className="form-label">
-                        בילדותי צפית שעות רבות בטלויזיה
+                        בילדותי צפיתי שעות רבות בטלויזיה
                     </label>
                     <input
                         type="checkbox"
                         name="childhoodDescription"
-                        value="בילדותי צפית שעות רבות בטלויזיה"
+                        value="בילדותי צפיתי שעות רבות בטלויזיה"
                         onChange={handleCheckboxChange}
-                        checked={formData.childhoodDescription?.includes("בילדותי צפית שעות רבות בטלויזיה")}
+                        checked={formData.childhoodDescription?.includes("בילדותי צפיתי שעות רבות בטלויזיה")}
                     />
                 </div>
 
@@ -957,6 +957,137 @@ const ChildhoodQuestionnaire = () => {
                     />
                 </div>
 
+                <div className="form-group radio-preferred">
+  <label htmlFor="remissionExperience" className="form-label">
+    האם אי פעם חווית הפוגה/ רמיסיה של המחלה?
+  </label>
+
+  <div className="form-check">
+    <input
+      type="radio"
+      id="yes"
+      name="remissionExperience"
+      value="כן"
+      onChange={handleChange}
+      checked={formData.remissionExperience === "כן"}
+    />
+    <label htmlFor="yes">כן</label>
+  </div>
+
+  <div className="form-check">
+    <input
+      type="radio"
+      id="no"
+      name="remissionExperience"
+      value="לא"
+      onChange={handleChange}
+      checked={formData.remissionExperience === "לא"}
+    />
+    <label htmlFor="no">לא</label>
+  </div>
+
+  {formData.remissionExperience === 'כן' && (
+    <>
+      <label className="form-label">
+        {preferredLanguage === "לשון זכר"
+          ? "האם אתה יכול להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"
+          : "האם את יכולה להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"}
+      </label>
+
+      {["תחושת חרדה", "שינויים בראיה", "שינויים בחוש הריח", "שינויים במצב הרוח", "חום", 
+        "כאבי/ מיחושי ראש", "כאבי/ מיחושי בטן", "כאבי שרירים", "קשיי שינה/ הרדמות", 
+        "היפראקטיביות/ פעלתנות אינטנסיבית", "בחילה", "צרבת", "עייפות", "תחושת מועקה", 
+        "אחר- פרט.י", "לא ידוע"].map((symptom) => (
+          <div className="form-check" key={symptom}>
+            <input
+              type="checkbox"
+              id={symptom}
+              name="symptoms"
+              value={symptom}
+              onChange={handleChange}
+              checked={formData.symptoms?.includes(symptom)}
+            />
+            <label htmlFor={symptom}>{symptom}</label>
+          </div>
+      ))}
+    </>
+  )}
+</div>
+
+<div className="form-group smell-preference">
+  <label htmlFor="smellPreference" className="form-label">
+    ציין לגבי כל אחד מהריחות הבאים אם את.ה אוהב.ת / לא אוהב.ת אותם / אדיש.ה
+  </label>
+
+  {[
+    "דלק/ בנזין/ סולר",
+    "גויאבה",
+    "קלמנטינה",
+    "דגים",
+    "קולורבי",
+    "בצל",
+    "שום",
+    "טיגון",
+    "קפה טחון או מבושל",
+    "אוכל מבושל",
+    "עשן עצים /קמין",
+    "סיגריות/ עשן טבק",
+    "פריחה של עצים/ פרחים מסוימים",
+    "עובש/ לחות",
+    "ניחוחות כביסה וחומרי ניקוי –מרככי כביסה, סבונים ודטרגנטים ריחניים.",
+    "חומרי חיטוי וכימיקלים –כלור/ אקונומיקה/ אמוניה /אלכוהול לחיטוי.",
+    "צבע טרי ולכות – חומרים מכילי ממיסים נדיפים.",
+    "בשמים ומוצרי טיפוח – כולל דאודורנטים, קרמים, ספריי לשיער"
+  ].map((smell) => (
+    <div className="form-group radio-preferred option-spacing" key={smell}>
+      <label>{smell}</label>
+      <div>
+        <input
+          type="radio"
+          id={`${smell}-like`}
+          name={smell}
+          value="אוהב.ת"
+          onChange={handleChange}
+          checked={formData[smell] === "אוהב.ת"}
+        />
+        <label htmlFor={`${smell}-like`}>
+        {preferredLanguage === "לשון זכר"
+          ? " אוהב"
+          : " אוהבת"}
+           </label>
+
+        <input
+          type="radio"
+          id={`${smell}-dislike`}
+          name={smell}
+          value="לא אוהב.ת"
+          onChange={handleChange}
+          checked={formData[smell] === "לא אוהב.ת"}
+        />
+        <label htmlFor={`${smell}-dislike`}>
+        {preferredLanguage === "לשון זכר"
+          ? "לא אוהב"
+          : "לא אוהבת"}
+           </label>
+
+        <input
+          type="radio"
+          id={`${smell}-indifferent`}
+          name={smell}
+          value="אדיש.ה"
+          onChange={handleChange}
+          checked={formData[smell] === "אדיש.ה"}
+        />
+        <label htmlFor={`${smell}-indifferent`}>
+        {preferredLanguage === "לשון זכר"
+          ? "אדיש"
+          : "אדישה"}
+        </label>
+      </div>
+    </div>
+  ))}
+</div>
+
 
 
                 {/* Additional Comments Section */}
@@ -970,7 +1101,13 @@ const ChildhoodQuestionnaire = () => {
                     <textarea name="additionalComments" className="form-control" value={formData.additionalComments} onChange={handleChange}></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary">שלח</button>
+                <button type="submit" className="btn btn-primary">
+                {preferredLanguage === "לשון זכר"
+          ? "שלח"
+          : "שלחי"}
+
+                    שלח</button>
+
             </form>
         </div>
     );

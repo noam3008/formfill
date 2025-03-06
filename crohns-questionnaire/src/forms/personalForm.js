@@ -3,12 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
 import {useNavigate,useLocation} from "react-router-dom";
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const PersonalForm = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {};
-  
+  const { preferredLanguage ,idNumber} = location.state || {};
+  const [questions, setQuestions] = useState([]); // Store questions from DB
   const [formData, setFormData] = useState({
+    idNumber: location.state?.idNumber,
+    preferredLanguage: location.state?.preferredLanguage || "",
     maritalStatus: '',
     numberOfChildren: '',
     changeTime : '',
@@ -102,15 +105,55 @@ const PersonalForm = () => {
   const employmentOptions = preferredLanguage === 'לשון זכר' ? maleEmploymentOptions : femaleEmploymentOptions;
 
 
+  // useEffect(() => {
+  //   window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+  // }, []); // Empty dependency array to ensure it runs only once when the component mounts
+
   useEffect(() => {
-    window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
-  }, []); // Empty dependency array to ensure it runs only once when the component mounts
+    axios.get("http://localhost:3002/test_questions_personal")
+        .then((response) => {
+            setQuestions(response.data); // Set questions in state
+            const initialFormData = {};
+            response.data.forEach(q => {
+                initialFormData[q.field_name] = ""; // Initialize form data for each field
+            });
+            
+            // Only set formData if it's not set yet, or add missing fields
+            setFormData(prevData => ({
+                ...prevData,   // Keep any previous formData values
+                ...initialFormData // Add or override the new form fields
+            }));
+        })
+        .catch((error) => {
+            console.error("Error fetching questions:", error);
+        });
+
+        window.scrollTo(0, 0); 
+
+    // Set idNumber from location.state if not already in formData
+    if (location.state?.idNumber && !formData.idNumber) {
+        setFormData(prevData => ({
+            ...prevData,
+            idNumber: location.state.idNumber
+        }));
+    }
+    if (location.state?.preferredLanguage && !formData.preferredLanguage) {
+        setFormData(prevData => ({
+            ...prevData,
+            preferredLanguage: location.state.preferredLanguage
+        }));
+    }
+}, [location.state?.idNumber]); // Only rerun if location.state.idNumber changes
 
 
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => {
+      const newData = { ...prevData, [name]: value };
+      console.log("Updated formData:", newData); // Debugging
+      return newData;
+    });
   };
 
   const handleSiblingAgeChange = (index, value) => {
@@ -119,19 +162,44 @@ const PersonalForm = () => {
     setFormData({ ...formData, siblingAges: updatedAges });
   };
 
-  const handlesubmit = (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
-    if (formData.numberOfChildren < 0) {
-      alert("מספר ילדים חייב להיות מספר חיובי או 0"); // Hebrew: "The age must be a positive number."
-      return; // Prevents updating the state with an invalid value
-  }
-   navigate("/medicalformfirst", { state: { preferredLanguage: formData.preferredLanguage } });
-  
-    
-    // You can add an API call here
-    
-  };
+    console.log("FormData before sending:", formData);
+
+    try {
+        if (formData.numberOfChildren < 0) {
+            alert("מספר ילדים חייב להיות מספר חיובי או 0");  
+            return;
+        }
+
+        const response = await fetch("http://localhost:3002/submit_personal_info", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+            const errorResponse = await response.text();  
+            console.error("Server response:", errorResponse);  
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Response data:", result);
+        localStorage.setItem('userData', JSON.stringify(result));
+
+        navigate("/medicalformfirst", { 
+            state: { preferredLanguage: formData.preferredLanguage, idNumber: formData.idNumber } 
+        });
+
+    } catch (error) {
+        console.error("Fetch error:", error.message);
+    }
+};
 
   const siblingInputs = Array.from({ length: Number(formData.numberOfSiblings) || 0 }, (_, index) => (
     <div className="form-group" key={index}>
@@ -153,7 +221,10 @@ const PersonalForm = () => {
       <h2 className="mb-4 text-center">Personal Information Form</h2>
       <form onSubmit={handlesubmit}>
       <div className="form-group radio-preferred">
-      <label htmlFor="maritalStatus" className="form-label">מצב אישי</label>
+      <label htmlFor="maritalStatus" className="form-label">
+      {questions.find(q => q.field_name === "maritalStatus")?.question_text || "שאלה לא זמינה"}
+        
+       </label>
 
             {valuesToUse.map((item, index) => (
               <div className="form-check" key={index}>
@@ -172,7 +243,10 @@ const PersonalForm = () => {
                
         {formData.preferredLanguage === 'לשון זכר' && (
         <div className="form-group">
-            <label className="form-label">מספר ילדים</label>
+            <label className="form-label">
+            {questions.find(q => q.field_name === "numberOfChildren")?.question_text || "שאלה לא זמינה"}
+              
+            </label>
             <input
                 type="number"
                 className="form-control"
@@ -186,70 +260,81 @@ const PersonalForm = () => {
         )}
 
         <div className="form-group">
-          <label htmlFor="height">גובה (בס"מ)</label>
+          <label htmlFor="height">
+          {questions.find(q => q.field_name === "height")?.question_text || "שאלה לא זמינה"}
+            
+           </label>
           <input type="number" name="height" id="height" min="0" className="form-control" value={formData.height} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="weight">משקל (בק"ג
-            )</label>
+          <label htmlFor="weight">
+          {questions.find(q => q.field_name === "weight")?.question_text || "שאלה לא זמינה"}</label>
           <input type="number" name="weight" id="weight" min ="0" className="form-control" value={formData.weight} onChange={handleChange} />
         </div>
 
         <div className="form-group radio-preferred">
-          <label htmlFor="weightChange" className="form-label" >האם היה לך שינוי של מעל 10 ק"ג במשקל במהלך חייך?</label>
-          <div className="form-check">
-              <input type="radio" name="weightChange" value="כן" onChange={handleChange}  /> כן
-          </div>
-          <div className="form-check">
-              <input type="radio" name="weightChange" value="לא" onChange={handleChange}  /> לא
-          </div>
-        </div>
+  <label htmlFor="weightChange" className="form-label">
+    {questions.find(q => q.field_name === "weightChange")?.question_text || "שאלה לא זמינה"}
+  </label>
+  <div className="form-check">
+    <input
+      type="radio"
+      name="weightChange"
+      value="כן"
+      checked={formData.weightChange === "כן"}
+      onClick={() => handleChange({ target: { name: "weightChange", value: formData.weightChange === "כן" ? "" : "כן" } })}
+      onChange={() => {}}
+    /> כן
+  </div>
+  <div className="form-check">
+    <input
+      type="radio"
+      name="weightChange"
+      value="לא"
+      checked={formData.weightChange === "לא"}
+      onClick={() => handleChange({ target: { name: "weightChange", value: formData.weightChange === "לא" ? "" : "לא" } })}
+      onChange={() => {}}
+    /> לא
+  </div>
+</div>
 
-        {/* Conditional rendering for additional fields if "Yes" is selected */}
+
+
         {formData.weightChange === 'כן' && (
-                <div>
-                
-          {/* Month and Year input */}
-          <div className="form-group">
-            <label htmlFor="changeTime" className="form-label">
-              מתי?
-            </label>
-            <div className="d-flex">
-              {/* Month Dropdown */}
-              <select
-                id="month"
-                name="changeTime"
-                className="form-control"
-                value={formData.changeTime.split("-")[0] || ""}
-                onChange={(e) => handleChange({ target: { name: "changeTime", value: `${e.target.value}-${formData.changeTime.split("-")[1] || ""}` } })}
-              >
-                <option value="">בחר חודש</option>
-                {["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"].map((month, index) => (
-                  <option key={index} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
+  <div>
+    {/* Year Input Only */}
+    <div className="form-group radio-preferred">
+      <label htmlFor="changeTime" className="form-label">
+        {questions.find(q => q.field_name === "changeTime")?.question_text || "שאלה לא זמינה"}
+      </label>
+      <div className="d-flex justify-content-end">
+        <input
+          type="number"
+          id="year"
+          min="1900"
+          name="changeTime"
+          className="form-control"
+          placeholder="שנה"
+          value={formData.changeTime || ""}
+          onChange={(e) => handleChange({ target: { name: "changeTime", value: e.target.value } })}
+          style={{ width: "120px" }}
+        />
+      </div>
+    </div>
+  </div>
+)}
 
-              {/* Year Input */}
-              <input
-                type="number"
-                id="year"
-                min = "1900"
-                name="changeTime"
-                className="form-control"
-                placeholder="שנה"
-                value={formData.changeTime.split("-")[1] || ""}
-                onChange={(e) => handleChange({ target: { name: "changeTime", value: `${formData.changeTime.split("-")[0] || ""}-${e.target.value}` } })}
-                style={{ marginLeft: "10px", width: "100px" }}
-              />
-            </div>
-            </div>
+
+
+          <div>
+                
+          
                   
                   <div className="form-group">
                     <label htmlFor="diseaseImpact" className="form-label">
-                      האם השינוי השפיע על מהלך המחלה?
+                    {questions.find(q => q.field_name === "diseaseImpact")?.question_text || "שאלה לא זמינה"}
+                     
                     </label>
                     <select
                       id="diseaseImpact"
@@ -265,11 +350,14 @@ const PersonalForm = () => {
                     </select>
                   </div>
                 </div>
-              )}
+              
 
 
         <div className="form-group">
-          <label htmlFor="currentOccupation">עיסוק נוכחי</label>
+          <label htmlFor="currentOccupation">
+            
+          {questions.find(q => q.field_name === "currentOccupation")?.question_text || "שאלה לא זמינה"}
+          </label>
           <select name="currentOccupation" id="currentOccupation" className="form-control" value={formData.currentOccupation} onChange={handleChange} >
             <option value="" disabled>
             {preferredLanguage === "לשון זכר"
@@ -309,56 +397,65 @@ const PersonalForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="yearsInOccupation">מספר השנים בעיסוק זה</label>
+          <label htmlFor="yearsInOccupation">
+          {questions.find(q => q.field_name === "yearsInOccupation")?.question_text || "שאלה לא זמינה"}
+           </label>
           <input type="number" min ="0" name="yearsInOccupation" id="yearsInOccupation" className="form-control" value={formData.yearsInOccupation} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-  <label htmlFor="employmentType">?כיצד אתה מגדיר את אופי העסקתך</label>
-  <select
-    name="employmentType"
-    id="employmentType"
-    className="form-control"
-    value={formData.employmentType}
-    onChange={handleChange}
-  >
-    <option value="" disabled>
-      {preferredLanguage === "לשון זכר" ? "בחר אופי העסקה" : "בחרי אופי העסקה"}
-    </option>
-    {employmentOptions.map((option, index) => (
-      <option key={index} value={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </select>
-</div>
+        <label htmlFor="employmentType">
+        {questions.find(q => q.field_name === "employmentType")?.question_text || "שאלה לא זמינה"}
+          
+      </label>
+        <select
+          name="employmentType"
+          id="employmentType"
+          className="form-control"
+          value={formData.employmentType}
+          onChange={handleChange}
+        >
+          <option value="" disabled>
+            {preferredLanguage === "לשון זכר" ? "בחר אופי העסקה" : "בחרי אופי העסקה"}
+          </option>
+          {employmentOptions.map((option, index) => (
+            <option key={index} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-{/* Only show this if employmentType is NOT "לא עובד" or "לא עובדת" */}
-{formData.employmentType !== "לא עובד" && formData.employmentType !== "לא עובדת" && (
-  <div className="form-group">
-    <label htmlFor="dailyActivity">:ביום עבודה ממוצע המצב שגופך נמצא בו</label>
-    <select
-      name="dailyActivity"
-      id="dailyActivity"
-      className="form-control"
-      value={formData.dailyActivity}
-      onChange={handleChange}
-    >
-      <option value="" disabled>
-        {preferredLanguage === "לשון זכר" ? "בחר פעילות" : "בחרי פעילות"}
-      </option>
-      {dailyActivityOptions.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
+      {/* Only show this if employmentType is NOT "לא עובד" or "לא עובדת" */}
+      {formData.employmentType !== "לא עובד" && formData.employmentType !== "לא עובדת" && (
+        <div className="form-group">
+          <label htmlFor="dailyActivity">
+          {questions.find(q => q.field_name === "dailyActivity")?.question_text || "שאלה לא זמינה"}
+      </label>
+          <select
+            name="dailyActivity"
+            id="dailyActivity"
+            className="form-control"
+            value={formData.dailyActivity}
+            onChange={handleChange}
+          >
+            <option value="" disabled>
+              {preferredLanguage === "לשון זכר" ? "בחר פעילות" : "בחרי פעילות"}
+            </option>
+            {dailyActivityOptions.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
 
         <div className="form-group">
-          <label htmlFor="education">השכלה</label>
+          <label htmlFor="education">
+          {questions.find(q => q.field_name === "education")?.question_text || "שאלה לא זמינה"}
+          </label>
           <select name="education" id="education" className="form-control" value={formData.education} onChange={handleChange} >
             <option value="" disabled>
             {preferredLanguage === "לשון זכר"
@@ -378,7 +475,9 @@ const PersonalForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="educationYears">מספר שנות לימוד</label>
+          <label htmlFor="educationYears">
+          {questions.find(q => q.field_name === "educationYears")?.question_text || "שאלה לא זמינה"}
+           </label>
           <select name="educationYears" id="educationYears" className="form-control" value={formData.educationYears} onChange={handleChange} >
             <option value="">בחר שנות לימוד</option>
             <option value="6-8">יסודית-6-8</option>
@@ -389,32 +488,44 @@ const PersonalForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="countryOfBirth">ארץ לידה</label>
+          <label htmlFor="countryOfBirth">
+          {questions.find(q => q.field_name === "countryOfBirth")?.question_text || "שאלה לא זמינה"}
+            </label>
           <input type="text" name="countryOfBirth" id="countryOfBirth" className="form-control" value={formData.countryOfBirth} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="motherCountryOfBirth">ארץ לידת האם</label>
+          <label htmlFor="motherCountryOfBirth">
+          {questions.find(q => q.field_name === "motherCountryOfBirth")?.question_text || "שאלה לא זמינה"}
+           </label>
           <input type="text" name="motherCountryOfBirth" id="motherCountryOfBirth" className="form-control" value={formData.motherCountryOfBirth} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="motherOrigin">מוצא האם</label>
+          <label htmlFor="motherOrigin">
+          {questions.find(q => q.field_name === "motherOrigin")?.question_text || "שאלה לא זמינה"}
+           </label>
           <input type="text" name="motherOrigin" id="motherOrigin" className="form-control" value={formData.motherOrigin} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="fatherCountryOfBirth">ארץ לידת האב</label>
+          <label htmlFor="fatherCountryOfBirth">
+          {questions.find(q => q.field_name === "fatherCountryOfBirth")?.question_text || "שאלה לא זמינה"}
+         </label>
           <input type="text" name="fatherCountryOfBirth" id="fatherCountryOfBirth" className="form-control" value={formData.fatherCountryOfBirth} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="fatherOrigin">מוצא האב</label>
+          <label htmlFor="fatherOrigin">
+          {questions.find(q => q.field_name === "fatherOrigin")?.question_text || "שאלה לא זמינה"}
+          </label>
           <input type="text" name="fatherOrigin" id="fatherOrigin" className="form-control" value={formData.fatherOrigin} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="numberOfSiblings">מספר אחים/אחיות</label>
+          <label htmlFor="numberOfSiblings">
+          {questions.find(q => q.field_name === "numberOfSiblings")?.question_text || "שאלה לא זמינה"}
+       </label>
           <input
             type="number"
             name="numberOfSiblings"
@@ -429,27 +540,37 @@ const PersonalForm = () => {
         {siblingInputs}
 
         <div className="form-group">
-          <label htmlFor="familyOrder">מקומך בסדר המשפחתי</label>
+          <label htmlFor="familyOrder">
+          {questions.find(q => q.field_name === "familyOrder")?.question_text || "שאלה לא זמינה"}
+      </label>
           <input type="number" name="familyOrder" min = "0" id="familyOrder" className="form-control" value={formData.familyOrder} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="motherAgeAtBirth">גיל האם בלידתך</label>
+          <label htmlFor="motherAgeAtBirth">
+          {questions.find(q => q.field_name === "motherAgeAtBirth")?.question_text || "שאלה לא זמינה"}
+        </label>
           <input type="number" name="motherAgeAtBirth" id="motherAgeAtBirth" min = "0" className="form-control" value={formData.motherAgeAtBirth} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="fatherAgeAtBirth">גיל האב בלידתך</label>
+          <label htmlFor="fatherAgeAtBirth">
+          {questions.find(q => q.field_name === "fatherAgeAtBirth")?.question_text || "שאלה לא זמינה"}
+      </label>
           <input type="number" name="fatherAgeAtBirth" id="fatherAgeAtBirth" min = "0" className="form-control" value={formData.fatherAgeAtBirth} onChange={handleChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="householdMembers">מספר הנפשות החיות איתך במשק הבית</label>
+          <label htmlFor="householdMembers">
+          {questions.find(q => q.field_name === "householdMembers")?.question_text || "שאלה לא זמינה"}
+         </label>
           <input type="number" name="householdMembers" id="householdMembers" className="form-control" min = "0" value={formData.householdMembers} onChange={handleChange} />
         </div>
 
         <div className="form-group radio-preferred">
-          <label htmlFor="petOwner" className="form-label" >האם יש בבית חיית מחמד?</label>
+          <label htmlFor="petOwner" className="form-label" >
+          {questions.find(q => q.field_name === "petOwner")?.question_text || "שאלה לא זמינה"}
+    </label>
           <div className="form-check">
               <input type="radio" name="petOwner" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -461,13 +582,17 @@ const PersonalForm = () => {
 
         {formData.petOwner === 'כן' && (
           <div className="form-group">
-            <label htmlFor="petAge"> ?מאיזה גיל יש לך חיית מחמד</label>
+            <label htmlFor="petAge"> 
+            {questions.find(q => q.field_name === "petAge")?.question_text || "שאלה לא זמינה"}
+   </label>
             <input type="number" name="petAge" min = "0" id="petAge" className="form-control" value={formData.petAge} onChange={handleChange} />
           </div>
         )}
 
         <div className="form-group radio-preferred">
-          <label htmlFor="experiencedLoss" className="form-label" >האם חווית אובדן של בן משפחה קרוב?</label>
+          <label htmlFor="experiencedLoss" className="form-label" >
+          {questions.find(q => q.field_name === "experiencedLoss")?.question_text || "שאלה לא זמינה"}
+            </label>
           <div className="form-check">
               <input type="radio" name="experiencedLoss" value="כן" onChange={handleChange}  /> כן
           </div>
@@ -478,13 +603,18 @@ const PersonalForm = () => {
 
         {formData.experiencedLoss === 'כן' && (
           <div className="form-group">
-            <label htmlFor="ageAtLoss"> ?באיזה גיל היית בזמן המאורע</label>
+            <label htmlFor="ageAtLoss"> 
+              
+            {questions.find(q => q.field_name === "ageAtLoss")?.question_text || "שאלה לא זמינה"}
+             </label>
             <input type="number" name="ageAtLoss" min = "0" id="ageAtLoss" className="form-control" value={formData.ageAtLoss} onChange={handleChange} />
           </div>
         )}
 
         <div className="form-group radio-preferred">
-          <label htmlFor="welfareTreatment" className="form-label" >האם היית מטופל במערכת הרווחה?</label>
+          <label htmlFor="welfareTreatment" className="form-label" >
+          {questions.find(q => q.field_name === "welfareTreatment")?.question_text || "שאלה לא זמינה"}
+         </label>
           <div className="form-check">
               <input type="radio" name="welfareTreatment" value="כן" onChange={handleChange}  /> כן
           </div>
