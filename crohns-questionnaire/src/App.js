@@ -16,6 +16,9 @@ import ACEQuestionnaire from './forms/aceQuestionaire';
 import HealthStatusQuestionnaire from './forms/healthStatusQuestionnaire';
 import LeisureActivityQuestionnaire from './forms/leisureactivityquestionnaire';
 import SubmitForm from './forms/sumbitForm';
+import BriefQuastionaire from './forms/briefQuastionaire';
+import Satisfactionquestionnaire from './forms/satisfactionquestionnaire';
+import EndPage from './forms/endPage';
 
 
 // Create this component
@@ -39,7 +42,9 @@ function App() {
           <Route path='/healthstatusquestionnaire' element = {<HealthStatusQuestionnaire/>}/>
           <Route path='/leisureactivityquestionnaire' element = {<LeisureActivityQuestionnaire/>}/>
           <Route path='/test_insert' element = {<SubmitForm/>}/>
-
+          <Route path='/briefquestionnaire' element = {<BriefQuastionaire/>}/>
+          <Route path='/satisfactionquestionnaire' element = {<Satisfactionquestionnaire/>}/>
+          <Route path='/endPage' element  = {<EndPage/>}/>
       </Routes>
     </Router>
   );

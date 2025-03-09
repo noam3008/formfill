@@ -257,10 +257,16 @@ const MedicalForm = () => {
                 : questions.find(q => q.field_name === "isTreat_women")?.question_text || "שאלה לא זמינה"}
             </label>
               <div className="form-check">
-                  <input type="radio" name="isTreat" value="כן" onChange={handleChange}  /> כן
+                  <input type="radio" name="isTreat" value="כן" onChange={handleChange}  
+                        onClick={() => handleChange({ target: { name: "isTreat", value: formData.isTreat === "כן" ? "" : "כן" } })}
+                        checked={formData.isTreat === "כן"}
+                  /> כן
               </div>
               <div className="form-check">
-                  <input type="radio" name="isTreat" value="לא" onChange={handleChange}  /> לא
+                  <input type="radio" name="isTreat" value="לא" onChange={handleChange} 
+                        onClick={() => handleChange({ target: { name: "isTreat", value: formData.isTreat === "לא" ? "" : "לא" } })}
+                        checked={formData.isTreat === "לא"}
+                  /> לא
               </div>
             </div>
 
@@ -307,10 +313,16 @@ const MedicalForm = () => {
                       {questions.find(q => q.field_name === "treatmentDateAndReason")?.question_text || "שאלה לא זמינה"}
                        </label>
                       <div className="form-check">
-                          <input type="radio" name="treatmentChanges" value="כן" onChange={handleChange}  /> כן
+                          <input type="radio" name="treatmentChanges" value="כן" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "treatmentChanges", value: formData.treatmentChanges === "כן" ? "" : "כן" } })}
+                                 checked={formData.treatmentChanges === "כן"}
+                          /> כן
                       </div>
                       <div className="form-check">
-                          <input type="radio" name="treatmentChanges" value="לא" onChange={handleChange}  /> לא
+                          <input type="radio" name="treatmentChanges" value="לא" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "treatmentChanges", value: formData.treatmentChanges === "לא" ? "" : "לא" } })}
+                                 checked={formData.treatmentChanges === "לא"}
+                          /> לא
                       </div>
               </div>
 
@@ -355,69 +367,71 @@ const MedicalForm = () => {
 
                     {questions.find(q => q.field_name === "treatmentAdherence")?.question_text || "שאלה לא זמינה"}
                   </label>
-                    <div className="slider-container">
-                        <input
-                            type="range"
-                            min="1"
-                            max="4"
-                            step="1"
-                            className="slider"
-                            id="treatmentAdherence"
-                            value={formData.treatmentAdherence } 
-                            name="treatmentAdherence"
-                            onInput={handleChange}
-                            onChange={handleChange}
-                            onClick={(e) => {
-                              if (formData.treatmentAdherence === 0) {
-                                  handleChange(e); // Ensure the first click registers
-                              }
-                          }}
-                        />
+                  <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            className="slider"
+            id="treatmentAdherence"
+            name="treatmentAdherence"
+            value={formData.treatmentAdherence || 0}  // Initial value is 0
+            onChange={handleChange}
+            onClick={(e) => {
+                if (formData.treatmentAdherence === 0) {
+                    handleChange(e);  // Ensure the first click registers
+                }
+            }}
+        />
                         <div className="slider-labels">
+                            <span>לא נבחרה תשובה</span>
                             <span>לא מתמיד</span>
                             <span>50% מתמיד</span>
                             <span>80% מתמיד</span>
                             <span>100% מתמיד</span>
                         </div>
-                    </div>
+                </div>
                 </div>
             )}
             
             {/* Medical Background */}
 
-
             <div className="winterlleness">
                     <label className="form-label">
+
                     {preferredLanguage === 'לשון זכר' 
                 ? questions.find(q => q.field_name === "winterIllness_men")?.question_text || "שאלה לא זמינה"
                 : questions.find(q => q.field_name === "winterIllness_woman")?.question_text || "שאלה לא זמינה"}
-                   </label>
-                    <div className="slider-container">
-                        <input
-                            type="range"
-                            min="1"
-                            max="3"
-                            step="1"
-                            className="slider"
-                            id="winterlleness"
-                            name="winterlleness"
-                            onInput={handleChange}
-                            value={formData.winterlleness}
-                            onChange={handleChange}
-                            onClick={(e) => {
-                              if (formData.winterlleness === 0) {
-                                  handleChange(e); // Ensure the first click registers
-                              }
-                          }}
-                        />
-                        <div className="slider-labels">
+                  </label>
+                  <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="4"
+            step="1"
+            className="slider"
+            id="winterlleness"
+            name="winterlleness"
+            value={formData.winterlleness || 0}  // Initial value is 0
+            onChange={handleChange}
+            onClick={(e) => {
+                if (formData.winterlleness === 0) {
+                    handleChange(e);  // Ensure the first click registers
+                }
+            }}
+        />
+<div className="slider-labels">
+                            <span>לא נבחרה תשובה</span>
                             <span>0 - בכלל לא</span>
                             <span >פעם עד פעמיים </span>
                             <span> שלוש ומעלה </span>
 
                         </div>
-                    </div>
                 </div>
+                </div>
+
+
 
                 <div className="doctorduechron">
                     <label className="form-label">
@@ -430,7 +444,7 @@ const MedicalForm = () => {
                         <input
                             type="range"
                             min="1"
-                            max="4"
+                            max="5"
                             step="1"
                             className="slider"
                             onInput={handleChange}
@@ -445,6 +459,7 @@ const MedicalForm = () => {
                             onChange={handleChange}
                         />
                         <div className="slider-labels">
+                        <span>לא נבחרה תשובה</span>
                             <span>0 - בכלל לא</span>
                             <span>1-2</span>
                             <span>3-4</span>
@@ -460,10 +475,16 @@ const MedicalForm = () => {
                 : questions.find(q => q.field_name === "allergies_women")?.question_text || "שאלה לא זמינה"}
           </label>
           <div className="form-check">
-              <input type="radio" name="allergies" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="allergies" value="כן" onChange={handleChange} 
+                  onClick={() => handleChange({ target: { name: "allergies", value: formData.allergies === "כן" ? "" : "כן" } })}
+                  checked={formData.allergies === "כן"}
+                   /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="allergies" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="allergies" value="לא" onChange={handleChange} 
+                  onClick={() => handleChange({ target: { name: "allergies", value: formData.allergies === "לא" ? "" : "לא" } })}
+                  checked={formData.allergies === "לא"}
+                   /> לא
           </div>
         </div>
 
@@ -496,10 +517,16 @@ const MedicalForm = () => {
                 : questions.find(q => q.field_name === "foodSensitivity_women")?.question_text || "שאלה לא זמינה"}
             </label>
           <div className="form-check">
-              <input type="radio" name="foodSensitivity" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="foodSensitivity" value="כן" onChange={handleChange} 
+               onClick={() => handleChange({ target: { name: "foodSensitivity", value: formData.foodSensitivity === "כן" ? "" : "כן" } })}
+               checked={formData.foodSensitivity === "כן"}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="foodSensitivity" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="foodSensitivity" value="לא" onChange={handleChange}  
+               onClick={() => handleChange({ target: { name: "foodSensitivity", value: formData.foodSensitivity === "לא" ? "" : "לא" } })}
+               checked={formData.foodSensitivity === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -527,6 +554,7 @@ const MedicalForm = () => {
             value="כן"
             onChange={handleChange}
             checked={formData.chronicDiseases === "כן"}
+            onClick={() => handleChange({ target: { name: "chronicDiseases", value: formData.chronicDiseases === "כן" ? "" : "כן" } })}
           />{" "}
           כן
         </div>
@@ -537,6 +565,8 @@ const MedicalForm = () => {
             value="לא"
             onChange={handleChange}
             checked={formData.chronicDiseases === "לא"}
+            onClick={() => handleChange({ target: { name: "chronicDiseases", value: formData.chronicDiseases === "ךא" ? "" : "לא" } })}
+
           />{" "}
           לא
         </div>
@@ -608,10 +638,16 @@ const MedicalForm = () => {
           {questions.find(q => q.field_name === "hospitalization")?.question_text || "שאלה לא זמינה"}
            </label>
           <div className="form-check">
-              <input type="radio" name="hospitalization" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="hospitalization" value="כן" onChange={handleChange}
+                             onClick={() => handleChange({ target: { name: "hospitalization", value: formData.hospitalization === "כן" ? "" : "כן" } })}
+                             checked={formData.hospitalization === "כן"}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="hospitalization" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="hospitalization" value="לא" onChange={handleChange}  
+                             onClick={() => handleChange({ target: { name: "hospitalization", value: formData.hospitalization === "לא" ? "" : "לא" } })}
+                             checked={formData.hospitalization === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -640,10 +676,17 @@ const MedicalForm = () => {
           {questions.find(q => q.field_name === "surgeries")?.question_text || "שאלה לא זמינה"}
            </label>
           <div className="form-check">
-              <input type="radio" name="surgeries" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="surgeries" value="כן" onChange={handleChange} 
+              
+              onClick={() => handleChange({ target: { name: "surgeries", value: formData.surgeries === "כן" ? "" : "כן" } })}
+              checked={formData.surgeries === "כן"}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="surgeries" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="surgeries" value="לא" onChange={handleChange} 
+                                      onClick={() => handleChange({ target: { name: "surgeries", value: formData.surgeries === "לא" ? "" : "לא" } })}
+                                      checked={formData.surgeries === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -689,10 +732,17 @@ const MedicalForm = () => {
           {questions.find(q => q.field_name === "complementaryMedicine")?.question_text || "שאלה לא זמינה"}
             </label>
           <div className="form-check">
-            <input type="radio" name="complementaryMedicine" value="כן" onChange={handleChange}  /> כן
+            <input type="radio" name="complementaryMedicine" value="כן" onChange={handleChange}  
+                onClick={() => handleChange({ target: { name: "complementaryMedicine", value: formData.complementaryMedicine === "כן" ? "" : "כן" } })}
+                checked={formData.complementaryMedicine === "כן"}
+            
+            /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="complementaryMedicine" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="complementaryMedicine" value="לא" onChange={handleChange} 
+                  onClick={() => handleChange({ target: { name: "complementaryMedicine", value: formData.complementaryMedicine === "לא" ? "" : "לא" } })}
+                  checked={formData.complementaryMedicine === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -802,19 +852,34 @@ const MedicalForm = () => {
             
           {questions.find(q => q.field_name === "diseaseTrigger")?.question_text || "שאלה לא זמינה"}</label>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange}  /> כן, התפרצות מחלה אחרת
+              <input type="radio" name="diseaseTrigger" value="התפרצות מחלה אחרת" onChange={handleChange} 
+                onClick={() => handleChange({ target: { name: "diseaseTrigger", value: formData.diseaseTrigger === "התפרצות מחלה אחרת" ? "" : "התפרצות מחלה אחרת" } })}
+                checked={formData.diseaseTrigger === "התפרצות מחלה אחרת"}
+              /> כן, התפרצות מחלה אחרת
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="סמיכות לארוע משנה חיים" onChange={handleChange}  /> כן, סמיכות לארוע משנה חיים
+              <input type="radio" name="diseaseTrigger" value="סמיכות לארוע משנה חיים" onChange={handleChange} 
+                              onClick={() => handleChange({ target: { name: "diseaseTrigger", value: formData.diseaseTrigger === "סמיכות לארוע משנה חיים" ? "" : "סמיכות לארוע משנה חיים" } })}
+                              checked={formData.diseaseTrigger === "סמיכות לארוע משנה חיים"}
+              /> כן, סמיכות לארוע משנה חיים
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="תאונה" onChange={handleChange}  /> כן, תאונה
+              <input type="radio" name="diseaseTrigger" value="תאונה" onChange={handleChange}  
+                              onClick={() => handleChange({ target: { name: "diseaseTrigger", value: formData.diseaseTrigger === "תאונה" ? "" :"תאונה" } })}
+                              checked={formData.diseaseTrigger === "תאונה"}
+              /> כן, תאונה
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="טראומה" onChange={handleChange}  /> כן ,טראומה
+              <input type="radio" name="diseaseTrigger" value="טראומה" onChange={handleChange} 
+                                                        onClick={() => handleChange({ target: { name: "diseaseTrigger", value: formData.diseaseTrigger === "טראומה" ? "" :"טראומה" } })}
+                                                        checked={formData.diseaseTrigger === "טראומה"}
+              /> כן ,טראומה
           </div>
           <div className="form-check">
-              <input type="radio" name="diseaseTrigger" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="diseaseTrigger" value="לא" onChange={handleChange} 
+                           onClick={() => handleChange({ target: { name: "diseaseTrigger", value: formData.diseaseTrigger === "לא" ? "" :"לא" } })}
+                           checked={formData.diseaseTrigger === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -855,10 +920,16 @@ const MedicalForm = () => {
 
           {questions.find(q => q.field_name === "cronNegative")?.question_text || "שאלה לא זמינה"} </label>
           <div className="form-check">
-              <input type="radio" name="cronNegative" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="cronNegative" value="כן" onChange={handleChange}
+                                         onClick={() => handleChange({ target: { name: "cronNegative", value: formData.cronNegative === "כן" ? "" :"כן" } })}
+                                         checked={formData.cronNegative === "כן"}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="cronNegative" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="cronNegative" value="לא" onChange={handleChange} 
+                                         onClick={() => handleChange({ target: { name: "cronNegative", value: formData.cronNegative === "לא" ? "" :"לא" } })}
+                                         checked={formData.cronNegative === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -897,6 +968,7 @@ const MedicalForm = () => {
       value="כן"
       onChange={handleChange}
       checked={formData.familyDoctorVisit === "כן"}
+      onClick={() => handleChange({ target: { name: "familyDoctorVisit", value: formData.familyDoctorVisit === "כן" ? "" :"כן" } })}
     />
     <label htmlFor="visitYes">כן</label>
   </div>
@@ -909,6 +981,7 @@ const MedicalForm = () => {
       value="לא"
       onChange={handleChange}
       checked={formData.familyDoctorVisit === "לא"}
+      onClick={() => handleChange({ target: { name: "familyDoctorVisit", value: formData.familyDoctorVisit === "לא" ? "" :"לא" } })}
     />
     <label htmlFor="visitNo">לא</label>
   </div>
@@ -951,6 +1024,7 @@ const MedicalForm = () => {
           value="כן"
           onChange={handleChange}
           checked={formData.dentistDoctorVisit === "כן"}
+          onClick={() => handleChange({ target: { name: "dentistDoctorVisit", value: formData.dentistDoctorVisit === "כן" ? "" :"כן" } })}
         />
         <label htmlFor="visitYes">כן</label>
       </div>
@@ -963,6 +1037,8 @@ const MedicalForm = () => {
           value="לא"
           onChange={handleChange}
           checked={formData.dentistDoctorVisit === "לא"}
+          onClick={() => handleChange({ target: { name: "dentistDoctorVisit", value: formData.dentistDoctorVisit === "לא" ? "" :"לא" } })}
+
         />
         <label htmlFor="visitNo">לא</label>
       </div>
@@ -1009,6 +1085,8 @@ const MedicalForm = () => {
           value="כן"
           onChange={handleChange}
           checked={formData.pointsDoctorVisit === "כן"}
+          onClick={() => handleChange({ target: { name: "pointsDoctorVisit", value: formData.pointsDoctorVisit === "כן" ? "" :"כן" } })}
+
         />
         <label htmlFor="visitYes">כן</label>
       </div>
@@ -1021,6 +1099,8 @@ const MedicalForm = () => {
           value="לא"
           onChange={handleChange}
           checked={formData.pointsDoctorVisit === "לא"}
+          onClick={() => handleChange({ target: { name: "pointsDoctorVisit", value: formData.pointsDoctorVisit === "לא" ? "" :"לא" } })}
+
         />
         <label htmlFor="visitNo">לא</label>
       </div>
@@ -1068,10 +1148,16 @@ const MedicalForm = () => {
             
            </label>
           <div className="form-check">
-              <input type="radio" name="takeMedicen" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="takeMedicen" value="כן" onChange={handleChange} 
+                        checked={formData.takeMedicen === "כן"}
+                        onClick={() => handleChange({ target: { name: "takeMedicen", value: formData.takeMedicen === "כן" ? "" :"כן" } })}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="takeMedicen" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="takeMedicen" value="לא" onChange={handleChange}  
+                        checked={formData.takeMedicen === "לא"}
+                        onClick={() => handleChange({ target: { name: "takeMedicen", value: formData.takeMedicen === "לא" ? "" :"לא" } })}
+              /> לא
           </div>
         </div>
 
@@ -1102,10 +1188,17 @@ const MedicalForm = () => {
                 : '   האם את לוקחת תוסף תזונה באופן קבוע '}
            </label>
           <div className="form-check">
-              <input type="radio" name="takeFood" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="takeFood" value="כן" onChange={handleChange} 
+              
+              checked={formData.takeFood === "כן"}
+              onClick={() => handleChange({ target: { name: "takeFood", value: formData.takeFood === "כן" ? "" :"כן" } })}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="takeFood" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="takeFood" value="לא" onChange={handleChange} 
+                checked={formData.takeFood === "לא"}
+                onClick={() => handleChange({ target: { name: "takeFood", value: formData.takeFood === "לא" ? "" :"לא" } })}
+              /> לא
           </div>
         </div>
 
@@ -1137,10 +1230,19 @@ const MedicalForm = () => {
             
             </label>
           <div className="form-check">
-              <input type="radio" name="otherDeases" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="otherDeases" value="כן" onChange={handleChange}
+              
+              checked={formData.otherDeases === "כן"}
+              onClick={() => handleChange({ target: { name: "otherDeases", value: formData.otherDeases === "כן" ? "" :"כן" } })}
+ 
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="otherDeases" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="otherDeases" value="לא" onChange={handleChange} 
+                        checked={formData.otherDeases === "לא"}
+                        onClick={() => handleChange({ target: { name: "otherDeases", value: formData.otherDeases === "לא" ? "" :"לא" } })}
+           
+              /> לא
           </div>
         </div>
 
@@ -1176,7 +1278,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   value={formData.medicationWithoutDoctorAmount }
@@ -1190,6 +1292,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+                  <span>לא נבחרה תשובה</span>
                   <span> בכלל לא</span>
                   <span>פעם ביום/יומיים</span>
                   <span>פעם בשבוע</span>
@@ -1240,7 +1343,7 @@ const MedicalForm = () => {
     <input
     type="range"
     min="1"
-    max="5"
+    max="6"
     step="1"
     className="slider"
     value={formData.headacheFrequency}  // Always set value from state
@@ -1255,6 +1358,7 @@ const MedicalForm = () => {
 />
 
         <div className="slider-labels">
+        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1270,7 +1374,7 @@ const MedicalForm = () => {
         <input
             type="range"
             min="1"
-            max="5"
+            max="6"
             step="1"
             className="slider"
             value={formData.abdominalPainFrequency }  // Fallback to 0, meaning no value selected
@@ -1286,6 +1390,7 @@ const MedicalForm = () => {
           }}
         />
         <div className="slider-labels">
+        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1301,7 +1406,7 @@ const MedicalForm = () => {
         <input
             type="range"
             min="1"
-            max="5"
+            max="6"
             step="1"
             className="slider"
             value={formData.backPainFrequency}  // Fallback to 0, meaning no value selected
@@ -1317,6 +1422,7 @@ const MedicalForm = () => {
           }}
         />
         <div className="slider-labels">
+        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1332,7 +1438,7 @@ const MedicalForm = () => {
         <input
             type="range"
             min="1"
-            max="5"
+            max="6"
             step="1"
             className="slider"
             value={formData.jointsPainFrequency }  // Fallback to 0, meaning no value selected
@@ -1348,6 +1454,7 @@ const MedicalForm = () => {
           }}
         />
         <div className="slider-labels">
+        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1367,10 +1474,18 @@ const MedicalForm = () => {
             
             </label>
           <div className="form-check">
-              <input type="radio" name="cronicDeseas" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="cronicDeseas" value="כן" onChange={handleChange} 
+                      checked={formData.cronicDeseas === "כן"}
+                      onClick={() => handleChange({ target: { name: "cronicDeseas", value: formData.cronicDeseas === "כן" ? "" :"כן" } })}
+
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="cronicDeseas" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="cronicDeseas" value="לא" onChange={handleChange}  
+                      checked={formData.cronicDeseas === "לא"}
+                      onClick={() => handleChange({ target: { name: "cronicDeseas", value: formData.cronicDeseas === "לא" ? "" :"לא" } })}
+
+              /> לא
           </div>
         </div>
 
@@ -1404,7 +1519,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="4"
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.isMouthAftha }
@@ -1418,6 +1533,7 @@ const MedicalForm = () => {
                 }}
               />
               <div className="slider-labels">
+                <span>לא נבחרה תשובה</span>
                   <span>אף פעם</span>
                   <span>לעתים נדירות</span>
                   <span>לפעמים</span>
@@ -1437,6 +1553,8 @@ const MedicalForm = () => {
           value="כן"
           onChange={handleChange}
           checked={formData.wormsSuffer === "כן"}
+          onClick={() => handleChange({ target: { name: "wormsSuffer", value: formData.wormsSuffer === "כן" ? "" :"כן" } })}
+
         />
         <label htmlFor="visitYes">כן</label>
       </div>
@@ -1449,6 +1567,8 @@ const MedicalForm = () => {
           value="לא"
           onChange={handleChange}
           checked={formData.wormsSuffer === "לא"}
+          onClick={() => handleChange({ target: { name: "wormsSuffer", value: formData.wormsSuffer === "לא" ? "" :"לא" } })}
+
         />
         <label htmlFor="visitNo">לא</label>
       </div>
@@ -1458,9 +1578,11 @@ const MedicalForm = () => {
           type="radio"
           id="visitNotKnoen"
           name="wormsSuffer"
-          value=" לא יודע"
+          value="לא יודע"
           onChange={handleChange}
           checked={formData.wormsSuffer === " לא יודע"}
+          onClick={() => handleChange({ target: { name: "wormsSuffer", value: formData.wormsSuffer === "לא יודע" ? "" :"לא יודע" } })}
+
         />
         <label htmlFor="visitNo">
         {preferredLanguage === 'לשון זכר' 
@@ -1482,6 +1604,8 @@ const MedicalForm = () => {
           value="כן"
           onChange={handleChange}
           checked={formData.otherInsectsSuffer === "כן"}
+          onClick={() => handleChange({ target: { name: "otherInsectsSuffer", value: formData.otherInsectsSuffer === "כן" ? "" :"כן" } })}
+
         />
         <label htmlFor="visitYes">כן</label>
       </div>
@@ -1494,6 +1618,8 @@ const MedicalForm = () => {
           value="לא"
           onChange={handleChange}
           checked={formData.otherInsectsSuffer === "לא"}
+          onClick={() => handleChange({ target: { name: "otherInsectsSuffer", value: formData.otherInsectsSuffer === "לא" ? "" :"לא" } })}
+
         />
         <label htmlFor="visitNo">לא</label>
       </div>
@@ -1503,9 +1629,11 @@ const MedicalForm = () => {
           type="radio"
           id="visitNotKnoen"
           name="otherInsectsSuffer"
-          value=" לא יודע"
+          value="לא יודע"
           onChange={handleChange}
           checked={formData.otherInsectsSuffer === " לא יודע"}
+          onClick={() => handleChange({ target: { name: "otherInsectsSuffer", value: formData.otherInsectsSuffer === "לא יודע" ? "" :"לא יודע" } })}
+
         />
         <label htmlFor="visitNo">        
           {preferredLanguage === 'לשון זכר' 
@@ -1562,7 +1690,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   id="selfConfidence"
@@ -1577,6 +1705,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+                  <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1595,7 +1724,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max=""
                   step="1"
                   className="slider"
                   value={formData.socialLife }
@@ -1609,6 +1738,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1627,7 +1757,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   value={formData.mood }
@@ -1641,6 +1771,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1659,7 +1790,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   value={formData.workAfterIll }
@@ -1673,6 +1804,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1691,7 +1823,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   value={formData.relationship }
@@ -1705,6 +1837,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1723,7 +1856,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   id="parentsAttidude"
@@ -1737,6 +1870,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1755,7 +1889,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   id="outsideActivity"
@@ -1769,6 +1903,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1787,7 +1922,7 @@ const MedicalForm = () => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="6"
                   step="1"
                   className="slider"
                   id="selfEsteem"
@@ -1801,6 +1936,7 @@ const MedicalForm = () => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
+              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1851,10 +1987,18 @@ const MedicalForm = () => {
             <div className="form-group radio-preferred">
               <label htmlFor="isPshycologicalTreatment" className="form-label" >האם עברת בעבר או בהווה טיפול פסיכולוגי/רגשי? </label>
               <div className="form-check">
-                  <input type="radio" name="isPshycologicalTreatment" value="כן" onChange={handleChange}  /> כן
+                  <input type="radio" name="isPshycologicalTreatment" value="כן" onChange={handleChange} 
+                     checked={formData.isPshycologicalTreatment === "כן"}
+                     onClick={() => handleChange({ target: { name: "isPshycologicalTreatment", value: formData.isPshycologicalTreatment === "כן" ? "" :"כן" } })}
+           
+                  /> כן
               </div>
               <div className="form-check">
-                  <input type="radio" name="isPshycologicalTreatment" value="לא" onChange={handleChange}  /> לא
+                  <input type="radio" name="isPshycologicalTreatment" value="לא" onChange={handleChange}  
+                     checked={formData.otherInsectsSuffer === "לא"}
+                     onClick={() => handleChange({ target: { name: "otherInsectsSuffer", value: formData.otherInsectsSuffer === "לא" ? "" :"לא" } })}
+           
+                  /> לא
               </div>
             </div>
 
@@ -1964,11 +2108,20 @@ const MedicalForm = () => {
               PDF, JPG, PNG, DOC, או DOCX ניתן להעלות קבצים בפורמטים  .
               </small>
             </div>
+
+
                   
 
     </div>
 
-          <button type="submit" className="btn btn-primary">Submit</button>
+    <h3>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מס 3 מתוך 15" : " שלחי שאלון מס 4 מתוך 15"}
+
+          </h3>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
+
         </form>
       </div>
   );

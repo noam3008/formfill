@@ -56,6 +56,7 @@ const LeisureActivityQuestionnaire = () => {
             value="כן"
             onChange={handleChange}
             checked={formData.sufficientExercise === "כן"}
+            onClick={() => handleChange({ target: { name: "sufficientExercise", value: formData.sufficientExercise === "כן" ? "" : "כן" } })}
           />
           <label htmlFor="sufficientYes">כן</label>
         </div>
@@ -67,6 +68,8 @@ const LeisureActivityQuestionnaire = () => {
             value="לא"
             onChange={handleChange}
             checked={formData.sufficientExercise === "לא"}
+            onClick={() => handleChange({ target: { name: "sufficientExercise", value: formData.sufficientExercise === "לא" ? "" : "לא" } })}
+
           />
           <label htmlFor="sufficientNo">לא</label>
         </div>
@@ -74,11 +77,11 @@ const LeisureActivityQuestionnaire = () => {
 
       {/* Question 2: How often do you engage in different types of exercise? */}
 
-      <label className="form-label">
+      <h3 className="form-label radio-preferred">
       {preferredLanguage === "לשון זכר"
             ? "במהלך 7 ימים (שבוע), כמה פעמים בממוצע אתה מבצע את הפעילויות הבאות למשך 15 דקות לפחות?"
             : "במהלך 7 ימים (שבוע), כמה פעמים בממוצע את מבצעת את הפעילויות הבאות למשך 15 דקות לפחות?"}
-      </label>
+      </h3>
 
       <div className="form-group radio-preferred">
         <label className="form-label">
@@ -140,6 +143,9 @@ const LeisureActivityQuestionnaire = () => {
             value="לעיתים קרובות"
             onChange={handleChange}
             checked={formData.sweatingFrequency === "לעיתים קרובות"}
+            onClick={() => handleChange({ target: { name: "sweatingFrequency", value: formData.sweatingFrequency === "לעיתים קרובות" ? "" : "לעיתים קרובות" } })}
+
+  
           />
           <label htmlFor="often">לעיתים קרובות</label>
         </div>
@@ -151,6 +157,8 @@ const LeisureActivityQuestionnaire = () => {
             value="לפעמים"
             onChange={handleChange}
             checked={formData.sweatingFrequency === "לפעמים"}
+            onClick={() => handleChange({ target: { name: "sweatingFrequency", value: formData.sweatingFrequency === "לפעמים" ? "" : "לפעמים" } })}
+
           />
           <label htmlFor="sometimes">לפעמים</label>
         </div>
@@ -162,14 +170,20 @@ const LeisureActivityQuestionnaire = () => {
             value="אף פעם / לעיתים נדירות"
             onChange={handleChange}
             checked={formData.sweatingFrequency === "אף פעם / לעיתים נדירות"}
+            onClick={() => handleChange({ target: { name: "sweatingFrequency", value: formData.sweatingFrequency === "אף פעם / לעיתים נדירות" ? "" : "אף פעם / לעיתים נדירות" } })}
+
           />
           <label htmlFor="rarely">אף פעם / לעיתים נדירות</label>
         </div>
       </div>
 
-      <button type="submit" className="btn btn-primary mt-4">
-        שלח שאלון
-      </button>
+      <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 7 מתוך 15" : " שלחי שאלון מספר 8 מתוך 15"}
+
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
     </form>
   );
 };

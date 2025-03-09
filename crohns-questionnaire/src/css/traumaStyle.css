@@ -4,6 +4,7 @@
     width: 75%; /* Restricts width to 1/4 of the page */
     margin: auto; /* Centers the div horizontally */
     text-align: right; /* Ensures RTL alignment for Hebrew text */
+    margin-bottom: 30px;
    
   }
 .h3-trauma{
@@ -12,6 +13,7 @@
   margin: auto;
   width: 75%;
 }
+
 
 h4 {
   font-size: 20px; /* Set the font size */

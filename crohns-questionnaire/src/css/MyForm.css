@@ -379,6 +379,30 @@ form {
         text-align: center;
     }
 
+    .smell-preference {
+        margin-bottom: 20px;
+      }
+      
+      .smell-label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+      }
+      
+      .radio-options {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      
+      .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      
+
       
 }
       

@@ -69,7 +69,7 @@ const navigate = useNavigate();
       <h3 className="h3-trauma">אנא ענה על השאלות הבאות כחלק משאלון טראומה</h3>
 
       {questions.map((question, index) => (
-        <div className="form-group-trauma" key={index}>
+        <div className="form-group-trauma radio-preferred" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
           <div className="slider-container">
           <input
@@ -98,11 +98,14 @@ const navigate = useNavigate();
           </div>
         </div>
       ))}
-      <button type="submit" className="btn btn-primary mt-4">
-      {preferredLanguage === "לשון זכר"
-          ? " שלח שאלון"
-          : " שלחי שאלון"}
-      </button>
+       <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מס 4 מתוך 15" : " שלחי שאלון מס 5 מתוך 15"}
+
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
+
     </form>
   );
 };

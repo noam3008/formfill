@@ -457,8 +457,10 @@ function WomanForm() {
       type="radio"
       name="hasMenstrualCycle"
       value="כן"
-      onChange={() => handleRadioChange("כן")}
+      onChange={handleChange}
       checked={formData.hasMenstrualCycle === "כן"}
+      onClick={() => handleChange({ target: { name: "hasMenstrualCycle", value: formData.hasMenstrualCycle === "כן" ? "" : "כן" } })}
+
     /> כן
   </div>
 
@@ -467,8 +469,9 @@ function WomanForm() {
       type="radio"
       name="hasMenstrualCycle"
       value="לא"
-      onChange={() => handleRadioChange("לא")}
+      onChange={handleChange}
       checked={formData.hasMenstrualCycle === "לא"}
+      onClick={() => handleChange({ target: { name: "hasMenstrualCycle", value: formData.hasMenstrualCycle === "לא" ? "" : "לא" } })}
     /> לא
   </div>
 </div>
@@ -499,7 +502,7 @@ function WomanForm() {
                         type="radio"
                         name="pregnancyStatus"
                         value="כן"
-                        onChange={handlePregnancyChange}
+                        onChange={handleChange}
                         checked={formData.pregnancyStatus === "כן"}
                         onClick={() => handleChange({ target: { name: "pregnancyStatus", value: formData.pregnancyStatus === "כן" ? "" : "כן" } })}
 
@@ -511,7 +514,7 @@ function WomanForm() {
                         type="radio"
                         name="pregnancyStatus"
                         value="לא"
-                        onChange={handlePregnancyChange}
+                        onChange={handleChange}
                         checked={formData.pregnancyStatus === "לא"}
                         onClick={() => handleChange({ target: { name: "pregnancyStatus", value: formData.pregnancyStatus === "לא" ? "" : "לא" } })}
 
@@ -519,7 +522,7 @@ function WomanForm() {
                 </div>
             </div>
 
-            {pregnancyStatus === 'כן' && (
+            {formData.pregnancyStatus === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
                     {questions.find(q => q.field_name === "pregnancyCount")?.question_text || "שאלה לא זמינה"}  
@@ -534,7 +537,7 @@ function WomanForm() {
                 </div>
             )}
 
-            {pregnancyStatus === 'כן' && (
+            {formData.pregnancyStatus === 'כן' && (
             <div className="form-group">
                 <label className="form-label">
                 {questions.find(q => q.field_name === "childrenCount")?.question_text || "שאלה לא זמינה"}  
@@ -550,7 +553,7 @@ function WomanForm() {
              )}
 
 
-            {pregnancyStatus === 'כן' && (
+            {formData.pregnancyStatus === 'כן' && (
             <div className="form-group radio-preferred">
                 <label htmlFor="postpartumDepression" className="form-label">
                 {questions.find(q => q.field_name === "postpartumDepression")?.question_text || "שאלה לא זמינה"}  
@@ -785,7 +788,7 @@ function WomanForm() {
                 </div>
             </div>
 
-            {isGlulotInPast === 'כן' && (
+            {formData.isGlulotInPast === 'כן' && (
                 <div className="form-group">
                     <label className="form-label">
                     {questions.find(q => q.field_name === "contraceptiveAgeStarted")?.question_text || "שאלה לא זמינה"}  
@@ -826,7 +829,7 @@ function WomanForm() {
                 </div>
             </div>
 
-            {isBikurKavua === 'כן' && (
+            {formData.isBikurKavua === 'כן' && (
                 <div className="form-group radio-preferred">
                     <label className="form-label">
                     {questions.find(q => q.field_name === "annualVisits")?.question_text || "שאלה לא זמינה"}  
@@ -916,11 +919,20 @@ function WomanForm() {
         
         </label>
     <div className="form-check">
-        <input type="radio" name="hormonalProfile" value="נבדק ונמצא תקין" onChange={handleChange} />
+        <input type="radio" name="hormonalProfile" value="נבדק ונמצא תקין" onChange={handleChange}
+        onClick={() => handleChange({ target: { name: "hormonalProfile", value: formData.hormonalProfile === "נבדק ונמצא תקין" ? "" : "נבדק ונמצא תקין" } })}
+        checked={formData.hormonalProfile === "נבדק ונמצא תקין"}
+
+
+        />
         <label>נבדק ונמצא תקין</label>
     </div>
     <div className="form-check">
-        <input type="radio" name="hormonalProfile" value="נבדק ונמצא כי________" onChange={handleChange} />
+        <input type="radio" name="hormonalProfile" value="נבדק ונמצא כי________" onChange={handleChange}
+                onClick={() => handleChange({ target: { name: "hormonalProfile", value: formData.hormonalProfile === "נבדק ונמצא כי________" ? "" : "נבדק ונמצא כי________" } })}
+                checked={formData.hormonalProfile === "נבדק ונמצא כי________"}
+
+        />
         <label>:נבדק ונמצא כי</label>
         <input 
             type="text" 
@@ -929,10 +941,15 @@ function WomanForm() {
             className="form-control" 
             onChange={handleChange} 
             disabled={!formData.hormonalProfile || formData.hormonalProfile !== 'נבדק ונמצא כי________'} 
+            
         />
     </div>
     <div className="form-check">
-        <input type="radio" name="hormonalProfile" value="לא נבדק" onChange={handleChange} />
+        <input type="radio" name="hormonalProfile" value="לא נבדק" onChange={handleChange} 
+        onClick={() => handleChange({ target: { name: "hormonalProfile", value: formData.hormonalProfile === "לא נבדק" ? "" : "לא נבדק" } })}
+        checked={formData.hormonalProfile === "לא נבדק"}
+
+        />
         <label>לא נבדק</label>
     </div>
 </div>

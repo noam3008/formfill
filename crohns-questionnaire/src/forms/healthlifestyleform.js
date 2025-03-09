@@ -34,6 +34,7 @@ const HealthLifestyleForm = () => {
         AlcoholAmount: '',
         energyLevel: 0,
         sleepDuration: '',
+        wakingUpAtNight :'',
         appetite: 0,
         exerciseFrequency: '',
         preferredLanguage:preferredLanguage,
@@ -41,8 +42,10 @@ const HealthLifestyleForm = () => {
         mainConcern: '',
         sleepingProblems: '',
         wakingAtNight: '',
+        pastsmokingPeriod :'', 
         travelForLeisure: '',
         travelForWork: '',
+        smokingPeriod:'',
         booksPerYear: '',
         friendsMeetings: '',
         meditationPractice: '',
@@ -94,25 +97,32 @@ const HealthLifestyleForm = () => {
           [name]: Math.max(0, Math.min(10, parseInt(value, 10))), // Clamp value between 0 and 10
         }));
       };
+
+
+      const handleCheckboxChange = (event) => {
+        const { value, checked } = event.target;
+      
+        setFormData((prevData) => {
+          const updatedConcerns = checked
+            ? [...prevData.mainConcern, value] // Add to list if checked
+            : prevData.mainConcern.filter((concern) => concern !== value); // Remove if unchecked
+      
+          return {
+            ...prevData,
+            mainConcern: updatedConcerns,
+            ...(value !== "אחר" && { otherConcern: "" }) // Clears "Other" input if not selected
+          };
+        });
+      };
+      
     
-    
+
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "oilType") {
-        const checked = e.target.checked; 
-        // If checked, add the value to the array; otherwise, remove it
-        const updatedOilTypes = checked
-            ? [...formData.oilType, value]
-            : formData.oilType.filter((item) => item !== value);
-
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: updatedOilTypes,
-        }));
-    } else {
+    {
         // Handle other fields
         setFormData((prevState) => ({
             ...prevState,
@@ -166,10 +176,16 @@ const HealthLifestyleForm = () => {
                 : '  האם את מעשנת כעת ?'}
            </label>
           <div className="form-check">
-              <input type="radio" name="isSmokingNow" value="כן" onChange={handleChange}  /> כן
+              <input type="radio" name="isSmokingNow" value="כן" onChange={handleChange} 
+                 onClick={() => handleChange({ target: { name: "isSmokingNow", value: formData.isSmokingNow === "כן" ? "" : "כן" } })}
+                 checked={formData.isSmokingNow === "כן"}
+              /> כן
           </div>
           <div className="form-check">
-              <input type="radio" name="isSmokingNow" value="לא" onChange={handleChange}  /> לא
+              <input type="radio" name="isSmokingNow" value="לא" onChange={handleChange}  
+                 onClick={() => handleChange({ target: { name: "isSmokingNow", value: formData.isSmokingNow === "לא" ? "" : "לא" } })}
+                 checked={formData.isSmokingNow === "לא"}
+              /> לא
           </div>
         </div>
 
@@ -181,7 +197,8 @@ const HealthLifestyleForm = () => {
                 ? '   פרט את מספר הסיגריות ביום' 
                 : '   פרטי את מספר הסיגריות ביום'}
                </label>
-            <input type="number" min ="0" name="smokingNowNumber" id="smokingNowNumber" className="form-control" value={formData.smokingNowNumber} onChange={handleChange} />
+            <input type="number" min ="0" name="smokingNowNumber" id="smokingNowNumber" className="form-control" value={formData.smokingNowNumber} onChange={handleChange} 
+            />
           </div>
         )}
 
@@ -194,16 +211,28 @@ const HealthLifestyleForm = () => {
                    
                     </label>
                 <div className="form-check">
-                    <input type="radio" name="smokingPeriod" value="0-1" onChange={handleChange}  /> 0-1
+                    <input type="radio" name="smokingPeriod" value="0-1" onChange={handleChange}  
+                                     onClick={() => handleChange({ target: { name: "smokingPeriod", value: formData.smokingPeriod === "0-1" ? "" : "0-1" } })}
+                                     checked={formData.smokingPeriod === "0-1"}
+                    /> 0-1
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="smokingPeriod" value="2-4" onChange={handleChange}  /> 2-4
+                    <input type="radio" name="smokingPeriod" value="2-4" onChange={handleChange} 
+                                                         onClick={() => handleChange({ target: { name: "smokingPeriod", value: formData.smokingPeriod === "2-4" ? "" : "2-4" } })}
+                                                         checked={formData.smokingPeriod === "2-4"}
+                    /> 2-4
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="smokingPeriod" value="5-7" onChange={handleChange}  /> 5-7
+                    <input type="radio" name="smokingPeriod" value="5-7" onChange={handleChange} 
+                                                         onClick={() => handleChange({ target: { name: "smokingPeriod", value: formData.smokingPeriod === "5-7" ? "" : "5-7" } })}
+                                                         checked={formData.smokingPeriod === "5-7"}
+                    /> 5-7
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="smokingPeriod" value=">7" onChange={handleChange}  /> >7
+                    <input type="radio" name="smokingPeriod" value=">7" onChange={handleChange} 
+                    onClick={() => handleChange({ target: { name: "smokingPeriod", value: formData.smokingPeriod === ">7" ? "" : ">7" } })}
+                    checked={formData.smokingPeriod === ">7"}
+                    /> >7
                 </div>
             </div>
         )}
@@ -212,10 +241,16 @@ const HealthLifestyleForm = () => {
             <div className="form-group radio-preferred">
                 <label htmlFor="isSmokingPast" className="form-label" > האם עישנת בעבר ?</label>
                 <div className="form-check">
-                    <input type="radio" name="isSmokingPast" value="כן" onChange={handleChange}  /> כן
+                    <input type="radio" name="isSmokingPast" value="כן" onChange={handleChange} 
+                    onClick={() => handleChange({ target: { name: "isSmokingPast", value: formData.isSmokingPast === "כן" ? "" : "כן" } })}
+                    checked={formData.isSmokingPast === "כן"}
+                    /> כן
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="isSmokingPast" value="לא" onChange={handleChange}  /> לא
+                    <input type="radio" name="isSmokingPast" value="לא" onChange={handleChange} 
+                    onClick={() => handleChange({ target: { name: "isSmokingPast", value: formData.isSmokingPast === "לא" ? "" : "לא" } })}
+                    checked={formData.isSmokingPast === "לא"}
+                    /> לא
                 </div>
             </div>
 
@@ -242,16 +277,28 @@ const HealthLifestyleForm = () => {
                     
                    </label>
                 <div className="form-check">
-                    <input type="radio" name="pastsmokingPeriod" value="0-1" onChange={handleChange}  /> 0-1
+                    <input type="radio" name="pastsmokingPeriod" value="0-1" onChange={handleChange} 
+                                   onClick={() => handleChange({ target: { name: "pastsmokingPeriod", value: formData.pastsmokingPeriod === "0-1" ? "" : "0-1" } })}
+                                   checked={formData.pastsmokingPeriod === "0-1"}
+                    /> 0-1
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="pastsmokingPeriod" value="2-4" onChange={handleChange}  /> 2-4
+                    <input type="radio" name="pastsmokingPeriod" value="2-4" onChange={handleChange}  
+                                      onClick={() => handleChange({ target: { name: "pastsmokingPeriod", value: formData.pastsmokingPeriod === "2-4" ? "" : "2-4" } })}
+                                      checked={formData.pastsmokingPeriod === "2-4"}
+                    /> 2-4
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="pastsmokingPeriod" value="5-7" onChange={handleChange}  /> 5-7
+                    <input type="radio" name="pastsmokingPeriod" value="5-7" onChange={handleChange}  
+                                      onClick={() => handleChange({ target: { name: "pastsmokingPeriod", value: formData.pastsmokingPeriod === "5-7" ? "" : "5-7" } })}
+                                      checked={formData.pastsmokingPeriod === "5-7"}
+                    /> 5-7
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="pastsmokingPeriod" value=">7" onChange={handleChange}  /> >7
+                    <input type="radio" name="pastsmokingPeriod" value=">7" onChange={handleChange} 
+                          onClick={() => handleChange({ target: { name: "pastsmokingPeriod", value: formData.pastsmokingPeriod === ">7" ? "" : ">7" } })}
+                          checked={formData.pastsmokingPeriod === ">7"}
+                    /> >7
                 </div>
             </div>
         )}
@@ -266,10 +313,16 @@ const HealthLifestyleForm = () => {
                 (ניתן לדלג על השאלה)
                </label>
             <div className="form-check">
-                <input type="radio" name="drugUse" value="כן" onChange={handleChange}  /> כן
+                <input type="radio" name="drugUse" value="כן" onChange={handleChange} 
+                  onClick={() => handleChange({ target: { name: "drugUse", value: formData.drugUse === "כן" ? "" : "כן" } })}
+                  checked={formData.drugUse === "כן"}
+                /> כן
             </div>
             <div className="form-check">
-                <input type="radio" name="drugUse" value="לא" onChange={handleChange}  /> לא
+                <input type="radio" name="drugUse" value="לא" onChange={handleChange} 
+                  onClick={() => handleChange({ target: { name: "drugUse", value: formData.drugUse === "לא" ? "" : "לא" } })}
+                  checked={formData.drugUse === "לא"}
+                /> לא
             </div>
         </div>
 
@@ -296,10 +349,16 @@ const HealthLifestyleForm = () => {
                 
                </label>
             <div className="form-check">
-                <input type="radio" name="AlcoholUse" value="כן" onChange={handleChange}  /> כן
+                <input type="radio" name="AlcoholUse" value="כן" onChange={handleChange}
+                 onClick={() => handleChange({ target: { name: "AlcoholUse", value: formData.AlcoholUse === "כן" ? "" : "כן" } })}
+                 checked={formData.AlcoholUse === "כן"}
+                /> כן
             </div>
             <div className="form-check">
-                <input type="radio" name="AlcoholUse" value="לא" onChange={handleChange}  /> לא
+                <input type="radio" name="AlcoholUse" value="לא" onChange={handleChange} 
+                 onClick={() => handleChange({ target: { name: "AlcoholUse", value: formData.AlcoholUse === "לא" ? "" : "לא" } })}
+                 checked={formData.AlcoholUse === "לא"}
+                /> לא
             </div>
         </div>
 
@@ -396,10 +455,16 @@ const HealthLifestyleForm = () => {
                 
                </label>
             <div className="form-check">
-                <input type="radio" name="exerciseFrequency" value="כן" onChange={handleChange}  /> כן
+                <input type="radio" name="exerciseFrequency" value="כן" onChange={handleChange}
+                                 onClick={() => handleChange({ target: { name: "exerciseFrequency", value: formData.exerciseFrequency === "כן" ? "" : "כן" } })}
+                                 checked={formData.exerciseFrequency === "כן"}
+                /> כן
             </div>
             <div className="form-check">
-                <input type="radio" name="exerciseFrequency" value="לא" onChange={handleChange}  /> לא
+                <input type="radio" name="exerciseFrequency" value="לא" onChange={handleChange}
+                                 onClick={() => handleChange({ target: { name: "exerciseFrequency", value: formData.exerciseFrequency === "לא" ? "" : "לא" } })}
+                                 checked={formData.exerciseFrequency === "לא"}
+                /> לא
             </div>
         </div>
 
@@ -412,102 +477,53 @@ const HealthLifestyleForm = () => {
             <input type="number" min ="0" name="stepsPerDay" id="stepsPerDay" className="form-control" value={formData.stepsPerDay} onChange={handleChange} />
         </div>
 
-        <div className="form-group  radio-preferred">
-            <label htmlFor="mainConcern" className="form-label">
-            {preferredLanguage === 'לשון זכר' 
-                ? '      מה הבעיה המרכזית שמעסיקה אותך בחודש האחרון ? בחר' 
-                : '       מה הבעיה המרכזית שמעסיקה אותך בחודש האחרון ? בחרי'}
-          
-            </label>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="כלכלית"
-                onChange={handleChange}
-                /> כלכלית
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="עבודה"
-                onChange={handleChange}
-                /> עבודה
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="אקלים"
-                onChange={handleChange}
-                /> אקלים
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="פוליטיקה"
-                onChange={handleChange}
-                /> פוליטיקה
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="זוגיות"
-                onChange={handleChange}
-                /> זוגיות
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="ילדים"
-                onChange={handleChange}
-                /> ילדים
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="בריאות שלי"
-                onChange={handleChange}
-                /> בריאות שלי
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="בריאות של הסובבים"
-                onChange={handleChange}
-                /> בריאות של הסובבים
-            </div>
-            <div className="form-check">
-                <input
-                type="radio"
-                name="mainConcern"
-                value="אחר"
-                onChange={handleChange}
-                /> אחר
-            </div>
+        <div className="form-group radio-preferred ">
+  <label htmlFor="mainConcern" className="form-label">
+    {preferredLanguage === 'לשון זכר' 
+      ? 'מה הבעיות המרכזיות שמעסיקות אותך בחודש האחרון? בחר' 
+      : 'מה הבעיות המרכזיות שמעסיקות אותך בחודש האחרון? בחרי'}
+  </label>
 
-            {formData.mainConcern === "אחר" && (
-                <div className="form-group">
-                <label htmlFor="otherConcern" className="form-label">
-                    פרט/י
-                </label>
-                <input
-                    type="text"
-                    id="otherConcern"
-                    name="otherConcern"
-                    className="form-control"
-                    value={formData.otherConcern || ""}
-                    onChange={handleChange}
-                />
-                </div>
-            )}
-            </div>
+  {[
+    "כלכלית", 
+    "עבודה", 
+    "אקלים", 
+    "פוליטיקה", 
+    "זוגיות", 
+    "ילדים", 
+    "בריאות שלי", 
+    "בריאות של הסובבים", 
+    "אחר"
+  ].map((option) => (
+    <div className="form-check" key={option}>
+      <input
+        type="checkbox"
+        name="mainConcern"
+        value={option}
+        checked={formData.mainConcern.includes(option)}
+        onChange={handleCheckboxChange}
+        className="form-check-input"
+      />
+      <label className="form-check-label">{option}</label>
+    </div>
+  ))}
+
+  {formData.mainConcern.includes("אחר") && (
+    <div className="form-group">
+      <label htmlFor="otherConcern" className="form-label">פרט/י</label>
+      <input
+        type="text"
+        id="otherConcern"
+        name="otherConcern"
+        className="form-control"
+        value={formData.otherConcern || ""}
+        onChange={handleChange}
+      />
+    </div>
+  )}
+</div>
+
+
 
             <div className="form-group radio-preferred">
                 <label htmlFor="sleepDifficulty" className="form-label">
@@ -519,6 +535,8 @@ const HealthLifestyleForm = () => {
                     name="sleepDifficulty"
                     value="אף פעם לא"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "sleepDifficulty", value: formData.sleepDifficulty === "אף פעם לא" ? "" : "אף פעם לא" } })}
+                    checked={formData.sleepDifficulty === "אף פעם לא"}
                     /> אף פעם לא
                 </div>
                 <div className="form-check">
@@ -527,6 +545,8 @@ const HealthLifestyleForm = () => {
                     name="sleepDifficulty"
                     value="לעיתים נדירות"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "sleepDifficulty", value: formData.sleepDifficulty === "לעיתים נדירות" ? "" : "לעיתים נדירות" } })}
+                    checked={formData.sleepDifficulty === "לעיתים נדירות"}
                     /> לעיתים נדירות
                 </div>
                 <div className="form-check">
@@ -535,6 +555,8 @@ const HealthLifestyleForm = () => {
                     name="sleepDifficulty"
                     value="לפעמים"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "sleepDifficulty", value: formData.sleepDifficulty === "לפעמים" ? "" : "לפעמים" } })}
+                    checked={formData.sleepDifficulty === "לפעמים"}
                     /> לפעמים
                 </div>
                 <div className="form-check">
@@ -543,6 +565,8 @@ const HealthLifestyleForm = () => {
                     name="sleepDifficulty"
                     value="לעיתים תכופות"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "sleepDifficulty", value: formData.sleepDifficulty === "לעיתים תכופות" ? "" : "לעיתים תכופות" } })}
+                    checked={formData.sleepDifficulty === "לעיתים תכופות"}
                     /> לעיתים תכופות
                 </div>
                 </div>
@@ -560,6 +584,8 @@ const HealthLifestyleForm = () => {
                         name="wakingUpAtNight"
                         value="כן"
                         onChange={handleChange}
+                        onClick={() => handleChange({ target: { name: "wakingUpAtNight", value: formData.wakingUpAtNight === "כן" ? "" : "כן" } })}
+                        checked={formData.wakingUpAtNight === "כן"}
                         /> כן
                     </div>
                     <div className="form-check">
@@ -568,6 +594,8 @@ const HealthLifestyleForm = () => {
                         name="wakingUpAtNight"
                         value="לא"
                         onChange={handleChange}
+                        onClick={() => handleChange({ target: { name: "wakingUpAtNight", value: formData.wakingUpAtNight === "לא" ? "" : "לא" } })}
+                        checked={formData.wakingUpAtNight === "לא"}
                         /> לא
                     </div>
 
@@ -600,19 +628,34 @@ const HealthLifestyleForm = () => {
                           
                         </label>
                         <div className="form-check">
-                            <input type="radio" name="vacationFlights" value="0" onChange={handleChange} /> 0
+                            <input type="radio" name="vacationFlights" value="0" onChange={handleChange} 
+                              onClick={() => handleChange({ target: { name: "vacationFlights", value: formData.vacationFlights === "0" ? "" : "0" } })}
+                              checked={formData.vacationFlights === "0"}
+                            /> 0
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="vacationFlights" value="1" onChange={handleChange} /> 1
+                            <input type="radio" name="vacationFlights" value="1" onChange={handleChange}
+                                                          onClick={() => handleChange({ target: { name: "vacationFlights", value: formData.vacationFlights === "1" ? "" : "1" } })}
+                                                          checked={formData.vacationFlights === "1"}
+                            /> 1
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="vacationFlights" value="2-3" onChange={handleChange} /> 2-3
+                            <input type="radio" name="vacationFlights" value="2-3" onChange={handleChange}
+                                                          onClick={() => handleChange({ target: { name: "vacationFlights", value: formData.vacationFlights === "2-3" ? "" : "2-3" } })}
+                                                          checked={formData.vacationFlights === "2-3"}
+                            /> 2-3
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="vacationFlights" value="4-5" onChange={handleChange} /> 4-5
+                            <input type="radio" name="vacationFlights" value="4-5" onChange={handleChange} 
+                                                          onClick={() => handleChange({ target: { name: "vacationFlights", value: formData.vacationFlights === "4-5" ? "" : "4-5" } })}
+                                                          checked={formData.vacationFlights === "4-5"}
+                            /> 4-5
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="vacationFlights" value=">5" onChange={handleChange} /> >5
+                            <input type="radio" name="vacationFlights" value=">5" onChange={handleChange}
+                                                          onClick={() => handleChange({ target: { name: "vacationFlights", value: formData.vacationFlights === ">5" ? "" : ">5" } })}
+                                                          checked={formData.vacationFlights === ">5"}
+                            /> >5
                         </div>
                         </div>
 
@@ -624,19 +667,34 @@ const HealthLifestyleForm = () => {
                             
                         </label>
                         <div className="form-check">
-                            <input type="radio" name="workFlights" value="0" onChange={handleChange} /> 0
+                            <input type="radio" name="workFlights" value="0" onChange={handleChange}
+                             onClick={() => handleChange({ target: { name: "workFlights", value: formData.workFlights === "0" ? "" : "0" } })}
+                             checked={formData.workFlights === "0"}
+                            /> 0
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="workFlights" value="1" onChange={handleChange} /> 1
+                            <input type="radio" name="workFlights" value="1" onChange={handleChange}
+                             onClick={() => handleChange({ target: { name: "workFlights", value: formData.workFlights === "1" ? "" : "1" } })}
+                             checked={formData.workFlights === "1"}
+                            /> 1
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="workFlights" value="2-3" onChange={handleChange} /> 2-3
+                            <input type="radio" name="workFlights" value="2-3" onChange={handleChange} 
+                             onClick={() => handleChange({ target: { name: "workFlights", value: formData.workFlights === "2-3" ? "" : "2-3" } })}
+                             checked={formData.workFlights === "2-3"}
+                             /> 2-3
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="workFlights" value="4-5" onChange={handleChange} /> 4-5
+                            <input type="radio" name="workFlights" value="4-5" onChange={handleChange} 
+                              onClick={() => handleChange({ target: { name: "workFlights", value: formData.workFlights === "4-5" ? "" : "4-5" } })}
+                              checked={formData.workFlights === "4-5"}
+                            /> 4-5
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="workFlights" value=">5" onChange={handleChange} /> >5
+                            <input type="radio" name="workFlights" value=">5" onChange={handleChange}
+                             onClick={() => handleChange({ target: { name: "workFlights", value: formData.workFlights === ">5" ? "" : ">5" } })}
+                             checked={formData.workFlights === ">5"}
+                            /> >5
                         </div>
                         </div>
 
@@ -648,22 +706,40 @@ const HealthLifestyleForm = () => {
                            
                         </label>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value="0" onChange={handleChange} /> 0
+                            <input type="radio" name="booksRead" value="0" onChange={handleChange} 
+                             onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === "0" ? "" : "0" } })}
+                             checked={formData.booksRead === "0"}
+                            /> 0
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value="1" onChange={handleChange} /> 1
+                            <input type="radio" name="booksRead" value="1" onChange={handleChange} 
+                             onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === "1" ? "" : "1" } })}
+                             checked={formData.booksRead === "1"}
+                            /> 1
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value="2-4" onChange={handleChange} /> 2-4
+                            <input type="radio" name="booksRead" value="2-4" onChange={handleChange} 
+                             onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === "2-4" ? "" : "2-4" } })}
+                             checked={formData.booksRead === "2-4"}
+                            /> 2-4
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value="4-6" onChange={handleChange} /> 4-6
+                            <input type="radio" name="booksRead" value="4-6" onChange={handleChange}
+                              onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === "4-6" ? "" : "4-6" } })}
+                              checked={formData.booksRead === "4-6"}
+                            /> 4-6
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value="6-8" onChange={handleChange} /> 6-8
+                            <input type="radio" name="booksRead" value="6-8" onChange={handleChange} 
+                             onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === "6-8" ? "" : "6-8" } })}
+                             checked={formData.booksRead === "6-8"}
+                            /> 6-8
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="booksRead" value=">8" onChange={handleChange} /> >8
+                            <input type="radio" name="booksRead" value=">8" onChange={handleChange}
+                             onClick={() => handleChange({ target: { name: "booksRead", value: formData.booksRead === ">8" ? "" : ">8" } })}
+                             checked={formData.booksRead === ">8"}
+                            /> >8
                         </div>
                         </div>
 
@@ -712,13 +788,22 @@ const HealthLifestyleForm = () => {
             </label>
             <div className="form-check-group">
                 <div className="form-check">
-                    <input type="radio" name="meditationPractice" value="אף פעם לא" onChange={handleChange} /> אף פעם לא
+                    <input type="radio" name="meditationPractice" value="אף פעם לא" onChange={handleChange} 
+                          onClick={() => handleChange({ target: { name: "meditationPractice", value: formData.meditationPractice === "אף פעם לא" ? "" : "אף פעם לא" } })}
+                          checked={formData.meditationPractice === "אף פעם לא"}
+                    /> אף פעם לא
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="meditationPractice" value="בעבר" onChange={handleChange} /> בעבר
+                    <input type="radio" name="meditationPractice" value="בעבר" onChange={handleChange} 
+                          onClick={() => handleChange({ target: { name: "meditationPractice", value: formData.meditationPractice === "בעבר" ? "" : "בעבר" } })}
+                          checked={formData.meditationPractice === "בעבר"}
+                    /> בעבר
                 </div>
                 <div className="form-check">
-                    <input type="radio" name="meditationPractice" value="כיום" onChange={handleChange} /> כיום
+                    <input type="radio" name="meditationPractice" value="כיום" onChange={handleChange}
+                          onClick={() => handleChange({ target: { name: "meditationPractice", value: formData.meditationPractice === "כיום" ? "" : "כיום" } })}
+                          checked={formData.meditationPractice === "כיום"}
+                    /> כיום
                 </div>
             </div>
         </div>
@@ -789,19 +874,31 @@ const HealthLifestyleForm = () => {
                 
                </label>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="כן" onChange={handleChange} /> כן
+                <input type="radio" name="glutenIntake" value="כן" onChange={handleChange}
+                 onClick={() => handleChange({ target: { name: "glutenIntake", value: formData.glutenIntake === "כן" ? "" : "כן" } })}
+                 checked={formData.glutenIntake === "כן"}
+                /> כן
             </div>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="לא" onChange={handleChange} /> לא
+                <input type="radio" name="glutenIntake" value="לא" onChange={handleChange} 
+                 onClick={() => handleChange({ target: { name: "glutenIntake", value: formData.glutenIntake === "לא" ? "" : "לא" } })}
+                 checked={formData.glutenIntake === "לא"}
+                /> לא
             </div>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="נמנע" onChange={handleChange} /> 
+                <input type="radio" name="glutenIntake" value="נמנע" onChange={handleChange}
+                 onClick={() => handleChange({ target: { name: "glutenIntake", value: formData.glutenIntake === "נמנע" ? "" : "נמנע" } })}
+                 checked={formData.glutenIntake === "נמנע"}
+                /> 
                 {preferredLanguage === 'לשון זכר' 
                 ? ' נמנע'
                 : ' נמנעת'}
             </div>
             <div className="form-check">
-                <input type="radio" name="glutenIntake" value="ממעט" onChange={handleChange} /> 
+                <input type="radio" name="glutenIntake" value="ממעט" onChange={handleChange}
+                 onClick={() => handleChange({ target: { name: "meditationPractice", value: formData.meditationPractice === "כיום" ? "" : "כיום" } })}
+                 checked={formData.meditationPractice === "כיום"}
+                /> 
                 {preferredLanguage === 'לשון זכר' 
                 ? ' ממעט'
                 : ' ממעטת'}
@@ -920,6 +1017,8 @@ const HealthLifestyleForm = () => {
                         name="dietChange"
                         value="כן"
                         onChange={handleChange}
+                        onClick={() => handleChange({ target: { name: "dietChange", value: formData.dietChange === "כן" ? "" : "כן" } })}
+                        checked={formData.dietChange === "כן"}
                         /> כן
                     </div>
                     <div className="form-check">
@@ -928,6 +1027,8 @@ const HealthLifestyleForm = () => {
                         name="dietChange"
                         value="לא"
                         onChange={handleChange}
+                        onClick={() => handleChange({ target: { name: "dietChange", value: formData.dietChange === "לא" ? "" : "לא" } })}
+                        checked={formData.dietChange === "לא"}
                         /> לא
                     </div>
 
@@ -1046,7 +1147,13 @@ const HealthLifestyleForm = () => {
                     </div>
 
 
-          <button type="submit" className="btn btn-primary">Submit</button>
+                    <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 6 מתוך 15" : " שלחי שאלון מספר 7 מתוך 15"}
+
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
 
 
         </form>

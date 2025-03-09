@@ -66,7 +66,7 @@ const DepressionAssessment = () => {
           : "? במהלך השבועיים האחרונים, באיזו תדירות היית מוטרדת מכל אחת מן הבעיות הבאות"}
       </h3>
       {questions.map((question, index) => (
-        <div className="form-group-trauma mt-3" key={index}>
+        <div className="form-group-trauma mt-3 radio-preferred" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
           <div className="slider-container">
             <input
@@ -94,13 +94,13 @@ const DepressionAssessment = () => {
           </div>
         </div>
       ))}
-      <button type="submit" className="btn btn-primary mt-4">
+ <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 5 מתוך 15" : " שלחי שאלון מספר 6 מתוך 15"}
 
-      {preferredLanguage === "לשון זכר"
-          ? " שלח שאלון"
-          : " שלחי שאלון"}
-       
-      </button>
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
     </form>
   );
 };

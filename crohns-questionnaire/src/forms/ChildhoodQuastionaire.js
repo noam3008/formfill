@@ -118,7 +118,7 @@ const ChildhoodQuestionnaire = () => {
                         
                        </label>
                     <select name="pregnancyRisk" className="form-select" onChange={handleChange}>
-                        <option value="">
+                        <option disabled value="">
                         {preferredLanguage === "לשון זכר"
           ? "בחר"
           : "בחרי"}  
@@ -132,7 +132,7 @@ const ChildhoodQuestionnaire = () => {
                 <div >
                     <label className="form-label">באיזה סוג לידה נולדת?</label>
                     <select name="birthType" className="form-select" onChange={handleChange}>
-                        <option value="">
+                        <option disabled value="">
                         {preferredLanguage === "לשון זכר"
           ? "בחר"
           : "בחרי"}  
@@ -151,7 +151,7 @@ const ChildhoodQuestionnaire = () => {
           : "  האם נולדת פגה?"}
                        </label>
                     <select name="preterm" className="form-select" onChange={handleChange}>
-                        <option value="">
+                        <option disabled value="">
                         {preferredLanguage === "לשון זכר"
           ? "בחר"
           : "בחרי"}  
@@ -169,7 +169,7 @@ const ChildhoodQuestionnaire = () => {
           : "    האם ינקת כתינוקת או שניזונת מתחליפי חלב?"}
                      </label>
                     <select name="feedingMethod" className="form-select" onChange={handleChange}>
-                        <option value="">
+                        <option disabled value="">
                         {preferredLanguage === "לשון זכר"
           ? "בחר"
           : "בחרי"}  
@@ -195,6 +195,8 @@ const ChildhoodQuestionnaire = () => {
                                 name="nativeBorn"
                                 value="Yes"
                                 onChange={handleChange}
+                                onClick={() => handleChange({ target: { name: "nativeBorn", value: formData.nativeBorn === "Yes" ? "" : "Yes" } })}
+                                checked={formData.nativeBorn === "Yes"}
                             />
                             כן
                         </div>
@@ -204,6 +206,8 @@ const ChildhoodQuestionnaire = () => {
                                 name="nativeBorn"
                                 value="No"
                                 onChange={handleChange}
+                                onClick={() => handleChange({ target: { name: "nativeBorn", value: formData.nativeBorn === "No" ? "" : "No" } })}
+                                checked={formData.nativeBorn === "No"}
                             />
                             לא
                         </div>
@@ -250,7 +254,7 @@ const ChildhoodQuestionnaire = () => {
                 {/* Hospitalization Information */}
                 <div className="form-group radio-preferred">
                 <label htmlFor="hospitalization" className="form-label">
-                     (עד גיל 18 )האם עברת אישפוז בילדות?
+                    האם עברת אישפוז בילדות (עד גיל 18)?
                 </label>
                 <div className="form-check">
                     <input
@@ -258,6 +262,8 @@ const ChildhoodQuestionnaire = () => {
                     name="hospitalization"
                     value="כן"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "hospitalization", value: formData.hospitalization === "כן" ? "" : "כן" } })}
+                    checked={formData.hospitalization === "כן"}
                     />{" "}
                     כן
                 </div>
@@ -267,6 +273,8 @@ const ChildhoodQuestionnaire = () => {
                     name="hospitalization"
                     value="לא"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "hospitalization", value: formData.hospitalization === "לא" ? "" : "לא" } })}
+                    checked={formData.hospitalization === "לא"}
                     />{" "}
                     לא
                 </div>
@@ -313,6 +321,8 @@ const ChildhoodQuestionnaire = () => {
                     name="pets"
                     value="כן"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "pets", value: formData.pets === "כן" ? "" : "כן" } })}
+                    checked={formData.pets === "כן"}
                     />{" "}
                     כן
                 </div>
@@ -322,6 +332,8 @@ const ChildhoodQuestionnaire = () => {
                     name="pets"
                     value="לא"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "pets", value: formData.pets === "לא" ? "" : "לא" } })}
+                    checked={formData.pets === "לא"}
                     />{" "}
                     לא
                 </div>
@@ -401,6 +413,8 @@ const ChildhoodQuestionnaire = () => {
                     name="childhoodIllnesses"
                     value="כן"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "childhoodIllnesses", value: formData.childhoodIllnesses === "כן" ? "" : "כן" } })}
+                    checked={formData.childhoodIllnesses === "כן"}
                     />{" "}
                     כן
                 </div>
@@ -410,6 +424,8 @@ const ChildhoodQuestionnaire = () => {
                     name="childhoodIllnesses"
                     value="לא"
                     onChange={handleChange}
+                    onClick={() => handleChange({ target: { name: "childhoodIllnesses", value: formData.childhoodIllnesses === "לא" ? "" : "לא" } })}
+                    checked={formData.childhoodIllnesses === "לא"}
                     />{" "}
                     לא
                 </div>
@@ -925,7 +941,7 @@ const ChildhoodQuestionnaire = () => {
                     <input
                         type="checkbox"
                         name="childhoodDescription"
-                        value="בילדותי ביליתי הרבה בקריאת בבית"
+                        value="בילדותי ביליתי הרבה בקריאה בבית"
                         onChange={handleCheckboxChange}
                         checked={formData.childhoodDescription?.includes("בילדותי ביליתי הרבה בקריאה בבית")}
                     />
@@ -970,6 +986,7 @@ const ChildhoodQuestionnaire = () => {
       value="כן"
       onChange={handleChange}
       checked={formData.remissionExperience === "כן"}
+      onClick={() => handleChange({ target: { name: "remissionExperience", value: formData.remissionExperience === "כן" ? "" : "כן" } })}
     />
     <label htmlFor="yes">כן</label>
   </div>
@@ -982,41 +999,56 @@ const ChildhoodQuestionnaire = () => {
       value="לא"
       onChange={handleChange}
       checked={formData.remissionExperience === "לא"}
+      onClick={() => handleChange({ target: { name: "remissionExperience", value: formData.remissionExperience === "לא" ? "" : "לא" } })}
     />
     <label htmlFor="no">לא</label>
   </div>
 
   {formData.remissionExperience === 'כן' && (
-    <>
-      <label className="form-label">
-        {preferredLanguage === "לשון זכר"
-          ? "האם אתה יכול להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"
-          : "האם את יכולה להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"}
-      </label>
+  <>
+    <label className="form-label">
+      {preferredLanguage === "לשון זכר"
+        ? "האם אתה יכול להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"
+        : "האם את יכולה להצביע על סימנים מקדימים המופיעים לפני התפרצות חוזרת של המחלה/ התקף? או סימנים שמעידים עבורך על התפרצות קרבה?"}
+    </label>
 
-      {["תחושת חרדה", "שינויים בראיה", "שינויים בחוש הריח", "שינויים במצב הרוח", "חום", 
-        "כאבי/ מיחושי ראש", "כאבי/ מיחושי בטן", "כאבי שרירים", "קשיי שינה/ הרדמות", 
-        "היפראקטיביות/ פעלתנות אינטנסיבית", "בחילה", "צרבת", "עייפות", "תחושת מועקה", 
-        "אחר- פרט.י", "לא ידוע"].map((symptom) => (
-          <div className="form-check" key={symptom}>
-            <input
-              type="checkbox"
-              id={symptom}
-              name="symptoms"
-              value={symptom}
-              onChange={handleChange}
-              checked={formData.symptoms?.includes(symptom)}
-            />
-            <label htmlFor={symptom}>{symptom}</label>
-          </div>
-      ))}
-    </>
-  )}
+    {[
+      "תחושת חרדה", "שינויים בראיה", "שינויים בחוש הריח", "שינויים במצב הרוח", "חום",
+      "כאבי/ מיחושי ראש", "כאבי/ מיחושי בטן", "כאבי שרירים", "קשיי שינה/ הרדמות",
+      "היפראקטיביות/ פעלתנות אינטנסיבית", "בחילה", "צרבת", "עייפות", "תחושת מועקה",
+      "אחר- פרט.י", "לא ידוע"
+    ].map((symptom) => (
+      <div className="form-check" key={symptom}>
+        <input
+          type="checkbox"
+          id={symptom}
+          name="symptoms"
+          value={symptom}
+          onChange={(e) => {
+            const { checked, value } = e.target;
+            handleChange({
+              target: {
+                name: "symptoms",
+                value: checked
+                  ? [...(formData.symptoms || []), value]
+                  : (formData.symptoms || []).filter(s => s !== value),
+              },
+            });
+          }}
+          checked={formData.symptoms?.includes(symptom)}
+        />
+        <label htmlFor={symptom}>{symptom}</label>
+      </div>
+    ))}
+  </>
+)}
+
 </div>
-
 <div className="form-group smell-preference">
   <label htmlFor="smellPreference" className="form-label">
-    ציין לגבי כל אחד מהריחות הבאים אם את.ה אוהב.ת / לא אוהב.ת אותם / אדיש.ה
+    {preferredLanguage === "לשון זכר"
+      ? "ציין לגבי כל אחד מהריחות הבאים אם אתה אוהב / לא אוהב  / אדיש"
+      : "צייני לגבי כל אחד מהריחות הבאים אם את אוהבת / לא אוהבת / אדישה"}
   </label>
 
   {[
@@ -1034,59 +1066,73 @@ const ChildhoodQuestionnaire = () => {
     "סיגריות/ עשן טבק",
     "פריחה של עצים/ פרחים מסוימים",
     "עובש/ לחות",
-    "ניחוחות כביסה וחומרי ניקוי –מרככי כביסה, סבונים ודטרגנטים ריחניים.",
-    "חומרי חיטוי וכימיקלים –כלור/ אקונומיקה/ אמוניה /אלכוהול לחיטוי.",
-    "צבע טרי ולכות – חומרים מכילי ממיסים נדיפים.",
+    ".ניחוחות כביסה וחומרי ניקוי – מרככי כביסה, סבונים ודטרגנטים ריחניים",
+    ".חומרי חיטוי וכימיקלים – כלור/ אקונומיקה/ אמוניה /אלכוהול לחיטוי",
+    "צבע טרי ולכות – חומרים מכילי ממיסים נדיפים",
     "בשמים ומוצרי טיפוח – כולל דאודורנטים, קרמים, ספריי לשיער"
   ].map((smell) => (
     <div className="form-group radio-preferred option-spacing" key={smell}>
-      <label>{smell}</label>
-      <div>
-        <input
-          type="radio"
-          id={`${smell}-like`}
-          name={smell}
-          value="אוהב.ת"
-          onChange={handleChange}
-          checked={formData[smell] === "אוהב.ת"}
-        />
-        <label htmlFor={`${smell}-like`}>
-        {preferredLanguage === "לשון זכר"
-          ? " אוהב"
-          : " אוהבת"}
-           </label>
+      <label className="smell-label">{smell}</label>
+      <div className="radio-options">
+        <div className="radio-option">
+          <input
+            type="radio"
+            id={`${smell}-like`}
+            name={smell}
+            value="אוהב"
+            onChange={handleChange}
+            checked={formData[smell] === "אוהב"}
+          />
+          <label htmlFor={`${smell}-like`}>
+            {preferredLanguage === "לשון זכר" ? "אוהב" : "אוהבת"}
+          </label>
+        </div>
 
-        <input
-          type="radio"
-          id={`${smell}-dislike`}
-          name={smell}
-          value="לא אוהב.ת"
-          onChange={handleChange}
-          checked={formData[smell] === "לא אוהב.ת"}
-        />
-        <label htmlFor={`${smell}-dislike`}>
-        {preferredLanguage === "לשון זכר"
-          ? "לא אוהב"
-          : "לא אוהבת"}
-           </label>
+        <div className="radio-option">
+          <input
+            type="radio"
+            id={`${smell}-dislike`}
+            name={smell}
+            value="לא אוהב"
+            onChange={handleChange}
+            checked={formData[smell] === "לא אוהב"}
+          />
+          <label htmlFor={`${smell}-dislike`}>
+            {preferredLanguage === "לשון זכר" ? "לא אוהב" : "לא אוהבת"}
+          </label>
+        </div>
 
-        <input
-          type="radio"
-          id={`${smell}-indifferent`}
-          name={smell}
-          value="אדיש.ה"
-          onChange={handleChange}
-          checked={formData[smell] === "אדיש.ה"}
-        />
-        <label htmlFor={`${smell}-indifferent`}>
-        {preferredLanguage === "לשון זכר"
-          ? "אדיש"
-          : "אדישה"}
-        </label>
+        <div className="radio-option">
+          <input
+            type="radio"
+            id={`${smell}-indifferent`}
+            name={smell}
+            value="אדיש"
+            onChange={handleChange}
+            checked={formData[smell] === "אדיש"}
+          />
+          <label htmlFor={`${smell}-indifferent`}>
+            {preferredLanguage === "לשון זכר" ? "אדיש" : "אדישה"}
+          </label>
+        </div>
       </div>
     </div>
   ))}
 </div>
+
+<p className="support-message radio-preferred">
+  :אם השאלון עורר בך תחושות שליליות או מצוקה ניתן לפנות לתמיכה
+  <br />
+  .ער"ן - עזרה ראשונה נפשית טלפון 1201
+  <br />
+  <a href="https://sahar.org.il/" target="_blank" rel="noopener noreferrer">
+    סה"ר - סיוע נפשי ברשת
+  </a>
+  <br />
+  .עמותת משאבים לסיוע נפשי 24/7 טלפון 046900600
+  <br />
+  דאגה בלב (שירות ביידיש) 0768844429
+</p>
 
 
 
@@ -1101,12 +1147,13 @@ const ChildhoodQuestionnaire = () => {
                     <textarea name="additionalComments" className="form-control" value={formData.additionalComments} onChange={handleChange}></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                {preferredLanguage === "לשון זכר"
-          ? "שלח"
-          : "שלחי"}
+                <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 10 מתוך 15" : " שלחי שאלון מספר 11 מתוך 15"}
 
-                    שלח</button>
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
 
             </form>
         </div>

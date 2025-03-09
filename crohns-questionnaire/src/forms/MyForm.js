@@ -33,8 +33,12 @@ const MyForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    // Add form validation here
-    if (!formData.idNumber.match(/^\d+$/)) newErrors.idNumber = "תעודת הזהות חייבת להיות מספר";
+
+    // Validate Israeli ID number
+    if (!is_israeli_id_number(formData.idNumber)) {
+        newErrors.idNumber = "תעודת הזהות אינה תקינה";
+    }
+
     if (!formData.firstName) newErrors.firstName = "שם פרטי נדרש";
     if (!formData.lastName) newErrors.lastName = "שם משפחה נדרש";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "כתובת אימייל אינה חוקית";
@@ -47,7 +51,21 @@ const MyForm = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+};
+
+// Israeli ID validation function
+function is_israeli_id_number(id) {
+    id = String(id).trim();
+    if (id.length > 9 || isNaN(id)) return false;
+    id = id.length < 9 ? ("00000000" + id).slice(-9) : id;
+    return (
+        Array.from(id, Number).reduce((counter, digit, i) => {
+            const step = digit * ((i % 2) + 1);
+            return counter + (step > 9 ? step - 9 : step);
+        }, 0) % 10 === 0
+    );
+}
+
 
   const handlesubmit = async (e) => {
     e.preventDefault();

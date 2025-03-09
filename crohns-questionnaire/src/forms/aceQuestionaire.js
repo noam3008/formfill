@@ -48,20 +48,23 @@ const ACEQuestionnaire = () => {
   const navigate = useNavigate();
 
   // Default answers are neutral (0 or 1)
-  const [answers, setAnswers] = useState(new Array(questions.length).fill(0));
-
-  // Handle slider changes
+  const [answers, setAnswers] = useState(new Array(questions.length).fill(null));
+   // Handle radio button change
+    // Handle radio button change
+  // Handle radio button change
   const handleChange = (index, value) => {
     const updatedAnswers = [...answers];
-    updatedAnswers[index] = parseInt(value, 10);
+
+    // If the same option is selected again, reset the answer (deselect)
+    updatedAnswers[index] = updatedAnswers[index] === value ? null : value;
+
     setAnswers(updatedAnswers);
   };
-
   // Handle form submission
   const handlesubmit = (e) => {
     e.preventDefault();
-    console.log("Answers submitted:", answers);
-    alert("תשובותיך נשמרו בהצלחה. סיימת למלא את כלל השאלונים");
+    console.log(formData); // Here you can handle form submission, like sending data to an API
+    navigate("/briefquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
     
   };
 
@@ -69,16 +72,17 @@ const ACEQuestionnaire = () => {
     <form onSubmit={handlesubmit}>
       <h3 className="text-center">ACE - שאלון חוויות ילדות</h3>
 
-      {/* Iterate through the questions based on preferredLanguage */}
+      {/* Iterate through the questions */}
       {questions.map((question, index) => (
-        <div className="form-group radio-preferred " key={index}>
+        <div className="form-group radio-preferred" key={index}>
           <label className="form-label">{`${index + 1}. ${question}`}</label>
           <div className="form-check">
             <input
               type="radio"
               name={`question-${index}`}
               value="כן"
-              onChange={(e) => handleChange(index, e.target.value)}
+              checked={answers[index] === "כן"} // Check if the answer is "כן"
+              onChange={(e) => handleChange(index, "כן")}
             />
             כן
           </div>
@@ -87,15 +91,20 @@ const ACEQuestionnaire = () => {
               type="radio"
               name={`question-${index}`}
               value="לא"
-              onChange={(e) => handleChange(index, e.target.value)}
+              checked={answers[index] === "לא"} // Check if the answer is "לא"
+              onChange={(e) => handleChange(index, "לא")}
             />
             לא
           </div>
         </div>
       ))}
-      <button type="submit" className="btn btn-primary mt-4">
-        שלח שאלון
-      </button>
+                     <h4>
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 11 מתוך 15" : " שלחי שאלון מספר 12 מתוך 15"}
+
+          </h4>
+          <button type="submit" className="btn btn-primary">
+            {preferredLanguage === "לשון זכר" ? "שלח" : "שלחי"}
+          </button>
     </form>
   );
 };
