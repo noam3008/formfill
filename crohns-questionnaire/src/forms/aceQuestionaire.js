@@ -6,6 +6,10 @@ import "../css/traumaStyle.css";
 const ACEQuestionnaire = () => {
   const location = useLocation();
   const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+  const [formData, setFormData] = useState({
+    // initial state object
+  });
+  
 
   // Male Questions
   const questionsMale = [
