@@ -9,6 +9,8 @@ app = Flask(__name__)
 CORS(app)
 import boto3
 import json
+import pymysql
+pymysql.install_as_MySQLdb()
 
 
 # Use your MySQL credentials (username, password, database name, etc.)

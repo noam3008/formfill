@@ -90,7 +90,7 @@ const MedicalForm = () => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3002/test_questions_medical")
+    axios.get("http://18.208.193.34:3002/test_questions_medical")
         .then((response) => {
             setQuestions(response.data); // Set questions in state
             const initialFormData = {};

@@ -110,7 +110,7 @@ const PersonalForm = () => {
   // }, []); // Empty dependency array to ensure it runs only once when the component mounts
 
   useEffect(() => {
-    axios.get("http://localhost:3002/test_questions_personal")
+    axios.get("http://18.208.193.34:3002/test_questions_personal")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
