@@ -146,17 +146,18 @@ class User(db.Model):
         return f'<User {self.id_number}>'
 
 
-# Test Questions Route
 @app.route('/test_questions_registration', methods=['GET'])
 def test_questions():
     try:
-        # Fetch all questions, ordered by ID
         print("Fetching registration questions...")
         questions = Question.query.filter_by(category="הרשמה").order_by(Question.id).all()
-        return jsonify([q.to_dict() for q in questions])  # Send questions as JSON
+        if not questions:
+            return jsonify({"message": "No questions found for category 'הרשמה'"}), 404
+        return jsonify([q.to_dict() for q in questions])
     except Exception as e:
         app.logger.error(f"Error fetching questions: {e}")
         return jsonify({"error": str(e)}), 500
+
     
 
 # Test Questions Route
