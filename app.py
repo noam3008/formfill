@@ -152,7 +152,7 @@ class User(db.Model):
 def test_questions():
     try:
         print("Fetching registration questions...")
-        questions = Question.query.filter_by(category="הרשמה").order_by(Question.id).all()
+        questions = Question.query.filter_by(category="reg").order_by(Question.id).all()
         if not questions:
             return jsonify({"message": "No questions found for category 'הרשמה'"}), 404
         return jsonify([q.to_dict() for q in questions])
