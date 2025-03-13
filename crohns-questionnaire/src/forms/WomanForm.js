@@ -236,7 +236,7 @@ function WomanForm() {
       
     
         try {
-          const response = await fetch("http://54.242.154.185:3002/insert_woman", {
+          const response = await fetch("http://localhost:3002/insert_woman", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

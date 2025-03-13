@@ -73,7 +73,7 @@ function is_israeli_id_number(id) {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://54.242.154.184:3002/test_insert", {
+      const response = await fetch("http://localhost:3002/test_insert", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
