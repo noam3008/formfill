@@ -40,7 +40,7 @@ function WomanForm() {
 
 
     useEffect(() => {
-        axios.get("http://54.242.154.184:3002/test_questions_woman")
+        axios.get("http://54.242.154.185:3002/test_questions_woman")
             .then((response) => {
                 setQuestions(response.data); // Set questions in state
                 const initialFormData = {};
