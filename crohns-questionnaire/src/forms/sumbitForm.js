@@ -11,7 +11,7 @@ const TestQuestions = () => {
     setLoading(true);  // Start loading state
 
     try {
-      const response = await axios.get("http://localhost:3002/test_questions");  // Fetch data from Flask API
+      const response = await axios.get("http://54.242.154.184:3002/test_questions");  // Fetch data from Flask API
       setQuestions(response.data);   // Set questions state with response data
       setLoading(false);              // Stop loading state
     } catch (error) {
