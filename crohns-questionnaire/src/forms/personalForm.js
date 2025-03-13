@@ -218,7 +218,7 @@ const PersonalForm = () => {
   return (
 
     <div className="form-container">
-      <h2 className="mb-4 text-center">Personal Information Form</h2>
+      <h2 className="mb-4 text-center">שאלון מידע אישי</h2>
       <form onSubmit={handlesubmit}>
         <div className="form-group radio-preferred">
           <label htmlFor="maritalStatus" className="form-label">
