@@ -11,7 +11,7 @@ const MyForm = () => {
 
   // Fetch the questions from the Flask server
   useEffect(() => {
-    axios.get("http:54.242.154.185:3002/test_questions_registration")
+    axios.get("http://54.242.154.185:3002/test_questions_registration")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
