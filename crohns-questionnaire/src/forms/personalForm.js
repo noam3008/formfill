@@ -108,9 +108,9 @@ const PersonalForm = () => {
   // useEffect(() => {
   //   window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
   // }, []); // Empty dependency array to ensure it runs only once when the component mounts
-
+////wqeeeeeeeeqwewqewqeqweqew
   useEffect(() => {
-    axios.get("http://18.208.193.34:3002/test_questions_personal")
+    axios.get("http://54.242.154.184:3002/test_questions_personal")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
@@ -487,6 +487,9 @@ const PersonalForm = () => {
             <option value="15+">אקדמאית >15</option>
           </select>
         </div>
+
+
+        
 
         <div className="form-group">
           <label htmlFor="countryOfBirth">
