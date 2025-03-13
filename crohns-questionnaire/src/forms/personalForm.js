@@ -172,7 +172,7 @@ const PersonalForm = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:3002/submit_personal_info", {
+      const response = await fetch("http://54.242.154.185:3002/submit_personal_info", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
