@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/MyForm.css';
 import { useNavigate ,useLocation} from 'react-router-dom';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 
 const foodItems = [
@@ -22,14 +23,18 @@ const foodItems = [
 
 const HealthLifestyleForm = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {};
-
-      const [formData, setFormData] = useState({
+   const { preferredLanguage, idNumber } = location.state || {};
+   const [questions, setQuestions] = useState([]); // Store questions from DB
+   const [formData, setFormData] = useState({
+        idNumber: idNumber,
+        preferredLanguage: preferredLanguage || "",
+        exerciseFun :'',
         isSmokingNow: '',
         smokingNowNumber : '',
         isSmokingPast :'',
         drugUse: '',
         drugUseDetails:'',
+        drugUseAmount:'',
         AlcoholUse: '',
         AlcoholAmount: '',
         energyLevel: 0,
@@ -62,6 +67,7 @@ const HealthLifestyleForm = () => {
         saltySnacksFrequency: '',
         sweetSnacksFrequency: '',
         energyFrequency :0,
+        meetingWithFriends :0,
         glutenIntake: '',
         glutenFreeGrainsFrequency: '',
         glutenGrainsFrequency: '',
@@ -77,11 +83,28 @@ const HealthLifestyleForm = () => {
     });
 
     
-      useEffect(() => {
-        window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
-      }, []); // Empty dependency array to ensure it runs only once when the component mounts
+    useEffect(() => {
+        axios.get("http://54.242.154.185:3002/test_questions_health_lifestyle")
+          .then((response) => {
+            setQuestions(response.data); // Set questions in state
+            const initialFormData = {};
+            response.data.forEach(q => {
+              initialFormData[q.field_name] = ""; // Initialize form data for each field
+            });
+    
+            // Only set formData if it's not set yet, or add missing fields
+            setFormData(prevData => ({
+              ...prevData,   // Keep any previous formData values
+              ...initialFormData // Add or override the new form fields
+            }));
+          })
+          .catch((error) => {
+            console.error("Error fetching questions:", error);
+          });
     
 
+          window.scrollTo(0, 0); // Scrolls to the top of the page when the component mounts
+        }, []); // Empty dependency array to ensure it runs only once when the component mounts
     const [timePeriod, setTimePeriod] = useState("week"); // Default is 'week'
     const [answers, setAnswers] = useState({}); // Store the answers dynamically
 
@@ -172,8 +195,8 @@ const HealthLifestyleForm = () => {
           <div className="form-group radio-preferred">
           <label htmlFor="isSmokingNow" className="form-label" > 
           {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה מעשן כעת ?' 
-                : '  האם את מעשנת כעת ?'}
+                ? questions.find(q => q.field_name === "isSmokingNow_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "isSmokingNow_woman")?.question_text || "שאלה לא זמינה"}
            </label>
           <div className="form-check">
               <input type="radio" name="isSmokingNow" value="כן" onChange={handleChange} 
@@ -194,8 +217,8 @@ const HealthLifestyleForm = () => {
           <div className="form-group">
             <label htmlFor="smokingNowNumber"> 
             {preferredLanguage === 'לשון זכר' 
-                ? '   פרט את מספר הסיגריות ביום' 
-                : '   פרטי את מספר הסיגריות ביום'}
+                ? questions.find(q => q.field_name === "smokingNowNumber_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "smokingNowNumber_woman")?.question_text || "שאלה לא זמינה"}
                </label>
             <input type="number" min ="0" name="smokingNowNumber" id="smokingNowNumber" className="form-control" value={formData.smokingNowNumber} onChange={handleChange} 
             />
@@ -206,8 +229,8 @@ const HealthLifestyleForm = () => {
             <div className="form-group radio-preferred">
                 <label htmlFor="smokingPeriod" className="form-label" >
                 {preferredLanguage === 'לשון זכר' 
-                ? '  כמה שנים אתה מגדיר את עצמך מעשן (אל תספור תקופות בהן לא עישנת)?' 
-                : '   כמה שנים את מגדירה את עצמך מעשנת (אל תספרי תקופות בהן לא עישנת)?'}
+                ? questions.find(q => q.field_name === "smokingPeriod_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "smokingPeriod_woman")?.question_text || "שאלה לא זמינה"}
                    
                     </label>
                 <div className="form-check">
@@ -239,7 +262,9 @@ const HealthLifestyleForm = () => {
 
           {formData.isSmokingNow === 'לא' &&(
             <div className="form-group radio-preferred">
-                <label htmlFor="isSmokingPast" className="form-label" > האם עישנת בעבר ?</label>
+                <label htmlFor="isSmokingPast" className="form-label" >
+                    
+                {questions.find(q => q.field_name === "isSmokingPast")?.question_text || "שאלה לא זמינה"}</label>
                 <div className="form-check">
                     <input type="radio" name="isSmokingPast" value="כן" onChange={handleChange} 
                     onClick={() => handleChange({ target: { name: "isSmokingPast", value: formData.isSmokingPast === "כן" ? "" : "כן" } })}
@@ -260,8 +285,8 @@ const HealthLifestyleForm = () => {
           <div className="form-group">
             <label htmlFor="smokingPastNumber"> 
             {preferredLanguage === 'לשון זכר' 
-                ? '    פרט את מספר הסיגריות ביום בתקופה בה עישנת'
-                : '   פרטי את מספר הסיגריות ביום בתקופה בה עישנת'}
+                ? questions.find(q => q.field_name === "smokingPastNumber_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "smokingPastNumber_woman")?.question_text || "שאלה לא זמינה"}
                 
               </label>
             <input type="number" min ="0" name="smokingPastNumber" id="smokingPastNumber" className="form-control" value={formData.smokingPastNumber} onChange={handleChange} />
@@ -272,8 +297,8 @@ const HealthLifestyleForm = () => {
             <div className="form-group radio-preferred">
                 <label htmlFor="pastsmokingPeriod" className="form-label" >
                 {preferredLanguage === 'לשון זכר' 
-                ? '   כמה שנים עישנת במהלך חייך (אל תספור תקופות בהן לא עישנת)?'
-                : '  כמה שנים עישנת במהלך חייך (אל תספרי תקופות בהן לא עישנת)?'}
+                ? questions.find(q => q.field_name === "pastsmokingPeriod_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "pastsmokingPeriod_woman")?.question_text || "שאלה לא זמינה"}
                     
                    </label>
                 <div className="form-check">
@@ -307,8 +332,8 @@ const HealthLifestyleForm = () => {
         <div className="form-group radio-preferred">
             <label htmlFor="drugUse" className="form-label" >
             {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה צורך היום או בעבר סמים  ?'
-                : '   האם את צורכת היום או בעבר סמים  ?'}
+                ? questions.find(q => q.field_name === "drugUse_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "drugUse_woman")?.question_text || "שאלה לא זמינה"}
                 <br></br>
                 (ניתן לדלג על השאלה)
                </label>
@@ -329,23 +354,28 @@ const HealthLifestyleForm = () => {
 
         {formData.drugUse === 'כן' && (
           <div className="form-group">
-            <label htmlFor="drugUseDetails">? איזה סם</label>
+            <label htmlFor="drugUseDetails">                   
+                 {questions.find(q => q.field_name === "drugUseDetails")?.question_text || "שאלה לא זמינה"}
+            </label>
             <textarea type="text"  name="drugUseDetails" id="drugUseDetails" className="form-control" value={formData.drugUseDetails} onChange={handleChange} />
           </div>
         )}
 
         {formData.drugUse === 'כן' && (
           <div className="form-group">
-            <label htmlFor="drugUseDetailsAmount">? באיזו תדירות</label>
-            <textarea type="text"  name="drugUseDetails" id="drugUseDetails" className="form-control" value={formData.drugUseDetails} onChange={handleChange} />
+            <label htmlFor="drugUseDetailsAmount">
+            {questions.find(q => q.field_name === "drugUseAmount")?.question_text || "שאלה לא זמינה"}
+                {/* ? באיזו תדירות */}
+                </label>
+            <textarea type="text"  name="drugUseAmount" id="drugUseAmount" className="form-control" value={formData.drugUseAmount} onChange={handleChange} />
           </div>
         )}
         
         <div className="form-group radio-preferred">
             <label htmlFor="AlcoholUse" className="form-label" >
             {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה שותה אלכוהול '
-                : '    האם את שותה אלכוהול  '}
+                ? questions.find(q => q.field_name === "AlcoholUse_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "AlcoholUse_woman")?.question_text || "שאלה לא זמינה"}
                 
                </label>
             <div className="form-check">
@@ -367,8 +397,8 @@ const HealthLifestyleForm = () => {
           <div className="form-group">
             <label htmlFor="AlcoholAmount">
             {preferredLanguage === 'לשון זכר' 
-                ? ' פרט כמה מנות אלכוהול בחודש ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'
-                : '  פרטי כמה מנות אלכוהול בחודש ממוצע, מנת אלכוהול הינה מנה של 40 מ"ל של משקה חריף/ כוס יין/ כוס בירה'}
+                ? questions.find(q => q.field_name === "AlcoholAmount_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "AlcoholAmount_woman")?.question_text || "שאלה לא זמינה"}
                 
                </label>
             <input type="number" min ="0" name="AlcoholAmount" id="AlcoholAmount" className="form-control" value={formData.AlcoholAmount} onChange={handleChange} />
@@ -379,8 +409,8 @@ const HealthLifestyleForm = () => {
         <div className="energyLevel">
                 <label className="form-label">
                 {preferredLanguage === 'לשון זכר' 
-                ? ' הגדר את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייף מאוד - 5 מאוד אנרגטי'
-                : ' הגדירי את רמת האנרגיה שלך בדרך כלל במשך היום בטווח מ 1-5 כאשר 1 עייפה מאוד - 5 מאוד אנרגטית?'}
+                ? questions.find(q => q.field_name === "energyLevel_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "energyLevel_woman")?.question_text || "שאלה לא זמינה"}
                  </label>
                 <div className="slider-container">
                     <input
@@ -410,7 +440,11 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group">
-            <label htmlFor="sleepDuration">? בחודש האחרון כמה שעות בממוצע ישנת בלילה</label>
+            <label htmlFor="sleepDuration">
+            {questions.find(q => q.field_name === "sleepDuration")?.question_text || "שאלה לא זמינה"}
+
+                {/* ? בחודש האחרון כמה שעות בממוצע ישנת בלילה */}
+                </label>
             <input type="number" min ="0" name="sleepDuration" id="sleepDuration" className="form-control" value={formData.sleepDuration} onChange={handleChange} />
         </div>
 
@@ -419,8 +453,8 @@ const HealthLifestyleForm = () => {
                 <label className="form-label">
 
                 {preferredLanguage === 'לשון זכר' 
-                ? ' איך תתאר את רמת התאבון שלך?'
-                : 'איך תתארי את מצב התאבון שלך ? '}
+                ? questions.find(q => q.field_name === "appetite_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "appetite_woman")?.question_text || "שאלה לא זמינה"}
                 </label>
                 <div className="slider-container">
                     <input
@@ -450,20 +484,20 @@ const HealthLifestyleForm = () => {
         <div className="form-group radio-preferred">
             <label htmlFor="exerciseFrequency" className="form-label" >
             {preferredLanguage === 'לשון זכר' 
-                ? ' האם אתה נהנה מפעילות ספורטיבית ?' 
-                : ' האם את נהנית מפעילות ספורטיבית  ?'}
+                ? questions.find(q => q.field_name === "exerciseFun_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "exerciseFun_woman")?.question_text || "שאלה לא זמינה"}
                 
                </label>
             <div className="form-check">
-                <input type="radio" name="exerciseFrequency" value="כן" onChange={handleChange}
-                                 onClick={() => handleChange({ target: { name: "exerciseFrequency", value: formData.exerciseFrequency === "כן" ? "" : "כן" } })}
-                                 checked={formData.exerciseFrequency === "כן"}
+                <input type="radio" name="exerciseFun" value="כן" onChange={handleChange}
+                                 onClick={() => handleChange({ target: { name: "exerciseFun", value: formData.exerciseFun === "כן" ? "" : "כן" } })}
+                                 checked={formData.exerciseFun === "כן"}
                 /> כן
             </div>
             <div className="form-check">
-                <input type="radio" name="exerciseFrequency" value="לא" onChange={handleChange}
-                                 onClick={() => handleChange({ target: { name: "exerciseFrequency", value: formData.exerciseFrequency === "לא" ? "" : "לא" } })}
-                                 checked={formData.exerciseFrequency === "לא"}
+                <input type="radio" name="exerciseFun" value="לא" onChange={handleChange}
+                                 onClick={() => handleChange({ target: { name: "exerciseFun", value: formData.exerciseFun === "לא" ? "" : "לא" } })}
+                                 checked={formData.exerciseFun === "לא"}
                 /> לא
             </div>
         </div>
@@ -471,17 +505,17 @@ const HealthLifestyleForm = () => {
         <div className="form-group">
             <label htmlFor="stepsPerDay">
             {preferredLanguage === 'לשון זכר' 
-                ? '? הערכה - כמה צעדים אתה צועד ביום ממוצע ' 
-                : ' ? הערכה - כמה צעדים את צועדת ביום ממוצע '}
+                ? questions.find(q => q.field_name === "stepsPerDay_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "stepsPerDay_woman")?.question_text || "שאלה לא זמינה"}
                 </label>
             <input type="number" min ="0" name="stepsPerDay" id="stepsPerDay" className="form-control" value={formData.stepsPerDay} onChange={handleChange} />
         </div>
 
         <div className="form-group radio-preferred ">
   <label htmlFor="mainConcern" className="form-label">
-    {preferredLanguage === 'לשון זכר' 
-      ? 'מה הבעיות המרכזיות שמעסיקות אותך בחודש האחרון? בחר' 
-      : 'מה הבעיות המרכזיות שמעסיקות אותך בחודש האחרון? בחרי'}
+  {preferredLanguage === 'לשון זכר' 
+                ? questions.find(q => q.field_name === "mainConcern_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "mainConcern_woman")?.question_text || "שאלה לא זמינה"}
   </label>
 
   {[
@@ -527,7 +561,9 @@ const HealthLifestyleForm = () => {
 
             <div className="form-group radio-preferred">
                 <label htmlFor="sleepDifficulty" className="form-label">
-                    האם יש לך קשיי הרדמות?
+                {questions.find(q => q.field_name === "sleepDifficulty")?.question_text || "שאלה לא זמינה"}
+
+                    {/* האם יש לך קשיי הרדמות? */}
                 </label>
                 <div className="form-check">
                     <input
@@ -574,8 +610,8 @@ const HealthLifestyleForm = () => {
                 <div className="form-group radio-preferred">
                     <label htmlFor="wakingUpAtNight" className="form-label">
                     {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה מתעורר תדיר בלילה?' 
-                : ' האם את מתעוררת תדיר בלילה?'}
+                ? questions.find(q => q.field_name === "wakingUpAtNight_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "wakingUpAtNight_woman")?.question_text || "שאלה לא זמינה"}
                       
                     </label>
                     <div className="form-check">
@@ -603,8 +639,8 @@ const HealthLifestyleForm = () => {
                         <div className="form-group">
                         <label htmlFor="wakingUpFrequency" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? ' אנא ציין מספר פעמים בלילה:' 
-                : 'אנא צייני מספר פעמים בלילה:'}
+                ? questions.find(q => q.field_name === "wakingUpFrequency_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "wakingUpFrequency_woman")?.question_text || "שאלה לא זמינה"}
                              
                         </label>
                         <input
@@ -622,9 +658,8 @@ const HealthLifestyleForm = () => {
 
                     <div className="form-group radio-preferred">
                         <label htmlFor="vacationFlights" className="form-label">
-                        {preferredLanguage === 'לשון זכר' 
-                ? '   כמה פעמים טסת בשנה האחרונה לחופש בחו"ל' 
-                : '  כמה פעמים טסת בשנה האחרונה לחופש בחו"ל'}
+                        {questions.find(q => q.field_name === "vacationFlights")?.question_text || "שאלה לא זמינה"}
+
                           
                         </label>
                         <div className="form-check">
@@ -661,9 +696,10 @@ const HealthLifestyleForm = () => {
 
                         <div className="form-group radio-preferred">
                         <label htmlFor="workFlights" className="form-label">
-                        {preferredLanguage === 'לשון זכר' 
-                ? ' כמה פעמים טסת בשנה האחרונה לחו"ל למטרת עבודה'  
-                : '  כמה פעמים טסת בשנה האחרונה לחו"ל למטרת עבודה' }
+    
+                        
+                        {questions.find(q => q.field_name === "workFlights")?.question_text || "שאלה לא זמינה"}
+
                             
                         </label>
                         <div className="form-check">
@@ -700,9 +736,8 @@ const HealthLifestyleForm = () => {
 
                         <div className="form-group radio-preferred">
                         <label htmlFor="booksRead" className="form-label">
-                        {preferredLanguage === 'לשון זכר' 
-                ? ' כמה ספרים קראת בשנה האחרונה'
-                : ' כמה ספרים קראת בשנה האחרונה'}
+                        {questions.find(q => q.field_name === "booksRead")?.question_text || "שאלה לא זמינה"}
+
                            
                         </label>
                         <div className="form-check">
@@ -743,11 +778,11 @@ const HealthLifestyleForm = () => {
                         </div>
                         </div>
 
-            <div className="appetite">
+            <div className="form-group radio-preferred">
                 <label className="form-label">
                 {preferredLanguage === 'לשון זכר' 
-                ? '  כמה פעמים אתה נפגש עם חברים ?'
-                : '  כמה פעמים את נפגשת עם חברים '}
+                ? questions.find(q => q.field_name === "meetingWithFriends_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "meetingWithFriends_woman")?.question_text || "שאלה לא זמינה"}
                            
                </label>
                     <div className="slider-container">
@@ -757,12 +792,12 @@ const HealthLifestyleForm = () => {
                             max="6"
                             step="1"
                             className="slider"
-                            value={formData.energyFrequency || 0} 
-                            id="energyFrequency"
-                            name="energyFrequency"
+                            value={formData.meetingWithFriends || 0} 
+                            id="meetingWithFriends"
+                            name="meetingWithFriends"
                             onChange={handleChange}
                             onClick={(e) => {
-                                if (formData.energyFrequency === 0) {
+                                if (formData.meetingWithFriends === 0) {
                                     handleChange(e); // Ensure the first click registers
                                 }
                             }}
@@ -782,8 +817,8 @@ const HealthLifestyleForm = () => {
             <div className="form-group radio-preferred">
             <label className="form-label">
             {preferredLanguage === 'לשון זכר' 
-                ? ' האם אתה מתרגל מדיטציה/יוגה/ מיידפולנס באופן קבוע?'
-                : '  האם את מתרגלת מדיטציה/יוגה/ מיידפולנס באופן קבוע?'}
+                ? questions.find(q => q.field_name === "meditationPractice_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "meditationPractice_woman")?.question_text || "שאלה לא זמינה"}
                
             </label>
             <div className="form-check-group">
@@ -811,8 +846,8 @@ const HealthLifestyleForm = () => {
       <div className="form-group">
         <label>
         {preferredLanguage === 'לשון זכר' 
-                ? '?כמה ארוחות אתה אוכל ביום ממוצע '
-                : '  ?כמה ארוחות את אוכלת ביום ממוצע '}
+                ? questions.find(q => q.field_name === "averageMeals_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "averageMeals_woman")?.question_text || "שאלה לא זמינה"}
 
 
         </label>
@@ -827,7 +862,7 @@ const HealthLifestyleForm = () => {
           {preferredLanguage === 'לשון זכר' 
                 ? 'בחר'
                 : ' בחרי'}
-            בחר</option>
+            </option>
           {['1', '2', '3', '4', '5', '6', '>6'].map((option) => (
             <option key={option} value={option}>
               {option}
@@ -869,8 +904,8 @@ const HealthLifestyleForm = () => {
         <div className="form-group radio-preferred">
             <label className="form-label">
             {preferredLanguage === 'לשון זכר' 
-                ? '  האם אתה אוכל גלוטן?'
-                : '   האם את אוכלת גלוטן?'}
+                ? questions.find(q => q.field_name === "glutenIntake_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "glutenIntake_woman")?.question_text || "שאלה לא זמינה"}
                 
                </label>
             <div className="form-check">
@@ -906,7 +941,11 @@ const HealthLifestyleForm = () => {
         </div>
 
         <div className="form-group  radio-preferred">
-            <label className="form-label">בחודש האחרון, כמה פעמים בשבוע אכלת דגנים (ללא גלוטן) אורז, תירס, קינואה, טף, דוחן וכו'</label>
+            <label className="form-label">
+            {questions.find(q => q.field_name === "grainFrequencyWeek")?.question_text || "שאלה לא זמינה"}
+
+                                {/* בחודש האחרון, כמה פעמים בשבוע אכלת דגנים (ללא גלוטן) אורז, תירס, קינואה, טף, דוחן וכו' */}
+                                </label>
             <div className="form-check">
                 <input type="number" min = "0" name="grainFrequencyWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />
             </div>
@@ -933,8 +972,8 @@ const HealthLifestyleForm = () => {
         <div className="form-group radio-preferred">
                 <label className="form-label">
                 {preferredLanguage === 'לשון זכר' 
-                ? '  איזה שמן אתה צורך בדר"כ? (ניתן לסמן יותר מאחד)'
-                : '   איזה שמן את צורכת בדר"כ? (ניתן לסמן יותר מאחד)'}
+                ? questions.find(q => q.field_name === "oilType_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "oilType_woman")?.question_text || "שאלה לא זמינה"}
                     
                    </label>
                 <div className="form-check-group">
@@ -994,12 +1033,22 @@ const HealthLifestyleForm = () => {
                             onChange={handleChange} 
                         /> מרגרינה
                     </div>
+                    <div className="form-check">
+                        <input 
+                            type="checkbox" 
+                            name="oilType" 
+                            value="קוקוס" 
+                            onChange={handleChange} 
+                        /> קוקוס
+                    </div>
                 </div>
             </div>
 
             <div className="form-group  radio-preferred">
             <label className="form-label">
-            בחודש האחרון כמה פעמים שתית שתייה ממותקת?
+            {questions.find(q => q.field_name === "drinkingSweetAmountPerWeek")?.question_text || "שאלה לא זמינה"}
+
+                {/* ש האחרון כמה פעמים שתית שתייה ממותקת? */}
                </label>
             <div className="form-check">
                 <input type="number" name="drinkingSweetAmountPerWeek" min="0" placeholder="מספר פעמים בשבוע" onChange={handleChange} />
@@ -1009,7 +1058,10 @@ const HealthLifestyleForm = () => {
 
         <div className="form-group radio-preferred">
                     <label htmlFor="dietChange" className="form-label">
-                    האם ערכת שינוי בדיאטה בעקבות המחלה?
+
+                    {questions.find(q => q.field_name === "dietChange")?.question_text || "שאלה לא זמינה"}
+
+                    {/* האם ערכת שינוי בדיאטה בעקבות המחלה? */}
                     </label>
                     <div className="form-check">
                         <input
@@ -1043,10 +1095,10 @@ const HealthLifestyleForm = () => {
                         <input
                             type="number"
                             min="0"
-                            name="dietChange"
-                            id="dietChange"
+                            name="dietChangeDetails"
+                            id="dietChangeDetails"
                             className="form-control"
-                            value={formData.dietChange || ""}
+                            value={formData.dietChangeDetails || ""}
                             onChange={handleChange}
                         />
                         </div>
@@ -1056,8 +1108,8 @@ const HealthLifestyleForm = () => {
                     <div className="form-group radio-preferred">
                         <label htmlFor="eatingOutFrequency" className="form-label">
                         {preferredLanguage === 'לשון זכר' 
-                ? '         כמה פעמים בחודש אתה אוכל בחוץ/ מזמין אוכל'
-                : '         כמה פעמים בחודש את אוכלת בחוץ/ מזמינה אוכל'}
+                ? questions.find(q => q.field_name === "eatingOutFrequency_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "eatingOutFrequency_woman")?.question_text || "שאלה לא זמינה"}
                          
                         </label>
                         <div className="form-check-group">

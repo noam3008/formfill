@@ -105,7 +105,7 @@ const BriefQuestionnaire = () => {
 
   return (
     <form onSubmit={handlesubmit}>
-      <h3 className="text-center">שאלון תפיסת מחלה קצר</h3>
+      <h3 className="text-center">שאלון תפיסת מחלה </h3>
       {questionForm.map((question, index) => {
         // Choose the appropriate label based on preferredLanguage
         const label = preferredLanguage === "לשון זכר" ? question.labelMan : question.labelWoman;

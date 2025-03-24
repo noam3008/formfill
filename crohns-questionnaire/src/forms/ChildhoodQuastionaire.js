@@ -109,77 +109,66 @@ const ChildhoodQuestionnaire = () => {
             <h2>שאלון לידה וילדות מוקדמת</h2>
             <form onSubmit={handlesubmit}>
 
-                {/* Pregnancy and Birth Section */}
-                <div>
-                    <label className="form-label">
-                    {preferredLanguage === "לשון זכר"
-          ? " האם ההריון שלך כעובר, היה בסיכון?"
-          : "  האם ההריון שלך כעובר, היה בסיכון?"}
-                        
-                       </label>
-                    <select name="pregnancyRisk" className="form-select" onChange={handleChange}>
-                        <option disabled value="">
-                        {preferredLanguage === "לשון זכר"
-          ? "בחר"
-          : "בחרי"}  
-                            </option>
-                        <option value="כן">כן</option>
-                        <option value="לא">לא</option>
-                        <option value="לא יודע">לא ידוע</option>
-                    </select>
-                </div>
+{/* Pregnancy and Birth Section */}
+<div>
+  <label className="form-label">
+    {preferredLanguage === "לשון זכר"
+      ? " האם ההריון שלך כעובר, היה בסיכון?"
+      : " האם ההריון שלך כעובר, היה בסיכון?"}
+  </label>
+  <select name="pregnancyRisk" className="form-select" value={formData.pregnancyRisk || ""} onChange={handleChange}>
+    <option disabled value="">
+      {preferredLanguage === "לשון זכר" ? "בחר" : "בחרי"}
+    </option>
+    <option value="כן">כן</option>
+    <option value="לא">לא</option>
+    <option value="לא יודע">לא ידוע</option>
+  </select>
+</div>
 
-                <div >
-                    <label className="form-label">באיזה סוג לידה נולדת?</label>
-                    <select name="birthType" className="form-select" onChange={handleChange}>
-                        <option disabled value="">
-                        {preferredLanguage === "לשון זכר"
-          ? "בחר"
-          : "בחרי"}  
-                            </option>
-                        <option value="רגילה (וגינלית)">רגילה (וגינלית)</option>
-                        <option value="מכשירנית">מכשירנית</option>
-                        <option value="קיסרית">קיסרית</option>
-                        <option value="לא יודע">לא ידוע</option>
-                    </select>
-                </div>
+<div>
+  <label className="form-label">באיזה סוג לידה נולדת?</label>
+  <select name="birthType" className="form-select" value={formData.birthType || ""} onChange={handleChange}>
+    <option disabled value="">
+      {preferredLanguage === "לשון זכר" ? "בחר" : "בחרי"}
+    </option>
+    <option value="רגילה (וגינלית)">רגילה (וגינלית)</option>
+    <option value="מכשירנית">מכשירנית</option>
+    <option value="קיסרית">קיסרית</option>
+    <option value="לא יודע">לא ידוע</option>
+  </select>
+</div>
 
-                <div >
-                    <label className="form-label">
-                    {preferredLanguage === "לשון זכר"
-          ? "  האם נולדת פג?"
-          : "  האם נולדת פגה?"}
-                       </label>
-                    <select name="preterm" className="form-select" onChange={handleChange}>
-                        <option disabled value="">
-                        {preferredLanguage === "לשון זכר"
-          ? "בחר"
-          : "בחרי"}  
-                            </option>
-                        <option value="כן">כן</option>
-                        <option value="לא">לא</option>
-                    </select>
-                </div>
+<div>
+  <label className="form-label">
+    {preferredLanguage === "לשון זכר" ? "האם נולדת פג?" : "האם נולדת פגה?"}
+  </label>
+  <select name="preterm" className="form-select" value={formData.preterm || ""} onChange={handleChange}>
+    <option disabled value="">
+      {preferredLanguage === "לשון זכר" ? "בחר" : "בחרי"}
+    </option>
+    <option value="כן">כן</option>
+    <option value="לא">לא</option>
+  </select>
+</div>
 
-                <div >
-                    <label className="form-label">
-                        
-                    {preferredLanguage === "לשון זכר"
-          ? "    האם ינקת כתינוק או שניזונת מתחליפי חלב?"
-          : "    האם ינקת כתינוקת או שניזונת מתחליפי חלב?"}
-                     </label>
-                    <select name="feedingMethod" className="form-select" onChange={handleChange}>
-                        <option disabled value="">
-                        {preferredLanguage === "לשון זכר"
-          ? "בחר"
-          : "בחרי"}  
-                            </option>
-                        <option value="הנקה">הנקה</option>
-                        <option value="תחליפי חלב">תחליפי חלב</option>
-                        <option value="לא יודע">לא ידוע</option>
-                    </select>
-                </div>
-                <br></br>
+<div>
+  <label className="form-label">
+    {preferredLanguage === "לשון זכר"
+      ? "האם ינקת כתינוק או שניזונת מתחליפי חלב?"
+      : "האם ינקת כתינוקת או שניזונת מתחליפי חלב?"}
+  </label>
+  <select name="feedingMethod" className="form-select" value={formData.feedingMethod || ""} onChange={handleChange}>
+    <option disabled value="">
+      {preferredLanguage === "לשון זכר" ? "בחר" : "בחרי"}
+    </option>
+    <option value="הנקה">הנקה</option>
+    <option value="תחליפי חלב">תחליפי חלב</option>
+    <option value="לא יודע">לא ידוע</option>
+  </select>
+</div>
+<br />
+
 
                 <div className="form-group radio radio-preferred">
                     <label className="form-label">
@@ -313,7 +302,7 @@ const ChildhoodQuestionnaire = () => {
                 {/* Pets Information */}
                 <div className="form-group radio-preferred">
                 <label htmlFor="pets" className="form-label">
-                    האם היו לך בבית חיות מחמד?
+                    האם  בילדותך היו לך בבית חיות מחמד?
                 </label>
                 <div className="form-check">
                     <input
@@ -1120,19 +1109,7 @@ const ChildhoodQuestionnaire = () => {
   ))}
 </div>
 
-<p className="support-message radio-preferred">
-  :אם השאלון עורר בך תחושות שליליות או מצוקה ניתן לפנות לתמיכה
-  <br />
-  .ער"ן - עזרה ראשונה נפשית טלפון 1201
-  <br />
-  <a href="https://sahar.org.il/" target="_blank" rel="noopener noreferrer">
-    סה"ר - סיוע נפשי ברשת
-  </a>
-  <br />
-  .עמותת משאבים לסיוע נפשי 24/7 טלפון 046900600
-  <br />
-  דאגה בלב (שירות ביידיש) 0768844429
-</p>
+
 
 
 

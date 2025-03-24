@@ -45,7 +45,7 @@ const EndPage = () => {
 </p>
 <p dir="rtl">
   <a href="mailto:coltontauaic@tauex.tau.ac.il">
-    coltontauaic@tauex.tau.ac.il
+     coltonsurvey@tauex.tau.ac.il
   </a>.
 </p>
       </div>

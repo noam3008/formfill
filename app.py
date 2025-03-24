@@ -55,6 +55,148 @@ class Woman(db.Model):
     def __repr__(self):
         return f'<Woman {self.id_number}>'
     
+class CrohnSurveyResponses(db.Model):
+    __tablename__ = 'medical_form_first_answers'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_number = db.Column(db.Integer, db.ForeignKey('Users.id_number'), nullable=False)
+    diagnosis = db.Column(db.String(255))
+    crohn_onset_age = db.Column(db.Integer)
+    crohn_diagnosis_age = db.Column(db.Integer)
+    current_treatment_type = db.Column(db.String(255))
+    treatment_duration = db.Column(db.String(255))
+    treatment_change_date = db.Column(db.String(120) ) 
+    treatment_change_reason = db.Column(db.Text)
+    winter_illnesses_per_year = db.Column(db.Integer)
+    doctor_visits_per_year = db.Column(db.Integer)
+    allergy_diagnosis_age = db.Column(db.Integer)
+    other_chronic_diseases = db.Column(db.String(120) ) 
+    additional_chronic_disease_count = db.Column(db.Integer)
+    disease_name = db.Column(db.String(255))
+    symptom_onset_age = db.Column(db.Integer)
+    disease_diagnosis_age = db.Column(db.Integer)
+    hospitalizations_last_decade = db.Column(db.String(120) ) 
+    hospitalization_details = db.Column(db.Text)
+    underwent_surgeries = db.Column(db.String(120) ) 
+    surgeries_list = db.Column(db.Text)
+    surgery_ages = db.Column(db.Text)
+    alternative_medicine = db.Column(db.String(120) ) 
+    alternative_medicine_reason = db.Column(db.Text)
+    alternative_medicine_type = db.Column(db.String(255))
+    alternative_medicine_duration = db.Column(db.String(255))
+    alternative_medicine_improvement = db.Column(db.Boolean)
+    helpful_treatment = db.Column(db.Text)
+    worsening_factors = db.Column(db.Text)
+    suspected_trigger = db.Column(db.String(120) ) 
+    trigger_details = db.Column(db.Text)
+    best_self_care_method = db.Column(db.Text)
+    family_chronic_diseases = db.Column(db.String(120) ) 
+    family_disease_details = db.Column(db.Text)
+    receiving_treatment = db.Column(db.Boolean)
+    treatment_changes = db.Column(db.String(120) ) 
+    treatment_adherence = db.Column(db.String(120) ) 
+    gp_visits_for_crohn = db.Column(db.String(120) ) 
+    diagnosed_allergy = db.Column(db.String(120) ) 
+    food_sensitivity = db.Column(db.String(120) ) 
+    past_hospitalizations = db.Column(db.String(120) ) 
+    past_surgeries =db.Column(db.String(120) ) 
+    past_alternative_medicine = db.Column(db.String(120) ) 
+    alternative_medicine_effect = db.Column(db.String(120) ) 
+    family_chronic_disease_history = db.Column(db.String(120) ) 
+    treatment_change = db.Column(db.String(120) ) 
+    treatment_consistency =db.Column(db.String(120) ) 
+    winter_illnesses_frequency = db.Column(db.Integer)
+    allergy_type = db.Column(db.Text)
+    sensitivity_onset_age = db.Column(db.Integer)
+    hospitalization_details_extended = db.Column(db.Text)
+    dentist_visits_for_crohn = db.Column(db.String(120) ) 
+    mole_check =db.Column(db.String(120) ) 
+    crohn_limitations = db.Column(db.Text)
+    work_issues_mental_frequency = db.Column(db.Integer)
+    medication_without_doctor_amount = db.Column(db.Integer)
+    self_esteem = db.Column(db.Text)
+    parents_attitude = db.Column(db.Text)
+    relationship =db.Column(db.Text)
+    work_after_illness = db.Column(db.Text)
+    mood = db.Column(db.Text)
+    social_life=db.Column(db.Text)
+    is_mouth_aftha=db.Column(db.String(120) )
+    headache_frequency=db.Column(db.String(120) )
+    abdominal_pain_frequency=db.Column(db.String(120) )
+    back_pain_frequency=db.Column(db.String(120) )
+    joints_pain_frequency=db.Column(db.String(120) )
+    chronic_pain=db.Column(db.String(120) )
+    mouth_ulcers=db.Column(db.String(120) )
+    social_impact=db.Column(db.String(120) )
+    self_confidence=db.Column(db.String(120) )
+    job_impact=db.Column(db.String(120) )
+    mental_health_impact=db.Column(db.String(120) )
+    psychological_treatment=db.Column(db.String(120) )
+    doctor_due_to_crohn=db.Column(db.String(120) )
+    emotional_treatment_impact=db.Column(db.String(120) )
+    blood_type=db.Column(db.String(120) )
+    regular_medications=db.Column(db.String(120) )
+    over_counter_medications=db.Column(db.String(120) )
+    outside_activity=db.Column(db.String(120) )
+    physical_health_impact=db.Column(db.String(120) )
+    mental_health_impact_work=db.Column(db.String(120) )
+    family_doctor_visit=db.Column(db.String(120) )
+    dentist_doctor_visit=db.Column(db.String(120) )
+    points_doctor_visit=db.Column(db.String(120) )
+    visit_frequency_family_doctor=db.Column(db.String(120) )
+    visit_frequency_dentist=db.Column(db.String(120) )
+
+class TraumaQuestionnaireAnswers(db.Model):
+    __tablename__ = 'trauma_questionnaire_answers'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    id_number = db.Column(db.String(255), db.ForeignKey('Users.id_number'), nullable=False)  # ForeignKey to Users table
+    preferred_language = db.Column(db.String(255))
+    intrusive_memories = db.Column(db.String(255))
+    intrusive_dreams = db.Column(db.String(255))
+    feeling_of_reexperiencing = db.Column(db.String(255))
+    distress_triggers = db.Column(db.String(255))
+    physical_reactions = db.Column(db.String(255))
+    avoidance_of_thoughts = db.Column(db.String(255))
+    avoidance_of_reminders = db.Column(db.String(255))
+    memory_gaps = db.Column(db.String(255))
+    negative_beliefs = db.Column(db.String(255))
+    self_blame = db.Column(db.String(255))
+    negative_emotions = db.Column(db.String(255))
+    loss_of_interest = db.Column(db.String(255))
+    emotional_detachment = db.Column(db.String(255))
+    difficulty_feeling_positive_emotions = db.Column(db.String(255))
+    future_pessimism = db.Column(db.String(255))
+    anger_behaviors = db.Column(db.String(255))
+    risky_behaviors = db.Column(db.String(255))
+    hypervigilance = db.Column(db.String(255))
+    exaggerated_startle_response = db.Column(db.String(255))
+    concentration_difficulties = db.Column(db.String(255))
+    sleep_difficulties = db.Column(db.String(255))
+
+    # Establishing relationship with Users table (for foreign key reference)
+    user = db.relationship('User', backref='trauma_questionnaires', lazy=True)
+
+class DepressionAnswers(db.Model):
+    __tablename__ = 'depression_answers'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    id_number = db.Column(db.String(255), db.ForeignKey('Users.id_number'), nullable=False)  # ForeignKey to Users table
+    preferred_language = db.Column(db.String(255))
+    sleep_difficulties = db.Column(db.String(255))
+    loss_of_interest = db.Column(db.String(255))
+    feelings_of_guilt = db.Column(db.String(255))
+    feelings_of_worthlessness = db.Column(db.String(255))
+    appetite_changes = db.Column(db.String(255))
+    concentration_difficulties = db.Column(db.String(255))
+    concentration_difficulties = db.Column(db.String(255)) 
+    suicidal_thoughts = db.Column(db.String(255)) 
+    fatigue = db.Column(db.String(255))  
+    restlessness = db.Column(db.String(255)) 
+
+    # Establishing relationship with Users table (for foreign key reference)
+    user = db.relationship('User', backref='depression_answers', lazy=True)
+
 class PersonalInfo(db.Model):
     __tablename__ = "personal_info"
     
@@ -133,10 +275,11 @@ class Question(db.Model):
 class User(db.Model):
     __tablename__ = "Users"  # Ensure it matches your MySQL table name
 
-    id_number = db.Column(db.String(80), unique=True, nullable=False,primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # New primary key
+    id_number = db.Column(db.String(80), nullable=False)  # No longer unique
     first_name = db.Column(db.String(120), nullable=False)
     last_name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)  # Keep email unique
     phone = db.Column(db.String(120))
     age = db.Column(db.Integer)
     health_fund = db.Column(db.String(120))
@@ -146,6 +289,19 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.id_number}>'
+
+@app.route('/test_questions_trauma', methods=['GET'])
+def test_questions_trauma():
+    try:
+        print("Fetching registration questions...")
+        questions = Question.query.filter_by(category="trauma").order_by(Question.id).all()
+        if not questions:
+            return jsonify({"message": "No questions found for category 'trauma'"}), 404
+        return jsonify([q.to_dict() for q in questions])
+    except Exception as e:
+        app.logger.error(f"Error fetching questions: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 
 @app.route('/test_questions_registration', methods=['GET'])
@@ -173,6 +329,24 @@ def test_questions_woman():
         app.logger.error(f"Error fetching questions: {e}")
         return jsonify({"error": str(e)}), 500
     
+
+    # API endpoint to fetch questions based on preferred language
+@app.route('/test_questions_depression', methods=['GET'])
+def get_questions_depression():
+    # Get the preferred language from the query parameter
+    preferred_language = request.args.get('preferredLanguage', default='לשון זכר', type=str)
+
+    # Query the questions from the database
+    if preferred_language == "לשון זכר":
+        questions = Question.query.filter_by(category="mental_health").order_by(Question.id).all()    
+    else:
+        questions = Question.query.filter_by(category="mental_health").order_by(Question.id).all()   
+
+    # Prepare the response
+    question_list = [{"id": question.id, "question_text": question.question_text} for question in questions]
+
+    # Return the questions as a JSON response
+    return jsonify(question_list)
     
 @app.route('/test_questions_personal', methods=['GET'])
 def test_questions_personal():
@@ -206,38 +380,169 @@ def test_questions_medical():
     except Exception as e:
         app.logger.error(f"Error fetching questions: {e}")
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/test_questions_health_lifestyle', methods=['GET'])
+def test_questions_health_lifestyle():
+    try:
+        # Fetch all questions, ordered by ID
+        questions = Question.query.filter_by(category="health_lifestyle").order_by(Question.id).all()
+        if not questions:
+            return jsonify({"message": "No questions found"}), 404
+        
+        questions_data = [q.to_dict() for q in questions]
+        app.logger.info(f"Questions data: {questions_data}")
+        
+        return jsonify(questions_data)  # Send questions as JSON
+    except Exception as e:
+        app.logger.error(f"Error fetching questions: {e}")
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/insert_user', methods=['POST'])
+def insert_user():
+    data = request.json
+    print("Received Data:", data)
+
+    if not data:
+        return jsonify({"error": "No data received"}), 400
+
+    try:
+        # Check if user already exists
+        existing_user = User.query.filter_by(id_number=data.get('idNumber')).first()
+
+        if existing_user:
+            # Update existing user
+            existing_user.first_name = data.get('first_name', existing_user.first_name)
+            existing_user.last_name = data.get('last_name', existing_user.last_name)
+            existing_user.email = data.get('email', existing_user.email)
+            existing_user.phone = data.get('phone', existing_user.phone)
+            existing_user.age = data.get('age', existing_user.age)
+            existing_user.health_fund = data.get('health_fund', existing_user.health_fund)
+            existing_user.gender = data.get('gender', existing_user.gender)
+            existing_user.sex = data.get('sex', existing_user.sex)
+            existing_user.preferred_language = data.get('preferred_language', existing_user.preferred_language)
+            message = "User updated successfully."
+        else:
+            # Create new user
+            new_user = User(
+                id_number=data.get('idNumber'),
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                email=data.get('email'),
+                phone=data.get('phone'),
+                age=data.get('age'),
+                health_fund=data.get('health_fund'),
+                gender=data.get('gender'),
+                sex=data.get('sex'),
+                preferred_language=data.get('preferred_language')
+            )
+            db.session.add(new_user)
+            message = "User created successfully."
+
+        db.session.commit()
+        return jsonify({"message": message}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
     
-    
-@app.route('/test_insert', methods=['POST'])
-def test_insert():
+@app.route('/insert_crohn_survey', methods=['POST'])
+def insert_crohn_survey():
     data = request.json
 
     if not data:
         return jsonify({"error": "No data received"}), 400
 
     try:
-        new_user = User(
+        new_survey = CrohnSurveyResponses(
             id_number=data.get('idNumber'),
-            first_name=data.get('firstName'),
-            last_name=data.get('lastName'),
-            email=data.get('email'),
-            phone=data.get('phone'),
-            age=data.get('age'),
-            health_fund=data.get('healthFund'),
-            gender=data.get('gender'),
-            sex=data.get('sex'),
-            preferred_language=data.get('preferredLanguage')
+            diagnosis=data.get('diagnosis'),
+            crohn_onset_age=data.get('crohnAge'),
+            crohn_diagnosis_age=data.get('diagnosisAge'),
+            current_treatment_type=data.get('treatmentType'),
+            treatment_duration=data.get('treatmentDuration'),
+            treatment_changes=data.get('treatmentChanges'),
+            treatment_adherence=data.get('treatmentAdherence'),
+            other_chronic_diseases=True if data.get('chronicDiseases') == "כן" else False,
+            additional_chronic_disease_count=data.get('chronicCount', 0),
+            disease_name=', '.join([d.get('name', '') for d in data.get('diseases', [])]),
+            symptom_onset_age=', '.join([str(d.get('symptomsAge', '')) for d in data.get('diseases', [])]),
+            disease_diagnosis_age=', '.join([str(d.get('diagnosisAge', '')) for d in data.get('diseases', [])]),
+            hospitalizations_last_decade=True if data.get('hospitalization') == "כן" else False,
+            hospitalization_details=data.get('hospitalizationDetails'),
+            underwent_surgeries=True if data.get('surgeries') == "כן" else False,
+            surgeries_list=data.get('surgeriesList'),
+            surgery_ages=data.get('surgeryAges'),
+            alternative_medicine=True if data.get('complementaryMedicine') == "כן" else False,
+            alternative_medicine_reason=data.get('complementaryMedicineReason'),
+            helpful_treatment=data.get('treatmentHelp'),
+            worsening_factors=data.get('aggravatesCondition'),
+            suspected_trigger=True if data.get('diseaseOnsetEvent') == "כן" else False,
+            trigger_details=data.get('triggerDetails'),
+            best_self_care_method=data.get('improvesCondition'),
+            family_chronic_diseases=True if data.get('backgroundDiseases') == "כן" else False,
+            family_disease_details=data.get('familyDiseaseDetails'),
+            receiving_treatment=True if data.get('receivingTreatment') == "כן" else False,
+            food_sensitivity=True if data.get('foodSensitivity') == "כן" else False,
+            diagnosed_allergy=True if data.get('allergies') == "כן" else False,
+            past_hospitalizations=True if data.get('pastHospitalizations') == "כן" else False,
+            past_surgeries=True if data.get('pastSurgeries') == "כן" else False,
+            past_alternative_medicine=True if data.get('pastAlternativeMedicine') == "כן" else False,
+            treatment_consistency=True if data.get('treatmentConsistency') == "כן" else False,
+            winter_illnesses_frequency=data.get('winterlleness', 0),
+            allergy_type=data.get('allergyType'),
+            sensitivity_onset_age=data.get('foodSensetivityAge'),
+            hospitalization_details_extended=data.get('hospitalizationDetailsExtended'),
+            dentist_visits_for_crohn=True if data.get('dentistDoctorVisit') == "כן" else False,
+            mole_check=True if data.get('moleCheck') == "כן" else False,
+            crohn_limitations=data.get('crohnLimitations'),
+            work_issues_mental_frequency=data.get('workIssuesMentalFrequency'),
+            medication_without_doctor_amount=data.get('medicationWithoutDoctorAmount'),
+            self_esteem=data.get('selfEsteem'),
+            parents_attitude=data.get('parentsAttidude'),
+
+            relationship=data.get('relationship'),
+            work_after_illness=data.get('workAfterIll'),
+            mood=data.get('mood'),
+            social_life=data.get('socialLife'),
+            is_mouth_aftha=True if data.get('isMouthAftha') == "כן" else False,
+            headache_frequency=data.get('headacheFrequency'),
+            abdominal_pain_frequency=data.get('abdominalPainFrequency'),
+            back_pain_frequency=data.get('backPainFrequency'),
+            joints_pain_frequency=data.get('jointsPainFrequency'),
+            chronic_pain=data.get('chronicPain'),
+            mouth_ulcers=data.get('mouthUlcers'),
+            social_impact=data.get('socialImpact'),
+            self_confidence=data.get('selfConfidence'),
+            job_impact=data.get('jobImpact'),
+            mental_health_impact=data.get('mentalHealthImpact'),
+            psychological_treatment=data.get('psychologicalTreatment'),
+            doctor_due_to_crohn=data.get('doctorduechron'),
+            emotional_treatment_impact=data.get('emotionalTreatmentImpact'),
+            blood_type=data.get('bloodType'),
+            regular_medications=data.get('regularMedications'),
+            over_counter_medications=data.get('overCounterMedications'),
+            outside_activity=data.get('outsideActivity'),
+            physical_health_impact=data.get('physicalHealthImpact'),
+            mental_health_impact_work=data.get('mentalHealthImpactWork'),
+            family_doctor_visit=data.get('familyDoctorVisit'),
+            dentist_doctor_visit=data.get('dentistDoctorVisit'),
+            points_doctor_visit=data.get('pointsDoctorVisit'),
+            visit_frequency_family_doctor=data.get('visitFrequencyFamilyDoctor'),
+            visit_frequency_dentist=data.get('visitFrequencyDentist')
         )
 
-        db.session.add(new_user)
+        db.session.add(new_survey)
         db.session.commit()
 
-        return jsonify({"message": "Data inserted successfully!"}), 200
+        return jsonify({"message": "Survey data inserted successfully!"}), 200
     except Exception as e:
         print(f"Error inserting data: {str(e)}")  # Log error for debugging
         return jsonify({"error": str(e)}), 500
-    
+
+
 
 
 def to_boolean(value):
@@ -248,6 +553,95 @@ def to_boolean(value):
     if value == "לא":
         return False
     return value  # Keep original value if it's neither "כן" nor "לא"
+
+@app.route('/insert_trauma_questionnaire', methods=['POST'])
+def submit_trauma_questionnaire():
+    data = request.json
+    print("Received Data:", data)
+
+    if not data:
+        return jsonify({"error": "No data received"}), 400
+
+    # Ensure that answers are included
+    if "answers" in data:
+        answers = data["answers"]  # Directly use the answers from the request
+        print("Answers Received:", answers)
+
+    try:
+        # Constructing the trauma questionnaire data using the received answers
+        trauma_questionnaire = TraumaQuestionnaireAnswers(
+            id_number=data.get('idNumber') or None,
+            preferred_language=data.get('preferredLanguage'),
+            intrusive_memories=answers.get('question_1'),
+            intrusive_dreams=answers.get('question_2'),
+            feeling_of_reexperiencing=answers.get('question_3'),
+            distress_triggers=answers.get('question_4'),
+            physical_reactions=answers.get('question_5'),
+            avoidance_of_thoughts=answers.get('question_6'),
+            avoidance_of_reminders=answers.get('question_7'),
+            memory_gaps=answers.get('question_8'),
+            negative_beliefs=answers.get('question_9'),
+            self_blame=answers.get('question_10'),
+            negative_emotions=answers.get('question_11'),
+            loss_of_interest=answers.get('question_12'),
+            emotional_detachment=answers.get('question_13'),
+            difficulty_feeling_positive_emotions=answers.get('question_14'),
+            future_pessimism=answers.get('question_15'),
+            anger_behaviors=answers.get('question_16'),
+            risky_behaviors=answers.get('question_17'),
+            hypervigilance=answers.get('question_18'),
+            exaggerated_startle_response=answers.get('question_19'),
+            concentration_difficulties=answers.get('question_20'),
+            sleep_difficulties=answers.get('question_21')
+        )
+
+        db.session.add(trauma_questionnaire)
+        db.session.commit()
+
+        return jsonify({"message": "Data submitted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/insert_depression_answers', methods=['POST'])
+def submit_depression_answers():
+    data = request.json
+    print("Received Data:", data)
+
+    if not data:
+        return jsonify({"error": "No data received"}), 400
+
+    # Ensure that answers are included
+    if "answers" in data:
+        answers = data["answers"]  # answers is now a dictionary
+        print("Answers Received:", answers)
+
+    try:
+        # Constructing the depression questionnaire data using the received answers
+        depression_answers = DepressionAnswers(
+            id_number=data.get('idNumber') or None,
+            preferred_language=data.get('preferredLanguage'),
+            sleep_difficulties=answers.get('0'),
+            loss_of_interest=answers.get('1'),
+            feelings_of_guilt=answers.get('2'),
+            feelings_of_worthlessness=answers.get('3'),
+            appetite_changes=answers.get('4'),
+            concentration_difficulties=answers.get('5'),
+            suicidal_thoughts=answers.get('6'),
+            fatigue=answers.get('7'),
+            restlessness=answers.get('8')
+        )
+
+        db.session.add(depression_answers)
+        db.session.commit()
+
+        return jsonify({"message": "Data submitted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 
 

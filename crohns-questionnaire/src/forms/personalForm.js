@@ -406,7 +406,11 @@ const PersonalForm = () => {
 
         <div className="form-group">
           <label htmlFor="employmentType">
-            {questions.find(q => q.field_name === "employmentType")?.question_text || "שאלה לא זמינה"}
+          {preferredLanguage === 'לשון זכר' 
+                ? questions.find(q => q.field_name === "employmentTypeMan")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "employmentTypeWoman")?.question_text || "שאלה לא זמינה"}
+
+            
 
           </label>
           <select
@@ -538,6 +542,7 @@ const PersonalForm = () => {
             value={formData.numberOfSiblings}
             onChange={handleChange}
             min="0"
+            max ="12"
           />
         </div>
 

@@ -102,6 +102,22 @@ const ACEQuestionnaire = () => {
           </div>
         </div>
       ))}
+
+
+<p className="support-message radio-preferred">
+  :אם השאלון עורר בך תחושות שליליות או מצוקה ניתן לפנות לתמיכה
+  <br />
+  .ער"ן - עזרה ראשונה נפשית טלפון 1201
+  <br />
+  <a href="https://sahar.org.il/" target="_blank" rel="noopener noreferrer">
+    סה"ר - סיוע נפשי ברשת
+  </a>
+  <br />
+  .עמותת משאבים לסיוע נפשי 24/7 טלפון 046900600
+  <br />
+  דאגה בלב (שירות ביידיש) 0768844429
+</p>
+
                      <h4>
             {preferredLanguage === "לשון זכר" ? " שלח שאלון מספר 11 מתוך 15" : " שלחי שאלון מספר 12 מתוך 15"}
 
