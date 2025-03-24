@@ -48,7 +48,7 @@ const Satisfactionquestionnaire = () => {
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/endPage", { state: { preferredLanguage } });
+    navigate("/endPage", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
   };
 
   // Slider labels

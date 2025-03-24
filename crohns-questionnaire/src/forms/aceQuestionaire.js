@@ -68,7 +68,7 @@ const ACEQuestionnaire = () => {
   const handlesubmit = (e) => {
     e.preventDefault();
     console.log(formData); // Here you can handle form submission, like sending data to an API
-    navigate("/briefquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
+    navigate("/briefquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
     
   };
 

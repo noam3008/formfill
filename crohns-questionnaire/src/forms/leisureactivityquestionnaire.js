@@ -5,11 +5,13 @@ import "../css/traumaStyle.css";
 
 const LeisureActivityQuestionnaire = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+ const { preferredLanguage, idNumber } = location.state || {};
   const navigate = useNavigate();
 
   // State initialization for questions
   const [formData, setFormData] = useState({
+    idNumber: idNumber,
+    preferredLanguage: preferredLanguage || "",
     sufficientExercise: "", // Yes/No question
     strenuous: "", // Intense exercise frequency
     moderate: "", // Moderate exercise frequency
@@ -30,11 +32,12 @@ const LeisureActivityQuestionnaire = () => {
     });
   };
 
-  // Handle form submission
+  
   const handlesubmit = (e) => {
     e.preventDefault();
-    alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/mspssquastionaire", { state: { preferredLanguage } });
+    // Handle form submission logic
+    console.log(formData);
+    navigate("/mspssquastionaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
   };
 
   return (

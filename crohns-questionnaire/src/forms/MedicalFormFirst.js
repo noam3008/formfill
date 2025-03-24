@@ -1360,7 +1360,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.medicationWithoutDoctorAmount }
@@ -1374,7 +1374,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-                  <span>לא נבחרה תשובה</span>
                   <span> בכלל לא</span>
                   <span>פעם ביום/יומיים</span>
                   <span>פעם בשבוע</span>
@@ -1428,7 +1427,7 @@ const handleChange = (e) => {
     <input
     type="range"
     min="1"
-    max="6"
+    max="5"
     step="1"
     className="slider"
     value={formData.headacheFrequency}  // Always set value from state
@@ -1443,7 +1442,6 @@ const handleChange = (e) => {
 />
 
         <div className="slider-labels">
-        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1459,7 +1457,7 @@ const handleChange = (e) => {
         <input
             type="range"
             min="1"
-            max="6"
+            max="5"
             step="1"
             className="slider"
             value={formData.abdominalPainFrequency }  // Fallback to 0, meaning no value selected
@@ -1475,7 +1473,6 @@ const handleChange = (e) => {
           }}
         />
         <div className="slider-labels">
-        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1491,7 +1488,7 @@ const handleChange = (e) => {
         <input
             type="range"
             min="1"
-            max="6"
+            max="5"
             step="1"
             className="slider"
             value={formData.backPainFrequency}  // Fallback to 0, meaning no value selected
@@ -1507,7 +1504,6 @@ const handleChange = (e) => {
           }}
         />
         <div className="slider-labels">
-        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1523,7 +1519,7 @@ const handleChange = (e) => {
         <input
             type="range"
             min="1"
-            max="6"
+            max="5"
             step="1"
             className="slider"
             value={formData.jointsPainFrequency }  // Fallback to 0, meaning no value selected
@@ -1539,7 +1535,6 @@ const handleChange = (e) => {
           }}
         />
         <div className="slider-labels">
-        <span>לא נבחרה תשובה</span>
             <span>אף פעם</span>
             <span>לעתים נדירות</span>
             <span>לפעמים</span>
@@ -1604,7 +1599,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="5"
+                  max="4"
                   step="1"
                   className="slider"
                   value={formData.isMouthAftha }
@@ -1618,7 +1613,6 @@ const handleChange = (e) => {
                 }}
               />
               <div className="slider-labels">
-                <span>לא נבחרה תשובה</span>
                   <span>אף פעם</span>
                   <span>לעתים נדירות</span>
                   <span>לפעמים</span>
@@ -1780,7 +1774,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   id="selfConfidence"
@@ -1795,7 +1789,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-                  <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1814,7 +1807,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max=""
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.socialLife }
@@ -1828,7 +1821,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1847,7 +1839,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.mood }
@@ -1861,7 +1853,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1880,7 +1871,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.workAfterIll }
@@ -1894,7 +1885,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1913,7 +1903,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   value={formData.relationship }
@@ -1927,7 +1917,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1946,7 +1935,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   id="parentsAttidude"
@@ -1960,7 +1949,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -1979,7 +1967,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   id="outsideActivity"
@@ -1993,7 +1981,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>
@@ -2012,7 +1999,7 @@ const handleChange = (e) => {
               <input
                   type="range"
                   min="1"
-                  max="6"
+                  max="5"
                   step="1"
                   className="slider"
                   id="selfEsteem"
@@ -2026,7 +2013,6 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
               <div className="slider-labels">
-              <span>לא נבחרה תשובה</span>
                   <span>השתנה לרעה</span>
                   <span>השתנה מעט לרעה</span>
                   <span>לא השתנה</span>

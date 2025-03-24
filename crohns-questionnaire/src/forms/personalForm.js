@@ -625,6 +625,16 @@ const PersonalForm = () => {
 
         {formData.experiencedLoss === 'כן' && (
           <div className="form-group">
+            <label htmlFor="whoseLost">
+
+              {questions.find(q => q.field_name === "whoseLost")?.question_text || "שאלה לא זמינה"}
+            </label>
+            <input type="text" name="whoseLost" id="whoseLost" className="form-control" value={formData.whoseLost} onChange={handleChange} />
+          </div>
+        )}
+
+        {formData.experiencedLoss === 'כן' && (
+          <div className="form-group">
             <label htmlFor="ageAtLoss">
 
               {questions.find(q => q.field_name === "ageAtLoss")?.question_text || "שאלה לא זמינה"}

@@ -5,7 +5,13 @@ import "../css/traumaStyle.css";
 
 const MSPSSQuestionnaire = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+ const { preferredLanguage, idNumber } = location.state || {};
+
+  // State initialization for questions
+  const [formData, setFormData] = useState({
+    idNumber: idNumber,
+    preferredLanguage: preferredLanguage || "",
+  });
 
   // Questions in masculine form
   const questionsMale = [
@@ -56,14 +62,16 @@ const MSPSSQuestionnaire = () => {
     updatedAnswers[index] = parseInt(value, 10);
     setAnswers(updatedAnswers);
   };
+  
 
-  // Handle form submission
+
   const handlesubmit = (e) => {
     e.preventDefault();
-    console.log("תשובות שהוזנו:", answers);
-    alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/healthstatusquestionnaire", { state: { preferredLanguage } });
+    // Handle form submission logic
+    console.log(formData);
+    navigate("/healthstatusquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
   };
+
 
   // Slider labels
   const labels = [

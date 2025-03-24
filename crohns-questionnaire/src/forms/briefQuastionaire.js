@@ -87,7 +87,7 @@ const BriefQuestionnaire = () => {
     e.preventDefault();
     console.log("תשובות שהוזנו:", answers);
     alert("תשובותיך נשמרו בהצלחה.");
-    navigate("/satisfactionquestionnaire", { state: { preferredLanguage } });
+    navigate("/satisfactionquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
   };
 
   // Slider labels

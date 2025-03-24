@@ -99,7 +99,7 @@ const ChildhoodQuestionnaire = () => {
     const handlesubmit = (e) => {
         e.preventDefault();
         console.log(formData); // Here you can handle form submission, like sending data to an API
-        navigate("/acequastionaire", { state: { preferredLanguage: formData.preferredLanguage } });
+        navigate("/acequastionaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
     };
 
 
@@ -530,7 +530,7 @@ const ChildhoodQuestionnaire = () => {
                 </h6>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי היו נוקשים</label>
+                    <label className="form-label">האם אחד מהוריך או שניהם היו נוקשים</label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -588,7 +588,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי היו מאד מעורבים בהתנהלות הילדים</label>
+                    <label className="form-label"> אחד מהוריך או שניהם היו מאד מעורבים בהתנהלות הילדים</label>
                                         <div className="slider-container">
                         <input
                             type="range"
@@ -734,7 +734,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי דאגו לכל מחסור פיזי</label>
+                    <label className="form-label">האם אחד מהוריך או שניהם דאגו לכל מחסור פיזי</label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -763,7 +763,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי דאגו לכל מחסור רגשי</label>
+                    <label className="form-label">האם אחד מהוריך או שניהם דאגו לכל מחסור רגשי</label>
                     <div className="slider-container">
                         <input
                             type="range"
@@ -792,8 +792,8 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי היו מתירניים</label>
-                    <div className="slider-container">
+                    <label className="form-label">האם אחד מהוריך או שניהם היו מתירניים</label>
+                    <div className="slider-container"> 
                         <input
                             type="range"
                             min="1"
@@ -821,7 +821,7 @@ const ChildhoodQuestionnaire = () => {
                 </div>
 
                 <div className="medicine-usage-container">
-                    <label className="form-label">הורי הרבו במגע עם הילדים</label>
+                    <label className="form-label">האם אחד מהוריך או שניהם הרבו במגע עם הילדים</label>
                     <div className="slider-container">
                         <input
                             type="range"

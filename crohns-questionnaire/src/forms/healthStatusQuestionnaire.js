@@ -83,7 +83,7 @@ const [formData, setFormData] = useState({
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    navigate("/childhoodquastionaire", { state: { preferredLanguage } });
+    navigate("/childhoodquastionaire",{ state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
 };
 
 

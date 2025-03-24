@@ -183,7 +183,7 @@ const HealthLifestyleForm = () => {
     e.preventDefault();
     // Handle form submission logic
     console.log(formData);
-    navigate("/leisureactivityquestionnaire", { state: { preferredLanguage: formData.preferredLanguage } });
+    navigate("/leisureactivityquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
   };
 
 
