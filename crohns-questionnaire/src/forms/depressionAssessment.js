@@ -28,7 +28,7 @@ const DepressionAssessment = () => {
   useEffect(() => {
     console.log("Received location.state:", location.state);
     axios
-      .get("http://54.242.154.185/:3002/test_questions_depression")
+      .get("http://54.242.154.185:3002/test_questions_depression")
       .then((response) => {
         const allQuestions = response.data;
 
