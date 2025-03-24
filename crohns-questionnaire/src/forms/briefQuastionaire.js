@@ -4,7 +4,12 @@ import "../css/traumaStyle.css";
 
 const BriefQuestionnaire = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+  const { preferredLanguage, idNumber } = location.state || {};
+  const [formData, setFormData] = useState({
+      idNumber: idNumber,
+      preferredLanguage: preferredLanguage || "",
+    });
+  
 
   const questionForm = [
     {

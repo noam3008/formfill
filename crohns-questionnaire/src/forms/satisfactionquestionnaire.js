@@ -5,7 +5,12 @@ import "../css/traumaStyle.css";
 
 const Satisfactionquestionnaire = () => {
   const location = useLocation();
-  const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+  const { preferredLanguage, idNumber } = location.state || {};
+  const [formData, setFormData] = useState({
+      idNumber: idNumber,
+      preferredLanguage: preferredLanguage || "",
+    });
+  
 
   // Questions in masculine form
   const questionsMale = [
