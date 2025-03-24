@@ -330,23 +330,22 @@ def test_questions_woman():
         return jsonify({"error": str(e)}), 500
     
 
-    # API endpoint to fetch questions based on preferred language
 @app.route('/test_questions_depression', methods=['GET'])
 def get_questions_depression():
-    # Get the preferred language from the query parameter
     preferred_language = request.args.get('preferredLanguage', default='לשון זכר', type=str)
 
-    # Query the questions from the database
-    if preferred_language == "לשון זכר":
-        questions = Question.query.filter_by(category="mental_health").order_by(Question.id).all()    
-    else:
-        questions = Question.query.filter_by(category="mental_health").order_by(Question.id).all()   
+    try:
+        # Query questions based on preferred language
+        questions = Question.query.filter_by(category="mental_health").order_by(Question.id).all()
+        
+        # Prepare response
+        question_list = [{"id": question.id, "question_text": question.question_text} for question in questions]
 
-    # Prepare the response
-    question_list = [{"id": question.id, "question_text": question.question_text} for question in questions]
-
-    # Return the questions as a JSON response
-    return jsonify(question_list)
+        # Return the response as JSON
+        return jsonify(question_list)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching questions."}), 500
     
 @app.route('/test_questions_personal', methods=['GET'])
 def test_questions_personal():
