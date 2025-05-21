@@ -6,12 +6,14 @@ import { useEffect } from "react";
 const HealthStatusQuestionnaire = () => {
   const navigate = useNavigate();
     const location = useLocation();
-    const { preferredLanguage } = location.state || {}; // Extract preferred language from state
+    const { preferredLanguage, idNumber } = location.state || {};
   
 const [formData, setFormData] = useState({
   listenDiagnose: '',
   treatmentDetailsDisturb:'',
-  treatmentListenInWhat:''
+  treatmentListenInWhat:'',
+  idNumber: idNumber,
+  preferredLanguage: preferredLanguage || "",
 
 })
   // Health-related questions

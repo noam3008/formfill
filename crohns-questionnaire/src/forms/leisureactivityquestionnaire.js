@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import "../css/traumaStyle.css";
+import axios from 'axios';
 
 const LeisureActivityQuestionnaire = () => {
   const location = useLocation();
  const { preferredLanguage, idNumber } = location.state || {};
+ const [questions, setQuestions] = useState([]); // Store questions from DB
   const navigate = useNavigate();
 
   // State initialization for questions
@@ -20,8 +22,41 @@ const LeisureActivityQuestionnaire = () => {
   });
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to the top of the page on mount
-  }, []);
+    axios.get("http://localhost:3002/test_questions_leisure_activity")
+      .then((response) => {
+        setQuestions(response.data); // Set questions in state
+        const initialFormData = {};
+        response.data.forEach(q => {
+          initialFormData[q.field_name] = ""; // Initialize form data for each field
+        });
+
+        // Only set formData if it's not set yet, or add missing fields
+        setFormData(prevData => ({
+          ...prevData,   // Keep any previous formData values
+          ...initialFormData // Add or override the new form fields
+        }));
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+      });
+
+    window.scrollTo(0, 0);
+
+    // Set idNumber from location.state if not already in formData
+    if (location.state?.idNumber && !formData.idNumber) {
+      setFormData(prevData => ({
+        ...prevData,
+        idNumber: location.state.idNumber
+      }));
+    }
+    if (location.state?.preferredLanguage && !formData.preferredLanguage) {
+      setFormData(prevData => ({
+        ...prevData,
+        preferredLanguage: location.state.preferredLanguage
+      }));
+    }
+  }, [location.state?.idNumber]); // Only rerun if location.state.idNumber changes
+
 
   // Handle input change for all questions
   const handleChange = (e) => {
@@ -47,9 +82,11 @@ const LeisureActivityQuestionnaire = () => {
       {/* Question 1: Do you think you exercise enough? */}
       <div className="form-group radio-preferred">
         <label className="form-label">
-          {preferredLanguage === "לשון זכר"
-            ? "האם לדעתך, אתה מבצע מספיק פעילות גופנית?"
-            : "האם לדעתך, את מבצעת מספיק פעילות גופנית?"}
+        {preferredLanguage === 'לשון זכר' 
+                ? questions.find(q => q.field_name === "sufficientExercise_man")?.question_text || "שאלה לא זמינה"
+                : questions.find(q => q.field_name === "sufficientExercise_woman")?.question_text || "שאלה לא זמינה"}
+              
+
         </label>
         <div className="form-check">
           <input
@@ -79,16 +116,17 @@ const LeisureActivityQuestionnaire = () => {
       </div>
 
       {/* Question 2: How often do you engage in different types of exercise? */}
-
+      <div className="form-group radio-preferred">
       <h3 className="form-label radio-preferred">
       {preferredLanguage === "לשון זכר"
             ? "במהלך 7 ימים (שבוע), כמה פעמים בממוצע אתה מבצע את הפעילויות הבאות למשך 15 דקות לפחות?"
             : "במהלך 7 ימים (שבוע), כמה פעמים בממוצע את מבצעת את הפעילויות הבאות למשך 15 דקות לפחות?"}
       </h3>
+      </div>
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-          פעילות עצימה (הלב פועם במהירות) - ריצה, כדורגל, כדורסל, ג'ודו, החלקה, שחייה נמרצת, רכיבה נמרצת על אופניים
+        {questions.find(q => q.field_name === "strenuous")?.question_text || "שאלה לא זמינה"}
         </label>
         <input
           type="number"
@@ -103,7 +141,7 @@ const LeisureActivityQuestionnaire = () => {
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-          פעילות מתונה (לא מתישה) - הליכה מהירה, טניס, רכיבה איטית על אופניים, כדורעף, שחייה קלה, ריקוד וכו'
+        {questions.find(q => q.field_name === "moderate")?.question_text || "שאלה לא זמינה"}
         </label>
         <input
           type="number"
@@ -118,7 +156,7 @@ const LeisureActivityQuestionnaire = () => {
 
       <div className="form-group radio-preferred">
         <label className="form-label">
-          פעילות קלה (מאמץ מינימלי) - יוגה, פילאטיס, רכיבה על סוסים, כדורת (באולינג), הליכה איטית
+        {questions.find(q => q.field_name === "light")?.question_text || "שאלה לא זמינה"}
         </label>
         <input
           type="number"
@@ -135,8 +173,10 @@ const LeisureActivityQuestionnaire = () => {
       <div className="form-group radio-preferred">
         <label className="form-label">
           {preferredLanguage === "לשון זכר"
-            ? "במהלך שבוע ממוצע, באיזו תדירות אתה עוסק בפעילות גופנית מספיק זמן על מנת להזיע (פעימות לב מהירות)?"
-            : "במהלך שבוע ממוצע, באיזו תדירות את עוסקת בפעילות גופנית מספיק זמן על מנת להזיע (פעימות לב מהירות)?"}
+
+                    ? questions.find(q => q.field_name === "sweatingFrequency_man")?.question_text || "שאלה לא זמינה"
+                    : questions.find(q => q.field_name === "sweatingFrequency_woman")?.question_text || "שאלה לא זמינה"}
+
         </label>
         <div className="form-check">
           <input

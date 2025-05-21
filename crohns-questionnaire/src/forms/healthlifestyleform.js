@@ -536,7 +536,7 @@ const HealthLifestyleForm = () => {
         value={option}
         checked={formData.mainConcern.includes(option)}
         onChange={handleCheckboxChange}
-        className="form-check-input"
+        
       />
       <label className="form-check-label">{option}</label>
     </div>

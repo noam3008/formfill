@@ -1,12 +1,12 @@
 
-from flask import request, jsonify, Flask
+from flask import request, jsonify, Flask,make_response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_cors import CORS
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 import boto3
 import json
 import pymysql
@@ -315,6 +315,12 @@ def test_questions():
     except Exception as e:
         app.logger.error(f"Error fetching questions: {e}")
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/clear-cookie', methods=['GET'])
+def clear_cookie():
+    resp = make_response(jsonify({"message": "Cookie cleared"}))
+    resp.set_cookie('your_cookie_name', '', expires=0)
+    return resp
 
     
 
@@ -328,6 +334,32 @@ def test_questions_woman():
     except Exception as e:
         app.logger.error(f"Error fetching questions: {e}")
         return jsonify({"error": str(e)}), 500
+    
+
+    
+    
+    # Test Questions Route
+@app.route('/test_questions_mspssquationaire', methods=['GET'])
+def test_questions_leisure_mspsquastionaire():
+    try:
+        # Fetch all questions, ordered by ID
+        questions = Question.query.filter_by(category="social_support").order_by(Question.id).all()
+        return jsonify([q.to_dict() for q in questions])  # Send questions as JSON
+    except Exception as e:
+        app.logger.error(f"Error fetching questions: {e}")
+        return jsonify({"error": str(e)}), 500
+    
+# Test Questions Route
+@app.route('/test_questions_leisure_activity', methods=['GET'])
+def test_questions_leisure_activity():
+    try:
+        # Fetch all questions, ordered by ID
+        questions = Question.query.filter_by(category="leisure_activity").order_by(Question.id).all()
+        return jsonify([q.to_dict() for q in questions])  # Send questions as JSON
+    except Exception as e:
+        app.logger.error(f"Error fetching questions: {e}")
+        return jsonify({"error": str(e)}), 500
+    
     
 
 @app.route('/test_questions_depression', methods=['GET'])
