@@ -11,7 +11,7 @@ const MyForm = () => {
 
   // Fetch the questions from the Flask server
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_registration")
+    axios.get("http://localhost:3002/test_questions_registration")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
@@ -73,7 +73,7 @@ function is_israeli_id_number(id) {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://54.242.154.185:3002/insert_user", {
+      const response = await fetch("http://localhost:3002/insert_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

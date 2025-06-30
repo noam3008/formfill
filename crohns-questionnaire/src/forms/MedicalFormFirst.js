@@ -10,13 +10,15 @@ const MedicalForm = () => {
    const [selectedOption, setSelectedOption] = useState(""); // Stores Yes/No selection
    const [questions, setQuestions] = useState([]); // Store questions from DB
   const [frequency, setFrequency] = useState("");
-  const { preferredLanguage ,idNumber} = location.state || {};
+  const { diagnosis = [], preferredLanguage = "", idNumber = "" } = location.state || {};
   // State management for the form
   const [formData, setFormData] = useState({
-    idNumber: location.state?.idNumber,
-    preferredLanguage: location.state?.preferredLanguage || "",
-    diagnosis: '',
+    diagnosis: diagnosis, // ✅ Use value passed from previous page
+    preferredLanguage,
+    idNumber,
     workIssuesMentalFrequency : '',
+    artitisNegative :'',
+    artitiesAge:'',
     isPshycologicalTreatment :'',
     medicationWithoutDoctorAmount :0,
     foodSensetivityAge :'',
@@ -27,6 +29,7 @@ const MedicalForm = () => {
     mood :0,
     socialLife :0,
     isMouthAftha : 0,
+    diagnosisArtitisAge:'',
     complementaryMedicineReason :"",
     chronicDiseases: "", // Yes/No selection
     chronicCount: 0, // Number of chronic diseases
@@ -93,40 +96,29 @@ const MedicalForm = () => {
   };
 
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_medical")
-        .then((response) => {
-            setQuestions(response.data); // Set questions in state
-            const initialFormData = {};
-            response.data.forEach(q => {
-                initialFormData[q.field_name] = ""; // Initialize form data for each field
-            });
-            
-            // Only set formData if it's not set yet, or add missing fields
-            setFormData(prevData => ({
-                ...prevData,   // Keep any previous formData values
-                ...initialFormData // Add or override the new form fields
-            }));
-        })
-        .catch((error) => {
-            console.error("Error fetching questions:", error);
+    axios.get("http://localhost:3002/test_questions_medical")
+      .then((response) => {
+        setQuestions(response.data);
+        const initialFormData = {};
+        response.data.forEach(q => {
+          initialFormData[q.field_name] = "";
         });
-
-        window.scrollTo(0, 0); 
-
-    // Set idNumber from location.state if not already in formData
-    if (location.state?.idNumber && !formData.idNumber) {
+  
         setFormData(prevData => ({
-            ...prevData,
-            idNumber: location.state.idNumber
+          ...initialFormData,
+          ...prevData,
+          idNumber: location.state?.idNumber || prevData.idNumber || "",
+          preferredLanguage: location.state?.preferredLanguage || prevData.preferredLanguage || "",
+          diagnosis: location.state?.diagnosis || prevData.diagnosis || []
         }));
-    }
-    if (location.state?.preferredLanguage && !formData.preferredLanguage) {
-        setFormData(prevData => ({
-            ...prevData,
-            preferredLanguage: location.state.preferredLanguage
-        }));
-    }
-}, [location.state?.idNumber]); // Only rerun if location.state.idNumber changes
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+      });
+  
+    window.scrollTo(0, 0);
+  }, [location.state]);
+  
 
 
 const handleChange = (e) => {
@@ -183,7 +175,7 @@ const handleChange = (e) => {
         return;
       }
 
-      const response = await fetch("http://54.242.154.185:3002/insert_crohn_survey", {
+      const response = await fetch("http://localhost:3002/insert_crohn_survey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -256,23 +248,8 @@ const handleChange = (e) => {
         <h2 className="mb-4">Medical Form</h2>
         <form  onSubmit={handlesubmit}>
           <div className="row">
-
             {/* Diagnosis Information */}
-            <div >
-              <label htmlFor="diagnosis" className="form-label">
-              {questions.find(q => q.field_name === "diagnosis")?.question_text || "שאלה לא זמינה"}
-                
-               </label>
-              <input
-                  type="text"
-                  className="form-control"
-                  id="diagnosis"
-                  name="diagnosis"
-                  value={formData.diagnosis}
-                  onChange={handleChange}
-              />
-            </div>
-
+        {formData.diagnosis.includes("קרוהן/קוליטיס") && (
             <div >
               <label htmlFor="crohnAge" className="form-label">
                 
@@ -288,7 +265,9 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
             </div>
+            )}
 
+        {formData.diagnosis.includes("קרוהן/קוליטיס") && (
             <div >
               <label htmlFor="diagnosisAge" className="form-label">
               {questions.find(q => q.field_name === "diagnosisAge")?.question_text || "שאלה לא זמינה"}
@@ -303,7 +282,105 @@ const handleChange = (e) => {
                   onChange={handleChange}
               />
             </div>
-            
+            )}
+
+            {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס")) && (
+            <div >
+              <label htmlFor="artitiesAge" className="form-label">
+                
+              {questions.find(q => q.field_name === "artitiesAge")?.question_text || "שאלה לא זמינה"}
+                </label>
+              <input
+                  type="number"
+                  className="form-control"
+                  id="artitiesAge"
+                  name="artitiesAge"
+                  min="0"
+                  value={formData.artitiesAge}
+                  onChange={handleChange}
+              />
+            </div>
+            )}
+
+          {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס")) && (
+            <div >
+              <label htmlFor="diagnosisArtitisAge" className="form-label">
+              {questions.find(q => q.field_name === "diagnosisArtitisAge")?.question_text || "שאלה לא זמינה"}
+               </label>
+              <input
+                  type="number"
+                  className="form-control"
+                  id="diagnosisArtitisAge"
+                  name="diagnosisArtitisAge"
+                  min="0"
+                  value={formData.diagnosisArtitisAge}
+                  onChange={handleChange}
+              />
+            </div>
+            )}
+
+{(formData.diagnosis.includes("פסוריאזיס")) && (
+            <div >
+              <label htmlFor="psoriasisAge" className="form-label">
+                
+              {questions.find(q => q.field_name === "psoriasisAge")?.question_text || "שאלה לא זמינה"}
+                </label>
+              <input
+                  type="number"
+                  className="form-control"
+                  id="psoriasisAge"
+                  name="psoriasisAge"
+                  min="0"
+                  value={formData.psoriasisAge}
+                  onChange={handleChange}
+              />
+            </div>
+            )}
+
+          {(formData.diagnosis.includes("פסוריאזיס")) && (
+            <div >
+              <label htmlFor="diagnosisPsoriasisAge" className="form-label">
+              {questions.find(q => q.field_name === "diagnosisPsoriasisAge")?.question_text || "שאלה לא זמינה"}
+               </label>
+              <input
+                  type="number"
+                  className="form-control"
+                  id="diagnosisPsoriasisAge"
+                  name="diagnosisPsoriasisAge"
+                  min="0"
+                  value={formData.diagnosisPsoriasisAge}
+                  onChange={handleChange}
+              />
+            </div>
+            )}
+
+            <h3></h3>
+            {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס") || formData.diagnosis.includes("פסוריאזיס")) && (
+            <div className="form-group radio-preferred">
+                      <label htmlFor="biopsieIdent" className="form-label" >
+                      {questions.find(q => q.field_name === "biopsieIdent")?.question_text || "שאלה לא זמינה"}
+                       </label>
+                      <div className="form-check">
+                          <input type="radio" name="biopsieIdent" value="כן" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "biopsieIdent", value: formData.biopsieIdent === "כן" ? "" : "כן" } })}
+                                 checked={formData.biopsieIdent === "כן"}
+                          /> כן
+                      </div>
+                      <div className="form-check">
+                          <input type="radio" name="biopsieIdent" value="לא" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "biopsieIdent", value: formData.biopsieIdent === "לא" ? "" : "לא" } })}
+                                 checked={formData.biopsieIdent === "לא"}
+                          /> לא
+                      </div>
+                      <div className="form-check">
+                          <input type="radio" name="biopsieIdent" value="לא יודע" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "biopsieIdent", value: formData.biopsieIdent === "לא יודע" ? "" : "לא יודע" } })}
+                                 checked={formData.biopsieIdent === "לא יודע"}
+                          /> לא יודע
+                      </div>
+              </div>
+            )}
+
           <div className="mt-4"></div>
 
             {/* Treatment Information */}
@@ -493,6 +570,7 @@ const handleChange = (e) => {
           </div>
 
 
+          {formData.diagnosis.includes("קרוהן/קוליטיס") && (
 
                 <div className="doctorduechron">
                     <label className="form-label">
@@ -528,6 +606,85 @@ const handleChange = (e) => {
                         </div>
                     </div>
                 </div>
+          )}
+
+        {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס")) && (
+
+          <div className="doctorDueArtisis">
+              <label className="form-label">
+              {preferredLanguage === 'לשון זכר' 
+          ? questions.find(q => q.field_name === "doctorDueArtisis_men")?.question_text || "שאלה לא זמינה"
+          : questions.find(q => q.field_name === "doctorDueArtisis_women")?.question_text || "שאלה לא זמינה"}
+              
+              </label>
+              <div className="slider-container">
+                  <input
+                      type="range"
+                      min="1"
+                      max="4"
+                      step="1"
+                      className="slider"
+                      onInput={handleChange}
+                      id="doctorDueArtisis"
+                      name="doctorDueArtisis"
+                      value={formData.doctorDueArtisis }
+                      onClick={(e) => {
+                        if (formData.doctorDueArtisis === 0) {
+                            handleChange(e); // Ensure the first click registers
+                        }
+                    }}
+                      onChange={handleChange}
+                  />
+                  <div className="slider-labels">
+
+                      <span>0 - בכלל לא</span>
+                      <span>1-2</span>
+                      <span>3-4</span>
+                      <span>יותר מחמש פעמים</span>
+                  </div>
+              </div>
+          </div>
+          )}
+
+{(formData.diagnosis.includes("פסוריאזיס")) && (
+
+<div className="doctorDuePsoriazis">
+    <label className="form-label">
+    {preferredLanguage === 'לשון זכר' 
+? questions.find(q => q.field_name === "doctorDuePsoriazis_men")?.question_text || "שאלה לא זמינה"
+: questions.find(q => q.field_name === "doctorDuePsoriazis_men")?.question_text || "שאלה לא זמינה"}
+    
+    </label>
+    <div className="slider-container">
+        <input
+            type="range"
+            min="1"
+            max="4"
+            step="1"
+            className="slider"
+            onInput={handleChange}
+            id="doctorDuePsoriazis"
+            name="doctorDuePsoriazis"
+            value={formData.doctorDuePsoriazis }
+            onClick={(e) => {
+              if (formData.doctorDuePsoriazis === 0) {
+                  handleChange(e); // Ensure the first click registers
+              }
+          }}
+            onChange={handleChange}
+        />
+        <div className="slider-labels">
+
+            <span>0 - בכלל לא</span>
+            <span>1-2</span>
+            <span>3-4</span>
+            <span>יותר מחמש פעמים</span>
+        </div>
+    </div>
+</div>
+)}
+
+
 
         <div className="form-group radio-preferred">
           <label htmlFor="allergies" className="form-label" >
@@ -922,6 +1079,7 @@ const handleChange = (e) => {
           />
         </div>
 
+
         
 
         <div className="form-group radio-preferred">
@@ -991,6 +1149,28 @@ const handleChange = (e) => {
                 />
             </div>
 
+            {formData.diagnosis.includes("פסוריאזיס") && (
+
+              <div className="form-group radio-preferred">
+              <label htmlFor="coverman" className="form-label" >
+
+              {questions.find(q => q.field_name === "coverman")?.question_text || "שאלה לא זמינה"} </label>
+              <div className="form-check">
+                <input type="radio" name="coverman" value="כן" onChange={handleChange}
+                                          onClick={() => handleChange({ target: { name: "coverman", value: formData.coverman === "כן" ? "" :"כן" } })}
+                                          checked={formData.coverman === "כן"}
+                /> כן
+              </div>
+              <div className="form-check">
+                <input type="radio" name="coverman" value="לא" onChange={handleChange} 
+                                          onClick={() => handleChange({ target: { name: "coverman", value: formData.coverman === "לא" ? "" :"לא" } })}
+                                          checked={formData.coverman === "לא"}
+                /> לא
+              </div>
+              </div>
+              )}
+
+        {formData.diagnosis.includes("קרוהן/קוליטיס") && (
 
             <div className="form-group radio-preferred">
           <label htmlFor="cronNegative" className="form-label" >
@@ -1009,8 +1189,31 @@ const handleChange = (e) => {
               /> לא
           </div>
         </div>
+        )}
 
-        {formData.cronNegative === "כן" && (
+        {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס")) && (
+
+        <div className="form-group radio-preferred">
+        <label htmlFor="artitisNegative" className="form-label" >
+
+        {questions.find(q => q.field_name === "artitisNegative")?.question_text || "שאלה לא זמינה"} </label>
+        <div className="form-check">
+          <input type="radio" name="artitisNegative" value="כן" onChange={handleChange}
+                                    onClick={() => handleChange({ target: { name: "artitisNegative", value: formData.artitisNegative === "כן" ? "" :"כן" } })}
+                                    checked={formData.artitisNegative === "כן"}
+          /> כן
+        </div>
+        <div className="form-check">
+          <input type="radio" name="artitisNegative" value="לא" onChange={handleChange} 
+                                    onClick={() => handleChange({ target: { name: "artitisNegative", value: formData.artitisNegative === "לא" ? "" :"לא" } })}
+                                    checked={formData.artitisNegative === "לא"}
+          /> לא
+        </div>
+        </div>
+        )}
+
+
+        {(formData.cronNegative === "כן" || formData.artitisNegative=="כן")&& (
         <div className="form-group mt-3">
           <label htmlFor="cronNegativeReason" className="form-label">
           {preferredLanguage === 'לשון זכר' 
@@ -1036,6 +1239,122 @@ const handleChange = (e) => {
                 : questions.find(q => q.field_name === "doctorDueChron_women")?.question_text || "שאלה לא זמינה"}
 
   </label>
+
+  {(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס") || formData.diagnosis.includes("פסוריאזיס")) && (
+
+  <div className="form-group radio-preferred">
+          <label htmlFor="steroidiesTakeCare" className="form-label" >
+            
+          {questions.find(q => q.field_name === "steroidiesTakeCare")?.question_text || "שאלה לא זמינה"}
+      </label>
+          <div className="form-check">
+        <input
+          type="radio"
+          id="visitYes"
+          name="steroidiesTakeCare"
+          value="כן"
+          onChange={handleChange}
+          checked={formData.steroidiesTakeCare === "כן"}
+          onClick={() => handleChange({ target: { name: "steroidiesTakeCare", value: formData.steroidiesTakeCare === "כן" ? "" :"כן" } })}
+
+        />
+        <label htmlFor="visitYes">כן</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNo"
+          name="steroidiesTakeCare"
+          value="לא"
+          onChange={handleChange}
+          checked={formData.steroidiesTakeCare === "לא"}
+          onClick={() => handleChange({ target: { name: "steroidiesTakeCare", value: formData.steroidiesTakeCare === "לא" ? "" :"לא" } })}
+
+        />
+        <label htmlFor="visitNo">לא</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNotKnoen"
+          name="steroidiesTakeCare"
+          value="לא יודע"
+          onChange={handleChange}
+          checked={formData.steroidiesTakeCare === "לא יודע"}
+          onClick={() => handleChange({ target: { name: "steroidiesTakeCare", value: formData.steroidiesTakeCare === "לא יודע" ? "" :"לא יודע" } })}
+
+        />
+        <label htmlFor="visitNo">
+        {preferredLanguage === 'לשון זכר' 
+                ? '  לא יודע' 
+                : '  לא יודעת'}
+            
+          
+         </label>
+      </div>
+      </div>
+  )}
+
+{(formData.diagnosis.includes("פסוריאטיק ארטריטס") || formData.diagnosis.includes("ראומטיק ארטריטיס")|| formData.diagnosis.includes("פסוריאזיס")) && (
+
+<div className="form-group radio-preferred">
+        <label htmlFor="fotoTherapyTakeCare" className="form-label" >
+          
+        {questions.find(q => q.field_name === "fotoTherapyTakeCare")?.question_text || "שאלה לא זמינה"}
+    </label>
+        <div className="form-check">
+      <input
+        type="radio"
+        id="visitYes"
+        name="fotoTherapyTakeCare"
+        value="כן"
+        onChange={handleChange}
+        checked={formData.fotoTherapyTakeCare === "כן"}
+        onClick={() => handleChange({ target: { name: "fotoTherapyTakeCare", value: formData.fotoTherapyTakeCare === "כן" ? "" :"כן" } })}
+
+      />
+      <label htmlFor="visitYes">כן</label>
+    </div>
+
+    <div className="form-check">
+      <input
+        type="radio"
+        id="visitNo"
+        name="fotoTherapyTakeCare"
+        value="לא"
+        onChange={handleChange}
+        checked={formData.fotoTherapyTakeCare === "לא"}
+        onClick={() => handleChange({ target: { name: "fotoTherapyTakeCare", value: formData.fotoTherapyTakeCare === "לא" ? "" :"לא" } })}
+
+      />
+      <label htmlFor="visitNo">לא</label>
+    </div>
+
+    <div className="form-check">
+      <input
+        type="radio"
+        id="visitNotKnoen"
+        name="fotoTherapyTakeCare"
+        value="לא יודע"
+        onChange={handleChange}
+        checked={formData.fotoTherapyTakeCare === "לא יודע"}
+        onClick={() => handleChange({ target: { name: "fotoTherapyTakeCare", value: formData.fotoTherapyTakeCare === "לא יודע" ? "" :"לא יודע" } })}
+
+      />
+      <label htmlFor="visitNo">
+      {preferredLanguage === 'לשון זכר' 
+              ? '  לא יודע' 
+              : '  לא יודעת'}
+          
+        
+       </label>
+    </div>
+    </div>
+)}
+
+
 
   <div className="form-check">
     <input
@@ -1726,7 +2045,7 @@ const handleChange = (e) => {
                 </label>
       </div>
       </div>
-
+      {formData.diagnosis.includes("קרוהן/קוליטיס") && (
       <div className="form-group">
                     <label className="form-label">מתן צואה ברמיסיה - מספר פעמים ביום </label>
                     <input
@@ -1739,7 +2058,8 @@ const handleChange = (e) => {
                         min="0" // Ensures only positive numbers are allowed
                     />
                 </div>
-
+                )}
+{formData.diagnosis.includes("קרוהן/קוליטיס") && (
                 <div className="form-group">
                     <label className="form-label">מתן צואה בזמן התקף - מספר פעמים ביום </label>
                     <input
@@ -1752,6 +2072,7 @@ const handleChange = (e) => {
                         min="0" // Ensures only positive numbers are allowed
                     />
                 </div>
+                )}
 
                 <div className="form-group">
                     <label className="form-label">מתן שתן - מספר פעמים ביום בממוצע </label>

@@ -19,12 +19,13 @@ import SubmitForm from './forms/sumbitForm';
 import BriefQuastionaire from './forms/briefQuastionaire';
 import Satisfactionquestionnaire from './forms/satisfactionquestionnaire';
 import EndPage from './forms/endPage';
+import Diagnose from './forms/diagnose';
 
 function App() {
   useEffect(() => {
     console.log("App loaded, trying to clear cookie");
   
-    fetch('http://54.242.154.185:3002/clear-cookie', {
+    fetch('http://localhost:3002/clear-cookie', {
       method: 'GET',
       credentials: 'include'
     })
@@ -38,6 +39,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AcceptenceForm />} />
         <Route path="/start" element={<MyForm />} />
+        <Route path='/diagnose' element ={<Diagnose/>}/>
         <Route path="/woman" element={<WomanForm/>}/>
         <Route path="/success" element={<SuccessPage />}/>
         <Route path="/personalform" element={<PersonalForm />} />

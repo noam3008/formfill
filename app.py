@@ -6,7 +6,7 @@ from flask_cors import CORS
 import json
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://54.242.154.185:3000"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 import boto3
 import json
 import pymysql

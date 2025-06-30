@@ -28,7 +28,7 @@ const PTSDQuestionnaire = () => {
   useEffect(() => {
     console.log("Received location.state:", location.state);
     axios
-      .get("http://54.242.154.185:3002/test_questions_trauma")
+      .get("http://localhost:3002/test_questions_trauma")
       .then((response) => {
         setQuestions(response.data);
         const initialFormData = {};
@@ -75,7 +75,7 @@ const PTSDQuestionnaire = () => {
   
     // Send data to backend
     axios
-      .post("http://54.242.154.185:3002/insert_trauma_questionnaire", formSubmissionData)
+      .post("http://localhost:3002/insert_trauma_questionnaire", formSubmissionData)
       .then((response) => {
         console.log(response.data);
         alert("תשובותיך נשמרו בהצלחה.");

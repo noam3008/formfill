@@ -28,7 +28,7 @@ const DepressionAssessment = () => {
   useEffect(() => {
     console.log("Received location.state:", location.state);
     axios
-      .get("http://54.242.154.185:3002/test_questions_depression")
+      .get("http://localhost:3002/test_questions_depression")
       .then((response) => {
         const allQuestions = response.data;
 
@@ -79,7 +79,7 @@ const DepressionAssessment = () => {
     
       // Send data to backend
       axios
-        .post("http://54.242.154.185:3002/insert_depression_answers", formSubmissionData)
+        .post("http://localhost:3002/insert_depression_answers", formSubmissionData)
         .then((response) => {
           console.log(response.data);
           alert("תשובותיך נשמרו בהצלחה.");
