@@ -40,7 +40,7 @@ function WomanForm() {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3002/test_questions_woman")
+        axios.get("http://54.242.154.185:3002/test_questions_woman")
             .then((response) => {
                 setQuestions(response.data); // Set questions in state
                 const initialFormData = {};
@@ -236,7 +236,7 @@ function WomanForm() {
       
     
         try {
-          const response = await fetch("http://localhost:3002/insert_woman", {
+          const response = await fetch("http://54.242.154.185:3002/insert_woman", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

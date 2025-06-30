@@ -23,9 +23,10 @@ const foodItems = [
 
 const HealthLifestyleForm = () => {
   const location = useLocation();
-   const { preferredLanguage, idNumber } = location.state || {};
+  const { diagnosis = [], preferredLanguage = "", idNumber = "" } = location.state || {};
    const [questions, setQuestions] = useState([]); // Store questions from DB
    const [formData, setFormData] = useState({
+        diagnosis: diagnosis,
         idNumber: idNumber,
         preferredLanguage: preferredLanguage || "",
         exerciseFun :'',
@@ -84,7 +85,7 @@ const HealthLifestyleForm = () => {
 
     
     useEffect(() => {
-        axios.get("http://localhost:3002/test_questions_health_lifestyle")
+        axios.get("http://54.242.154.185:3002/test_questions_health_lifestyle")
           .then((response) => {
             setQuestions(response.data); // Set questions in state
             const initialFormData = {};

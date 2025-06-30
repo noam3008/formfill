@@ -96,7 +96,7 @@ const MedicalForm = () => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3002/test_questions_medical")
+    axios.get("http://54.242.154.185:3002/test_questions_medical")
       .then((response) => {
         setQuestions(response.data);
         const initialFormData = {};
@@ -175,7 +175,7 @@ const handleChange = (e) => {
         return;
       }
 
-      const response = await fetch("http://localhost:3002/insert_crohn_survey", {
+      const response = await fetch("http://54.242.154.185:3002/insert_crohn_survey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,20 +196,19 @@ const handleChange = (e) => {
       localStorage.setItem('userData', JSON.stringify(result));
 
       if (formData.diseaseTrigger === 'טראומה'&&workIssuesMentalFrequency >1) {
-        navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage ,workIssuesMentalFrequency:formData.workIssuesMentalFrequency,idNumber: formData.idNumber } });
+        navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage ,workIssuesMentalFrequency:formData.workIssuesMentalFrequency,idNumber: formData.idNumber, diagnosis: formData.diagnosis } });
       }
   
       else if (formData.diseaseTrigger === 'טראומה') {
-        navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
+        navigate("/ptsdquestionnaire", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber , diagnosis: formData.diagnosis } });
         
       }
       else if (workIssuesMentalFrequency >= 1) {
-        navigate("/depressionassessment", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
+        navigate("/depressionassessment", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber , diagnosis: formData.diagnosis } });
   
       }
       else{
-  
-        navigate("/healthlifestyleform", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber  } });
+        navigate("/healthlifestyleform", { state: { preferredLanguage: formData.preferredLanguage,idNumber: formData.idNumber , diagnosis: formData.diagnosis } });
   
       }
     } catch (error) {
