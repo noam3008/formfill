@@ -27,11 +27,16 @@ h4 {
   background-color: #f9f9f9; /* Light background for contrast */
 }
 
-
-  /* Hide slider thumb when value is 0 */
+/* Instead of hiding the thumb at value 0, make it minimal */
 .slider[value="0"]::-webkit-slider-thumb {
-  visibility: hidden;  /* Hide the thumb when value is 0 */
+  background-color: #ccc;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  opacity: 0.5;
 }
+
 
 /* Make sure the slider is always interactive, even when value is 0 */
 .slider {

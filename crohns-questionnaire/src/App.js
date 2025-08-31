@@ -25,7 +25,7 @@ function App() {
   useEffect(() => {
     console.log("App loaded, trying to clear cookie");
   
-    fetch('http://54.242.154.185:3002/clear-cookie', {
+    fetch('http://localhost:3002/clear-cookie', {
       method: 'GET',
       credentials: 'include'
     })

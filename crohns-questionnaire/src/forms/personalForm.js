@@ -110,7 +110,7 @@ const PersonalForm = () => {
   // }, []); // Empty dependency array to ensure it runs only once when the component mounts
 ////wqeeeeeeeeqwewqewqeqweqew
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_personal")
+    axios.get("http://localhost:3002/test_questions_personal")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
@@ -172,7 +172,7 @@ const PersonalForm = () => {
         return;
       }
 
-      const response = await fetch("http://54.242.154.185:3002/submit_personal_info", {
+      const response = await fetch("http://localhost:3002/submit_personal_info", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

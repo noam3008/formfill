@@ -85,7 +85,7 @@ const HealthLifestyleForm = () => {
 
     
     useEffect(() => {
-        axios.get("http://54.242.154.185:3002/test_questions_health_lifestyle")
+        axios.get("http://localhost:3002/test_questions_health_lifestyle")
           .then((response) => {
             setQuestions(response.data); // Set questions in state
             const initialFormData = {};

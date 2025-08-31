@@ -230,8 +230,9 @@ const ChildhoodQuestionnaire = () => {
 
                 <div >
                     <label className="form-label radio-preferred">היכן גרת בילדותך (עד גיל 12)?</label>
-                    <select name="childhoodResidence" className="form-select" onChange={handleChange}>
-                        <option value="" disabled>בחר</option>
+                    <select name="childhoodResidence" className="form-select" onChange={handleChange} defaultValue="">
+                        
+                        <option value="בחר" disabled>בחר</option>
                         <option value="בעיר">בעיר</option>
                         <option value="מושב">מושב</option>
                         <option value="כפר">כפר</option>
@@ -1005,7 +1006,7 @@ const ChildhoodQuestionnaire = () => {
       "תחושת חרדה", "שינויים בראיה", "שינויים בחוש הריח", "שינויים במצב הרוח", "חום",
       "כאבי/ מיחושי ראש", "כאבי/ מיחושי בטן", "כאבי שרירים", "קשיי שינה/ הרדמות",
       "היפראקטיביות/ פעלתנות אינטנסיבית", "בחילה", "צרבת", "עייפות", "תחושת מועקה",
-      "אחר- פרט.י", "לא ידוע"
+       "לא ידוע"
     ].map((symptom) => (
       <div className="form-check" key={symptom}>
         <input

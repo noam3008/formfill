@@ -27,6 +27,7 @@ const MedicalForm = () => {
     relationship : 0,
     workAfterIll :0,
     mood :0,
+    otherDiagnose:'',
     socialLife :0,
     isMouthAftha : 0,
     diagnosisArtitisAge:'',
@@ -96,7 +97,7 @@ const MedicalForm = () => {
   };
 
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_medical")
+    axios.get("http://localhost:3002/test_questions_medical")
       .then((response) => {
         setQuestions(response.data);
         const initialFormData = {};
@@ -175,7 +176,7 @@ const handleChange = (e) => {
         return;
       }
 
-      const response = await fetch("http://54.242.154.185:3002/insert_crohn_survey", {
+      const response = await fetch("http://localhost:3002/insert_crohn_survey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -317,6 +318,7 @@ const handleChange = (e) => {
               />
             </div>
             )}
+            </div>
 
 {(formData.diagnosis.includes("פסוריאזיס")) && (
             <div >
@@ -403,6 +405,24 @@ const handleChange = (e) => {
               </div>
             </div>
 
+            {formData.isTreat === 'כן' && (
+                      <div >
+                      <label htmlFor="treatmentType" className="form-label">
+                        
+                       מספר טיפולים נוכחים
+                        </label>
+                      <input
+                          type="int"
+                          min="0"
+                          className="form-control"
+                          id="treatmentType"
+                          name="treatmentType"
+                          value={formData.treatmentType}
+                          onChange={handleChange}
+                      />
+                    </div>
+        )}
+
 
         {formData.isTreat === 'כן' && (
                       <div >
@@ -436,6 +456,27 @@ const handleChange = (e) => {
               />
             </div>
              )}
+
+{formData.isTreat === 'כן' && (
+            <div>
+              <label htmlFor="treatmentLastYear" className="form-label">
+             האם התנסיתם בטיפולים אחרים בשנה האחרונה     
+                </label>
+                <div className="form-check">
+                          <input type="radio" name="treatmentLastYear" value="כן" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "treatmentLastYear", value: formData.treatmentLastYear === "כן" ? "" : "כן" } })}
+                                 checked={formData.treatmentLastYear === "כן"}
+                          /> כן
+                      </div>
+                      <div className="form-check">
+                          <input type="radio" name="treatmentLastYear" value="לא" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "treatmentLastYear", value: formData.treatmentLastYear === "לא" ? "" : "לא" } })}
+                                 checked={formData.treatmentLastYear === "לא"}
+                          /> לא
+                      </div>
+            </div>
+             )}
+
 
           <div className="mt-4"></div>  
           
@@ -494,8 +535,7 @@ const handleChange = (e) => {
              )} 
 
              
-             
-
+            
              
 
 {formData.isTreat === 'כן' && (
@@ -532,6 +572,35 @@ const handleChange = (e) => {
   </div>
 )}
 
+
+<div>
+              <label htmlFor="otherDiagnose" className="form-label">
+              : האם למישהו ממשפחתך (עד קרבה שניה- אחים ואחיות/ הורים/ בני דודים/ אחים של ההורים/ סבים סבתות) גם מאובחן במחלה אוטואימונית?    
+                </label>
+                <div className="form-check">
+                          <input type="radio" name="otherDiagnose" value="כן" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "otherDiagnose", value: formData.otherDiagnose === "כן" ? "" : "כן" } })}
+                                 checked={formData.otherDiagnose === "כן"}
+                          /> כן
+                      </div>
+                      <div className="form-check">
+                          <input type="radio" name="otherDiagnose" value="לא" onChange={handleChange} 
+                                 onClick={() => handleChange({ target: { name: "otherDiagnose", value: formData.otherDiagnose === "לא" ? "" : "לא" } })}
+                                 checked={formData.otherDiagnose === "לא"}
+                          /> לא
+                      </div>
+            </div>
+
+            {formData.otherDiagnose === 'כן' && (
+          <div className="form-group">
+            <label htmlFor="otherType">
+              
+              ציין איזה מחלה?
+              </label>
+            <input type="text" name="otherType" id="otherType" className="form-control" value={formData.otherType} onChange={handleChange} />
+          </div>
+        )}
+            
             
             {/* Medical Background */}
 
@@ -1358,7 +1427,7 @@ const handleChange = (e) => {
   <div className="form-check">
     <input
       type="radio"
-      id="visitYes"
+      id="visitYesFamily"
       name="familyDoctorVisit"
       value="כן"
       onChange={handleChange}
@@ -1464,6 +1533,60 @@ const handleChange = (e) => {
       </div>
 
       
+
+      <div className="form-group radio-preferred">
+          <label htmlFor="skinDoctorVisit" className="form-label" >
+          האם ביקרת אצל רופא עור בשנה האחרונה
+           </label>
+          <div className="form-check">
+        <input
+          type="radio"
+          id="visitYes"
+          name="skinDoctorVisit"
+          value="כן"
+          onChange={handleChange}
+          checked={formData.skinDoctorVisit === "כן"}
+          onClick={() => handleChange({ target: { name: "skinDoctorVisit", value: formData.skinDoctorVisit === "כן" ? "" :"כן" } })}
+        />
+        <label htmlFor="visitYes">כן</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="radio"
+          id="visitNo"
+          name="skinDoctorVisit"
+          value="לא"
+          onChange={handleChange}
+          checked={formData.skinDoctorVisit === "לא"}
+          onClick={() => handleChange({ target: { name: "skinDoctorVisit", value: formData.skinDoctorVisit === "לא" ? "" :"לא" } })}
+
+        />
+        <label htmlFor="visitNo">לא</label>
+      </div>
+
+  {/* ✅ Dropdown appears only if "Yes" is selected */}
+  {formData.skinDoctorVisit === "כן" && (
+        <div className="form-check " style={{ direction: "rtl", textAlign: "right" }}>
+          <label htmlFor="visitFrequencySkin">
+            {preferredLanguage === "לשון זכר"
+              ? " אני פוגש את הרופא כל"
+              : " אני פוגשת את הרופא כל"}
+          </label>
+
+          <select
+            id="visitFrequencySkin"
+            name="visitFrequencySkin"
+            value={formData.visitFrequencySkin}
+            onChange={handleChange}
+          >
+            <option value="">בחר</option>
+            <option value="3_months">כל 3 חודשים</option>
+            <option value="6_months">כל 6 חודשים</option>
+            <option value="1_year">כל שנה</option>
+          </select>
+        </div>
+      )}
 
       <div className="form-group radio-preferred">
           <label htmlFor="PointsDoctorVisit" className="form-label" >

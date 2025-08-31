@@ -36,7 +36,7 @@ const Diagnose = () => {
   };
 
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_medical")
+    axios.get("http://localhost:3002/test_questions_medical")
         .then((response) => {
             setQuestions(response.data); // Set questions in state
             const initialFormData = {};
@@ -126,7 +126,7 @@ const handleChange = (e) => {
         return;
       }
 
-      const response = await fetch("http://54.242.154.185:3002/submit_personal_info", {
+      const response = await fetch("http://localhost:3002/submit_personal_info", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -173,7 +173,8 @@ const handleChange = (e) => {
             "פסוריאזיס",
             "ראומטיק ארטריטיס",
             "פסוריאטיק ארטריטס",
-            "פיברומיאלגיה"
+            "פיברומיאלגיה",
+            "אחר"
           ].map((option) => (
             <div className="form-check" key={option}>
               <input
@@ -206,7 +207,7 @@ const handleChange = (e) => {
         </div>
 
     <h3>
-            {preferredLanguage === "לשון זכר" ? " שלח שאלון מס 3 מתוך 15" : " שלחי שאלון מס 4 מתוך 15"}
+            {preferredLanguage === "לשון זכר" ? " שלח שאלון מס 2 מתוך 15" : " שלחי שאלון מס 3 מתוך 15"}
 
           </h3>
           <button type="submit" className="btn btn-primary">

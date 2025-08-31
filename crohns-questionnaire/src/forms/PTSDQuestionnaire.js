@@ -28,7 +28,7 @@ const PTSDQuestionnaire = () => {
   useEffect(() => {
     console.log("Received location.state:", location.state);
     axios
-      .get("http://54.242.154.185:3002/test_questions_trauma")
+      .get("http://localhost:3002/test_questions_trauma")
       .then((response) => {
         setQuestions(response.data);
         const initialFormData = {};
@@ -75,7 +75,7 @@ const PTSDQuestionnaire = () => {
   
     // Send data to backend
     axios
-      .post("http://54.242.154.185:3002/insert_trauma_questionnaire", formSubmissionData)
+      .post("http://localhost:3002/insert_trauma_questionnaire", formSubmissionData)
       .then((response) => {
         console.log(response.data);
         alert("תשובותיך נשמרו בהצלחה.");
@@ -111,7 +111,7 @@ const PTSDQuestionnaire = () => {
               className="slider"
               id={`question-${index}`}
               name={`question-${index}`}
-              value={answers[question.field_name] || 0} // Binding value from answers state
+              value={answers[question.field_name] || "1"}
               onChange={(e) => handleChange(question.field_name, e.target.value)}
               onClick={(e) => {
                 if (answers[question.field_name] === 0) {

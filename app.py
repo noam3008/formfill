@@ -6,7 +6,7 @@ from flask_cors import CORS
 import json
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://54.242.154.185:3000"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 import boto3
 import json
 import pymysql
@@ -435,10 +435,12 @@ def insert_user():
 
     if not data:
         return jsonify({"error": "No data received"}), 400
+    
+    
 
     try:
         # Check if user already exists
-        existing_user = User.query.filter_by(id_number=data.get('idNumber')).first()
+        existing_user = User.query.filter_by(id_number=data.get('id_number')).first()
 
         if existing_user:
             # Update existing user
@@ -455,7 +457,7 @@ def insert_user():
         else:
             # Create new user
             new_user = User(
-                id_number=data.get('idNumber'),
+                id_number=data.get('id_number'),
                 first_name=data.get('first_name'),
                 last_name=data.get('last_name'),
                 email=data.get('email'),

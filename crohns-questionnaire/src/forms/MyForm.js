@@ -11,19 +11,28 @@ const MyForm = () => {
 
   // Fetch the questions from the Flask server
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_registration")
+    axios.get("http://localhost:3002/test_questions_registration")
       .then((response) => {
-        setQuestions(response.data); // Set questions in state
+        setQuestions(response.data);
+  
         const initialFormData = {};
         response.data.forEach(q => {
-          initialFormData[q.field_name] = ""; // Initialize form data
+          if (q.question_type === "radio") {
+            initialFormData[q.field_name] = ""; // Ensure radios start controlled
+          } else if (q.question_type === "select") {
+            initialFormData[q.field_name] = ""; // Select default empty
+          } else {
+            initialFormData[q.field_name] = ""; // Text, email, number fields
+          }
         });
+  
         setFormData(initialFormData);
       })
       .catch((error) => {
         console.error("Error fetching questions:", error);
       });
-       window.scrollTo(0, 0); 
+  
+    window.scrollTo(0, 0);
   }, []);
 
   const handleChange = (e) => {
@@ -72,13 +81,26 @@ function is_israeli_id_number(id) {
   
     if (!validateForm()) return;
 
+    const payload = {
+      id_number: formData.idNumber,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      age: formData.age,
+      health_fund: formData.healthFund,
+      gender: formData.gender,
+      sex: formData.sex,
+      preferred_language: formData.preferredLanguage
+    };
+
     try {
-      const response = await fetch("http://54.242.154.185:3002/insert_user", {
+      const response = await fetch("http://localhost:3002/insert_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
   
       if (!response.ok) {

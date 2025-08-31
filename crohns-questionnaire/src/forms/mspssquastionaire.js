@@ -50,7 +50,7 @@ const MSPSSQuestionnaire = () => {
   ];
 
   useEffect(() => {
-    axios.get("http://54.242.154.185:3002/test_questions_mspssquationaire")
+    axios.get("http://localhost:3002/test_questions_mspssquationaire")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
