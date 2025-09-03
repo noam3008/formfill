@@ -22,7 +22,7 @@ const LeisureActivityQuestionnaire = () => {
   });
 
   useEffect(() => {
-    axios.get("http://localhost:3002/test_questions_leisure_activity")
+    axios.get("http://54.242.154.185:3002/test_questions_leisure_activity")
       .then((response) => {
         setQuestions(response.data); // Set questions in state
         const initialFormData = {};
