@@ -339,8 +339,7 @@ function WomanForm() {
                 <div className="form-group radio-preferred">
                     <label htmlFor="menstrualPain" className="form-label">
                     {preferredLanguage === 'לשון זכר' 
-                ? ""
-                : {questions.find(q => q.field_name === "menstrualPain")?.question_text || "שאלה לא זמינה"}}
+                ? "" : questions.find(q => q.field_name === "menstrualPain")?.question_text || "שאלה לא זמינה"}
                     
                     </label>
                     <div className="form-check">
